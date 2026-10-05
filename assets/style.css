@@ -463,7 +463,7 @@ h1, h2, h3 {
   background: linear-gradient(var(--sky-top), var(--sky-bottom));
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .1), 0 12px 24px -16px rgba(0, 0, 0, .6);
 }
-.window svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.window > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .window::after { /* the mullions */
   content: "";
   position: absolute;
@@ -473,8 +473,35 @@ h1, h2, h3 {
     linear-gradient(var(--wood), var(--wood)) 0 56% / 100% 9px no-repeat;
   pointer-events: none;
 }
-.window .tag { position: absolute; left: 14px; bottom: 14px; z-index: 2; }
-.window .tag::after { display: none; }
+.window::after { z-index: 2; }
+
+/* the telescope outside: Moon Paparazzi. Its tag only shows on hover/focus. */
+.telescope {
+  position: absolute;
+  left: 15%;
+  bottom: 4%;
+  width: 30%;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.telescope svg { display: block; width: 100%; height: auto; overflow: visible; }
+.telescope .telescope__tag {
+  position: absolute;
+  left: 40%;
+  bottom: 96%;
+  z-index: 3;
+  margin: 0;
+  padding: 5px 9px;
+  white-space: nowrap;
+  transform: rotate(-3deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.telescope .telescope__tag::before, .telescope .telescope__tag::after { display: none; }
+.telescope:hover .telescope__tag,
+.telescope:focus-visible .telescope__tag { opacity: 1; }
+.o-glint { opacity: 0; }
 
 .moon-disc { fill: #fdf6df; }
 .moon-dark { fill: rgba(253, 246, 223, .12); }
@@ -1095,8 +1122,16 @@ h1, h2, h3 {
   .firefly:nth-of-type(3n) { animation-duration: 11s, 2.2s; animation-delay: -6s, -2s; }
   .star { animation: blink 3.6s ease-in-out infinite; }
   .star:nth-of-type(2n) { animation-delay: -1.4s; }
-  .window:hover .moon-disc, .window:focus-visible .moon-disc { filter: drop-shadow(0 0 12px rgba(255, 244, 214, .95)); }
-  .window:hover .o-flash, .window:focus-visible .o-flash { animation: flash 1.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  /* point at the telescope: it tips up a touch, the lens glints, the moon glows */
+  .o-scope { transition: transform .45s cubic-bezier(.3, 1.4, .5, 1); transform-box: view-box; transform-origin: 46px 54px; }
+  .telescope:hover .o-scope, .telescope:focus-visible .o-scope { transform: rotate(-5deg); }
+  .telescope:hover .o-glint, .telescope:focus-visible .o-glint { animation: flash 1.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  .telescope .telescope__tag { transition: opacity .2s ease, transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+  .telescope:hover .telescope__tag, .telescope:focus-visible .telescope__tag { transform: rotate(2deg) translateY(-2px); }
+  .window:has(.telescope:hover) .moon-disc,
+  .window:has(.telescope:focus-visible) .moon-disc { filter: drop-shadow(0 0 12px rgba(255, 244, 214, .95)); }
+  .window:has(.telescope:hover) .o-flash,
+  .window:has(.telescope:focus-visible) .o-flash { animation: flash 1.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
 
   /* objects on the shelf: lift, the tag swings, and each does its own thing */
   .thing svg { transition: transform .25s ease; }

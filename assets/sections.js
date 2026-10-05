@@ -47,9 +47,9 @@ window.SECTIONS = [
   {
     slug: "moon",
     title: "Moon Paparazzi",
-    object: "window",
+    object: "telescope",
     href: "https://www.instagram.com/moonpaparazzi/",
-    guide: "look out the window: that's tonight's real moon. click for my moon paparazzi shots on instagram",
+    guide: "the telescope! it's aimed at tonight's real moon. click for my moon paparazzi shots on instagram",
     blurb: "My moon photos, plus sunrises, sunsets, and whatever the sky is doing tonight.",
     status: "open"
   },

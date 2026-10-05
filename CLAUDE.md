@@ -54,7 +54,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
   **light switch** (the sky toggle), a tear-off **wall calendar** (real date
   and tonight's moon), the **window** with gingham curtains, ivy and a
-  **flower box**, the **toadstool guide**, two wooden **shelves** of objects
+  **flower box** (the window itself is not a link; a brass **telescope**
+  standing outside in the meadow, aimed at the moon, is the Moon Paparazzi
+  link), the **toadstool guide**, two wooden **shelves** of objects
   with paper **tags**, the **corkboard** of pinned "currently" notes, and a
   plank **floor** with a rug, fern, candle, and **Gemma** (see below). Petals drift by day and
   fireflies by night (`.ambient`). **Only the objects are links.** Every
@@ -62,11 +64,14 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - **Each object has its own hover animation**, hooked by `o-*` classes in its
   SVG (`o-land` globe spin, `o-steam`, `o-notes`/`o-arm`, `o-screen`/`o-heart-tv`,
   `o-ears`, `o-sun`, `o-blooms`, `o-heart`, `o-flash` on the window, `o-sway`
-  flowers). Keep these classes when redrawing an object.
+  flowers, `o-scope`/`o-glint` on the telescope). Keep these classes when
+  redrawing an object.
 - **Moon Paparazzi is Serena's Instagram**
   (`https://www.instagram.com/moonpaparazzi/`). Its entry in `sections.js` has
-  an `href`, so the window, the rooms nav and its tag all link out (new tab,
-  ↗ on the tag). `moon.html` only redirects there, so an old `moon.html` link
+  an `href`, so the telescope and the rooms nav link out (new tab, ↗ on the
+  tag). **The telescope's "Moon Paparazzi" tag is hidden until hover or
+  keyboard focus**, at Rex's request. Don't make it always visible. Hovering
+  it also tips the scope up, glints the lens, and makes the moon glow. `moon.html` only redirects there, so an old `moon.html` link
   still works. A separate sunrise/sunset page could come later.
 - `travels.html`, `kitchen.html`, `music.html`, `currently.html`, `moon.html`,
   `zoo.html`, `art.html`, `picks.html`: section stubs, all from one template.
