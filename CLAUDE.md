@@ -48,9 +48,26 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 
 ## Files
 
-- `index.html`: the cottage. A door intro (once per browser session), then a
-  window and two shelves of objects, one per section, plus the guide and the
-  "currently" card.
+- `index.html`: the cottage, drawn as one illustrated room. A door intro
+  (once per browser session: arch, rose bushes, lantern, forest) opens onto:
+  a bunting-and-fairy-light **garland** (pennant/bulb positions along the sag
+  are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
+  **light switch** (the sky toggle), a tear-off **wall calendar** (real date
+  and tonight's moon), the **window** with gingham curtains, ivy and a
+  **flower box**, the **toadstool guide**, two wooden **shelves** of objects
+  with paper **tags**, the **corkboard** of pinned "currently" notes, and a
+  plank **floor** with a rug, fern and candle. Petals drift by day and
+  fireflies by night (`.ambient`). **Only the objects are links.** Every
+  decorative piece is `aria-hidden`.
+- **Each object has its own hover animation**, hooked by `o-*` classes in its
+  SVG (`o-land` globe spin, `o-steam`, `o-notes`/`o-arm`, `o-screen`/`o-heart-tv`,
+  `o-ears`, `o-sun`, `o-blooms`, `o-heart`, `o-flash` on the window, `o-sway`
+  flowers). Keep these classes when redrawing an object.
+- **Moon Paparazzi is Serena's Instagram**
+  (`https://www.instagram.com/moonpaparazzi/`). Its entry in `sections.js` has
+  an `href`, so the window, the rooms nav and its tag all link out (new tab,
+  ↗ on the tag). `moon.html` only redirects there, so an old `moon.html` link
+  still works. A separate sunrise/sunset page could come later.
 - `travels.html`, `kitchen.html`, `music.html`, `currently.html`, `moon.html`,
   `zoo.html`, `art.html`, `picks.html`: section stubs, all from one template.
   Each has a `.page-head` (back link, title, blurb, and that section's object
@@ -70,8 +87,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   domain root.
 - `robots.txt`: disallows everything (link-only).
 - `assets/sections.js`: **the single source of truth for sections**: slug,
-  title, the guide's hover line, the blurb, and `status` ("soon" / "open").
-  Object labels and guide text on the hub read from it.
+  title, the guide's hover line, the blurb, `status` ("soon" / "open"), and an
+  optional `href` for a section that lives elsewhere. Object tags, links and
+  guide text on the hub read from it.
 - `assets/currently-data.js`: the "currently" card. `sample: true` makes it
   label itself as a placeholder.
 - `assets/sky.js`: the sun/moon engine from Rex's site, adapted to estimate
@@ -81,7 +99,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   drawing the real moon phase in the window, sky toggle). The cottage is
   `inert` while the door is up, so keyboard users can't tab behind it.
 - `assets/rooms.js`: the "wander to another room" nav on every section page,
-  built from `sections.js` (current page marked `aria-current`).
+  built from `sections.js` (current page marked `aria-current`; sections with
+  an `href` link out in a new tab).
 - `assets/mailbox.js`: letter form behaviour.
 - `assets/og.png` (1200×630): the link-preview image shown when the site is
   texted or posted. `assets/apple-touch-icon.png` (180×180): the toadstool's
@@ -97,17 +116,29 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - **Palette** (`:root`, redefined under `[data-dark="true"]`): linen bg, paper,
   wall, deep-forest ink (`--ink`, `--ink-soft`, `--ink-faint`), hairline.
   **Four accents:** `--moss`, `--rose`, `--gold`, `--berry` (toadstool red).
-  Plus `--wood`, and sky tokens (`--sky-top`, `--sky-bottom`, `--treeline`,
-  `--meadow`) that shift by sun phase.
+  Room materials: `--wood`, `--wood-lite`, `--wood-dark`, `--floor`, `--cork`.
+  Sky tokens (`--sky-top`, `--sky-bottom`, `--treeline`, `--meadow`) shift by
+  sun phase. The corkboard notes use fixed `--note-*` paper colours with
+  `--note-ink`, because paper stays paper at night.
+- **`--lamp`** is 0 by day and 1 at night. Fairy-light glow, the candle and the
+  door lantern scale their glow by it. Animate glows with `transform` only
+  (the `breathe` keyframes): an opacity animation would override `--lamp` and
+  light them up in daytime.
+- **Wallpaper:** soft stripes plus a sparse sprig pattern on `body::before`
+  (inline SVG data URI). It shows on every page.
 - **Type:** Cormorant Garamond (display), Nunito (body), Pixelify Sans (the
-  guide, labels, eyebrows: the "game UI" voice). Loaded via `<link>` tags in
-  each page's `<head>` (not `@import`, which would delay them).
+  guide, tags, eyebrows: the "game UI" voice). Loaded via `<link>` tags in
+  each page's `<head>` (not `@import`, which would delay them). The home page
+  alone also loads **Caveat**, for the handwritten corkboard notes.
 - **Drawing convention:** SVG objects use `class="ink"` for the outline plus a
   fill class (`f-paper`, `f-moss`, `f-rose`, `f-gold`, `f-berry`, `f-wood`,
   `f-ink`), e.g. `class="ink f-rose"`. Colours then follow day/night
   automatically. Never hard-code a fill that should change at night.
-- **The guide** is a toadstool next to the window. It's in the page flow, not
-  fixed, so it never covers content. Its lines live in `sections.js`.
+- **The guide** is a toadstool under the flower box. It's in the page flow,
+  not fixed, so it never covers content. Its lines live in `sections.js`.
+- **Checking the room visually:** headless Chrome can't go narrower than about
+  500px, so check phone width in a real mobile emulator (375px), not a headless
+  screenshot.
 - **Copy voice:** Serena speaks in first person ("write me a note"). The
   pixel-font UI bits are lowercase and playful; headings and blurbs use normal
   case. All current copy is a DRAFT for Serena to rewrite.

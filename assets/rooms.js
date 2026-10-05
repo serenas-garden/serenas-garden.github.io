@@ -19,8 +19,13 @@
   window.SECTIONS.forEach(function (s) {
     var li = document.createElement("li");
     var a = document.createElement("a");
-    a.href = s.slug + ".html";
+    a.href = s.href || s.slug + ".html";
     a.textContent = s.title;
+    if (s.href) {
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent += " \u2197";
+    }
     if (s.slug === here) a.setAttribute("aria-current", "page");
     li.appendChild(a);
     list.appendChild(li);

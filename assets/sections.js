@@ -6,6 +6,10 @@
  *
  * Copy is DRAFT, written as a starting point for Serena to rewrite in her own
  * voice. `status` is "soon" until a page has real content, then "open".
+ *
+ * A section with `href` lives somewhere else (e.g. Instagram): every link to it
+ * goes there instead of <slug>.html, opening in a new tab so the cottage stays
+ * open behind it.
  */
 window.SECTIONS = [
   {
@@ -44,9 +48,10 @@ window.SECTIONS = [
     slug: "moon",
     title: "Moon Paparazzi",
     object: "window",
-    guide: "look out the window: that's tonight's real moon. click for my moon paparazzi shots",
+    href: "https://www.instagram.com/moonpaparazzi/",
+    guide: "look out the window: that's tonight's real moon. click for my moon paparazzi shots on instagram",
     blurb: "My moon photos, plus sunrises, sunsets, and whatever the sky is doing tonight.",
-    status: "soon"
+    status: "open"
   },
   {
     slug: "zoo",
