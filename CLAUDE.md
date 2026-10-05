@@ -106,6 +106,16 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
    JS checks the same preference before timing anything (the door).
 7. **Mobile breakpoint:** `max-width: 640px`. Test at 375px wide with no
    horizontal scroll.
+8. **Commits are signed `Rex <rex@serenas-garden.invalid>`**, set in this
+   repo's local git config. That keeps history from linking to an account name
+   that carries a surname. Check `git config user.email` before committing from
+   a fresh clone.
+
+## Deploying
+
+Pushing to `main` deploys to GitHub Pages in about 30 seconds (no build,
+`.nojekyll` set). Pushes authenticate through the GitHub CLI (`gh`), which is
+signed in as Rex.
 
 ## Reusable pieces from Rex's site, for later sections
 
@@ -122,9 +132,6 @@ surname).
 
 ## Open items
 
-- Rex creates the `serenas-garden` org and the `serenas-garden.github.io` repo,
-  then gives Claude push access (GitHub CLI login, or a fine-grained token
-  whose resource owner is the org).
 - Serena's email, for the message form's access key.
 - Serena reviews and rewrites the draft copy in `sections.js`, and names the
   toadstool.

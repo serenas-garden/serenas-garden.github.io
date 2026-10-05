@@ -144,6 +144,7 @@ h1, h2, h3 {
   z-index: 50;
   display: grid;
   place-items: center;
+  overflow-y: auto;
   background:
     radial-gradient(ellipse at 50% 85%, var(--glow), transparent 60%),
     linear-gradient(var(--sky-top), var(--sky-bottom) 70%, var(--treeline) 70.2%);
@@ -158,6 +159,7 @@ h1, h2, h3 {
   padding: 16px;
   text-align: center;
 }
+.door-intro__inner p { margin: 0; }
 
 .door-sign {
   font: italic 500 clamp(30px, 6vw, 46px)/1 var(--display);
@@ -173,7 +175,9 @@ h1, h2, h3 {
   cursor: pointer;
   perspective: 900px;
 }
-.door-btn svg { width: min(240px, 58vw); height: auto; display: block; overflow: visible; }
+/* sized by height as well as width, so the door and its hint always fit on
+   short screens (landscape phones, small laptop windows). 0.69 = viewBox ratio */
+.door-btn svg { width: min(240px, 58vw, calc((100vh - 150px) * 0.69)); height: auto; display: block; overflow: visible; }
 .door-panel { transform-origin: 0% 50%; transform-box: fill-box; }
 .door-glow  { fill: var(--gold); opacity: .85; }
 
