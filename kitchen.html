@@ -3,32 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Kitchen · Serena's Garden</title>
+<title>The Kitchen · Serena&#x27;s Garden</title>
 <meta name="description" content="Things I&#x27;ve baked and cooked, the recipes, and how they actually turned out.">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f4efe2">
 <meta property="og:type" content="website">
-<meta property="og:title" content="The Kitchen · Serena's Garden">
+<meta property="og:site_name" content="Serena's Garden">
+<meta property="og:title" content="The Kitchen · Serena&#x27;s Garden">
 <meta property="og:description" content="Things I&#x27;ve baked and cooked, the recipes, and how they actually turned out.">
 <meta property="og:url" content="https://serenas-garden.github.io/kitchen.html">
+<meta property="og:image" content="https://serenas-garden.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A green cottage door under a vine arch at the edge of a fairy forest, with a crescent moon overhead">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
 </head>
-<body>
-<!-- STUB: replace everything inside <main> below .page-head when this section is built,
-     then set status: "open" for "kitchen" in assets/sections.js -->
+<body data-section="kitchen">
+<!-- STUB: when this section is built, replace .stub-note with the real content
+     (keep the header and the rooms nav), then set status: "open" for "kitchen"
+     in assets/sections.js -->
 <main class="wrap">
   <header class="page-head">
     <a class="back" href="./">&larr; back inside</a>
     <p class="eyebrow">serena's garden</p>
     <h1>The Kitchen</h1>
     <p>Things I&#x27;ve baked and cooked, the recipes, and how they actually turned out.</p>
+    <div class="page-art" aria-hidden="true">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M38 44 q-4 -7 0 -14 q4 -7 0 -14 M52 40 q-4 -7 0 -14 q4 -7 0 -14" class="ink" style="stroke-width:1.6;opacity:.5"/>
+      <ellipse cx="50" cy="84" rx="42" ry="9" class="ink f-paper"/>
+      <path d="M14 80 q36 -36 72 0 Z" class="ink f-gold"/>
+      <path d="M28 70 l12 10 M40 60 l20 20 M56 58 l16 16 M30 76 l22 -18 M46 80 l22 -20" class="ink" style="stroke-width:1.5"/>
+      </svg>
+    </div>
   </header>
 
   <div class="stub-note">
     <h2>Still decorating</h2>
     <p>This room isn't finished yet. Check back soon!</p>
   </div>
+
+  <nav class="rooms" aria-label="Other rooms" data-rooms hidden></nav>
 </main>
+<script src="assets/sections.js"></script>
+<script src="assets/rooms.js"></script>
 </body>
 </html>

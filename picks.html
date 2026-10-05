@@ -3,32 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Top Picks · Serena's Garden</title>
+<title>Top Picks · Serena&#x27;s Garden</title>
 <meta name="description" content="The things I actually use and love, and would tell a friend to buy.">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f4efe2">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Top Picks · Serena's Garden">
+<meta property="og:site_name" content="Serena's Garden">
+<meta property="og:title" content="Top Picks · Serena&#x27;s Garden">
 <meta property="og:description" content="The things I actually use and love, and would tell a friend to buy.">
 <meta property="og:url" content="https://serenas-garden.github.io/picks.html">
+<meta property="og:image" content="https://serenas-garden.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A green cottage door under a vine arch at the edge of a fairy forest, with a crescent moon overhead">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
 </head>
-<body>
-<!-- STUB: replace everything inside <main> below .page-head when this section is built,
-     then set status: "open" for "picks" in assets/sections.js -->
+<body data-section="picks">
+<!-- STUB: when this section is built, replace .stub-note with the real content
+     (keep the header and the rooms nav), then set status: "open" for "picks"
+     in assets/sections.js -->
 <main class="wrap">
   <header class="page-head">
     <a class="back" href="./">&larr; back inside</a>
     <p class="eyebrow">serena's garden</p>
     <h1>Top Picks</h1>
     <p>The things I actually use and love, and would tell a friend to buy.</p>
+    <div class="page-art" aria-hidden="true">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M24 54 Q50 8 76 54" class="ink"/>
+      <circle cx="36" cy="48" r="7" class="ink f-rose"/>
+      <circle cx="52" cy="44" r="7" class="ink f-gold"/>
+      <ellipse cx="66" cy="48" rx="4" ry="9" transform="rotate(25 66 48)" class="ink f-moss"/>
+      <path d="M14 54 H86 L78 92 H22 Z" class="ink f-wood"/>
+      <path d="M18 66 H82 M20 78 H80 M36 54 l-3 38 M50 54 v38 M64 54 l3 38" class="ink" style="stroke-width:1.4;opacity:.6"/>
+      </svg>
+    </div>
   </header>
 
   <div class="stub-note">
     <h2>Still decorating</h2>
     <p>This room isn't finished yet. Check back soon!</p>
   </div>
+
+  <nav class="rooms" aria-label="Other rooms" data-rooms hidden></nav>
 </main>
+<script src="assets/sections.js"></script>
+<script src="assets/rooms.js"></script>
 </body>
 </html>

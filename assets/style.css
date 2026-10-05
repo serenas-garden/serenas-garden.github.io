@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&display=swap");
+/* Fonts (Cormorant Garamond, Nunito, Pixelify Sans) load from <link> tags in
+   each page's <head>, not @import, so they download in parallel with this file. */
 
 /* =============================== tokens ===============================
    Day is a cottage in a sunlit garden; night is the same cottage with the
@@ -100,6 +101,8 @@ body::before {
 }
 
 a { color: inherit; }
+main:focus { outline: none; }
+
 a:focus-visible, button:focus-visible {
   outline: 2px dashed var(--berry);
   outline-offset: 4px;
@@ -369,7 +372,17 @@ h1, h2, h3 {
 
 /* ============================ section stubs ============================ */
 
-.page-head { padding: 28px 0 22px; border-bottom: 1px solid var(--hairline); }
+.page-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 8px 24px;
+  padding: 28px 0 22px;
+  border-bottom: 1px solid var(--hairline);
+}
+.page-head > :not(.page-art) { grid-column: 1; }
+.page-art { grid-column: 2; grid-row: 1 / span 4; align-self: center; width: 132px; }
+.page-art svg { width: 100%; height: auto; overflow: visible; display: block; }
 .back {
   display: inline-block;
   margin-bottom: 26px;
@@ -392,6 +405,98 @@ h1, h2, h3 {
 .stub-note h2 { font-size: 26px; margin-bottom: 6px; }
 .stub-note p { margin: 0; color: var(--ink-soft); }
 
+.rooms { margin: 0 0 56px; }
+.rooms ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+}
+.rooms a {
+  display: inline-block;
+  font: 400 13px/1 var(--pixel);
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 8px 12px;
+}
+.rooms a:hover { border-color: var(--moss); color: var(--moss); }
+.rooms a[aria-current="page"] { background: var(--moss); border-color: var(--moss); color: var(--paper); }
+
+/* ============================== the mailbox ==============================
+   A letter on lined paper. Posts to Web3Forms, which emails it to Serena. */
+
+.letter {
+  position: relative;
+  max-width: 580px;
+  margin: 32px 0 40px;
+  padding: 26px 26px 22px;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  box-shadow: 0 14px 30px -20px rgba(0, 0, 0, .45);
+}
+.letter fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.letter fieldset:disabled { opacity: .55; }
+.letter__greeting { font: italic 500 28px/1.2 var(--display); margin: 0 0 6px; }
+.letter textarea {
+  display: block;
+  width: 100%;
+  min-height: 224px;
+  resize: vertical;
+  border: 0;
+  padding: 0 2px;
+  color: var(--ink);
+  font: 400 17px/32px var(--body);
+  background: transparent repeating-linear-gradient(transparent 0 31px, var(--hairline) 31px 32px);
+}
+.letter .field { display: grid; gap: 2px; margin-top: 18px; }
+.letter label, .letter .hint { font: 400 12px/1.4 var(--pixel); color: var(--ink-soft); }
+.letter input[type="text"], .letter input[type="email"] {
+  width: 100%;
+  border: 0;
+  border-bottom: 1.5px solid var(--ink-faint);
+  border-radius: 0;
+  padding: 6px 2px;
+  color: var(--ink);
+  background: transparent;
+  font: 400 17px/1.4 var(--body);
+}
+.letter textarea:focus-visible, .letter input:focus-visible {
+  outline: 2px dashed var(--berry);
+  outline-offset: 4px;
+}
+.letter .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.hp { display: none !important; }
+
+.btn-send {
+  margin-top: 22px;
+  font: 500 15px/1 var(--pixel);
+  color: #fff8ef;
+  background: var(--berry);
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 20px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.btn-send:disabled { cursor: not-allowed; }
+.letter__status { min-height: 1.4em; margin: 12px 0 0; font: 400 13px/1.4 var(--pixel); color: var(--ink-soft); }
+.letter__privacy { margin: 14px 0 0; font-size: 14px; color: var(--ink-faint); }
+
+.letter__thanks { display: none; text-align: center; padding: 18px 0 8px; }
+.letter__thanks svg { width: 120px; height: auto; }
+.letter__thanks h2 { font-size: 30px; margin: 8px 0 6px; }
+.letter__thanks p { margin: 0; color: var(--ink-soft); }
+.letter.is-sent form { display: none; }
+.letter.is-sent .letter__thanks, #sent:target { display: block; }
+
+.mailbox-closed { margin-bottom: 0; }
+
 /* =============================== mobile =============================== */
 
 @media (max-width: 640px) {
@@ -400,6 +505,11 @@ h1, h2, h3 {
   .room-head { padding-top: 28px; }
   .shelf { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .guide svg { width: 46px; }
+  .page-head { grid-template-columns: 1fr; }
+  .page-head .back { order: -2; margin-bottom: 14px; }
+  .page-art { grid-column: 1; grid-row: auto; width: 96px; order: -1; }
+  .letter { padding: 20px 16px 18px; }
+  .letter .row { grid-template-columns: 1fr; }
 }
 
 /* =============================== motion ===============================

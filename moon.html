@@ -3,32 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Moon Paparazzi · Serena's Garden</title>
+<title>Moon Paparazzi · Serena&#x27;s Garden</title>
 <meta name="description" content="My moon photos, plus sunrises, sunsets, and whatever the sky is doing tonight.">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f4efe2">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Moon Paparazzi · Serena's Garden">
+<meta property="og:site_name" content="Serena's Garden">
+<meta property="og:title" content="Moon Paparazzi · Serena&#x27;s Garden">
 <meta property="og:description" content="My moon photos, plus sunrises, sunsets, and whatever the sky is doing tonight.">
 <meta property="og:url" content="https://serenas-garden.github.io/moon.html">
+<meta property="og:image" content="https://serenas-garden.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A green cottage door under a vine arch at the edge of a fairy forest, with a crescent moon overhead">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
 </head>
-<body>
-<!-- STUB: replace everything inside <main> below .page-head when this section is built,
-     then set status: "open" for "moon" in assets/sections.js -->
+<body data-section="moon">
+<!-- STUB: when this section is built, replace .stub-note with the real content
+     (keep the header and the rooms nav), then set status: "open" for "moon"
+     in assets/sections.js -->
 <main class="wrap">
   <header class="page-head">
     <a class="back" href="./">&larr; back inside</a>
     <p class="eyebrow">serena's garden</p>
     <h1>Moon Paparazzi</h1>
     <p>My moon photos, plus sunrises, sunsets, and whatever the sky is doing tonight.</p>
+    <div class="page-art" aria-hidden="true">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="46" r="34" style="fill:var(--sky-top)" class="ink"/>
+        <path d="M58 22 a24 24 0 1 0 0 48 a30 30 0 0 1 0 -48z" style="fill:#fdf6df"/>
+        <circle cx="74" cy="30" r="1.6" class="f-gold"/><circle cx="30" cy="66" r="1.2" class="f-gold"/>
+        <rect x="56" y="62" width="34" height="24" rx="4" class="ink f-ink"/>
+        <circle cx="73" cy="74" r="7" class="ink f-paper"/><circle cx="73" cy="74" r="3" class="f-ink"/>
+        <rect x="62" y="57" width="10" height="6" rx="2" class="ink f-ink"/>
+      </svg>
+    </div>
   </header>
 
   <div class="stub-note">
     <h2>Still decorating</h2>
     <p>This room isn't finished yet. Check back soon!</p>
   </div>
+
+  <nav class="rooms" aria-label="Other rooms" data-rooms hidden></nav>
 </main>
+<script src="assets/sections.js"></script>
+<script src="assets/rooms.js"></script>
 </body>
 </html>

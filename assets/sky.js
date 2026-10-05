@@ -226,6 +226,10 @@
     root.setAttribute("data-sky", state.phase);
     root.setAttribute("data-dark", state.dark ? "true" : "false");
 
+    // phones tint their address bar to match
+    var tint = document.querySelector('meta[name="theme-color"]');
+    if (tint) tint.setAttribute("content", state.dark ? "#172019" : "#f4efe2");
+
     window.Sky = window.Sky || {};
     window.Sky.state = state;
     window.Sky.mode = mode;

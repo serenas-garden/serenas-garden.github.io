@@ -26,6 +26,8 @@
     if (!entered) {
       intro.hidden = false;
       document.documentElement.style.overflow = "hidden";
+      var behind = document.querySelectorAll("#cottage");
+      Array.prototype.forEach.call(behind, function (el) { el.inert = true; });
       var door = intro.querySelector(".door-btn");
 
       door.addEventListener("click", function () {
@@ -35,6 +37,7 @@
         setTimeout(function () {
           intro.hidden = true;
           document.documentElement.style.overflow = "";
+          Array.prototype.forEach.call(behind, function (el) { el.inert = false; });
           var main = document.getElementById("cottage");
           if (main) main.focus({ preventScroll: true });
         }, reduceMotion ? 80 : 1350);
@@ -126,14 +129,16 @@
   }
 
   /* ------------------------- the moon in the window ------------------------ */
-  /* Lit side on the right while waxing, left while waning (as seen from the
-     northern hemisphere). The terminator is an ellipse whose width shrinks to
-     zero at first/last quarter, which is how the real shadow line looks. */
+  /* From the northern hemisphere the lit side is on the right while waxing and
+     on the left while waning; from the southern it's mirrored, so the visitor
+     sees the moon the way it looks out their own window. The terminator is an
+     ellipse whose width shrinks to zero at first/last quarter, which is how the
+     real shadow line looks. */
 
-  function moonPath(cx, cy, r, illum, waxing) {
+  function moonPath(cx, cy, r, illum, litRight) {
     var rx = Math.abs(2 * illum - 1) * r;
-    var outer = waxing ? 1 : 0;
-    var inner = (illum < 0.5) === waxing ? 0 : 1;
+    var outer = litRight ? 1 : 0;
+    var inner = (illum < 0.5) === litRight ? 0 : 1;
     return "M" + cx + " " + (cy - r) +
       " A" + r + " " + r + " 0 0 " + outer + " " + cx + " " + (cy + r) +
       " A" + rx.toFixed(2) + " " + r + " 0 0 " + inner + " " + cx + " " + (cy - r) + "Z";
@@ -153,6 +158,12 @@
     } catch (e) { return d.toDateString().toLowerCase(); }
   }
 
+  var TOGGLE_LABELS = {
+    auto: "sky: real time",
+    day: "sky: always day",
+    night: "sky: always night"
+  };
+
   var lit = document.getElementById("moon-lit");
   var today = document.querySelector(".today");
   var toggle = document.querySelector(".sky-toggle");
@@ -165,7 +176,8 @@
       moon = window.Sky && window.Sky.compute ? window.Sky.compute().moon : null;
     }
     if (lit && moon) {
-      lit.setAttribute("d", moon.illum < 0.03 ? "" : moonPath(300, 92, 38, moon.illum, moon.waxing));
+      var litRight = window.Sky.LAT < 0 ? !moon.waxing : moon.waxing;
+      lit.setAttribute("d", moon.illum < 0.03 ? "" : moonPath(300, 92, 38, moon.illum, litRight));
     }
     if (today) {
       var bits = [prettyDate(new Date())];
@@ -173,7 +185,7 @@
       today.textContent = bits.join(" · ");
     }
     if (toggle && window.Sky) {
-      toggle.textContent = "sky: " + window.Sky.mode;
+      toggle.textContent = TOGGLE_LABELS[window.Sky.mode] || "sky: real time";
     }
   }
 
