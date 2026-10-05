@@ -766,9 +766,9 @@ h1, h2, h3 {
 
 .floor {
   position: relative;
-  flex: 1 0 150px;
-  min-height: 150px;
-  margin-top: 64px;
+  flex: 1 0 190px;
+  min-height: 190px;
+  margin-top: 150px;
   background-color: var(--floor);
   background-image:
     repeating-linear-gradient(90deg, rgba(0, 0, 0, .16) 0 2px, transparent 2px 150px),
@@ -782,12 +782,98 @@ h1, h2, h3 {
   height: 18px;
   background: linear-gradient(var(--wood-lite) 0 3px, var(--wood) 3px 14px, var(--wood-dark) 14px);
 }
-.floor svg { position: absolute; overflow: visible; }
-.floor__rug   { left: 50%; top: 22px; width: min(620px, 72%); transform: translateX(-50%); }
-.floor__fern  { left: max(16px, 5%); bottom: 64px; width: 120px; }
-.floor__books { right: max(16px, 6%); bottom: 70px; width: 104px; }
 .candle-glow { fill: var(--gold); opacity: calc(var(--lamp) * .35); }
 .flame { fill: var(--gold); opacity: calc(.35 + var(--lamp) * .65); }
+
+/* ================================ gemma ================================
+   Serena's seal bicolor ragdoll. She lives on the floor of the cottage:
+   naps in her bed, wanders over to the cat tree, climbs to the top, and
+   comes back to bed. assets/gemma.js runs her day; this styles her. Her fur
+   colours are fixed (she's the same cat at night), just dimmed a touch. */
+
+.floor__stage {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(1040px, 100% - 32px);
+  height: 190px;
+  transform: translateX(-50%);
+  --base: 32px;           /* where feet meet the floor, from the stage bottom */
+}
+.floor__stage > * { position: absolute; }
+.floor__rug   { left: 50%; top: 10px; width: min(540px, 52%); height: auto; transform: translateX(-50%); z-index: 1; }
+.floor__fern  { left: -6px; bottom: calc(var(--base) - 3px); width: 104px; height: auto; z-index: 2; }
+.floor__books { right: 0; bottom: var(--base); width: 96px; height: auto; z-index: 2; }
+
+.cat-bed { left: calc(21% - 90px); bottom: calc(var(--base) - 2px); width: 180px; height: auto; overflow: visible; }
+.cat-bed--back  { z-index: 2; }
+.cat-bed--front { z-index: 4; pointer-events: none; }
+.cat-tree { left: calc(82% - 73px); bottom: var(--base); height: 270px; width: auto; z-index: 2; overflow: visible; }
+.sisal { filter: none; }
+:root[data-dark="true"] .sisal { filter: brightness(.62); }
+.bed-name { font: 400 7px/1 var(--pixel); letter-spacing: .08em; fill: var(--paper); }
+
+.gemma {
+  left: 0;
+  bottom: var(--base);
+  z-index: 3;
+  width: var(--gw, 128px);
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.gemma__body { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 100%; }
+.gemma__body.is-left { transform: scaleX(-1); }
+:root[data-dark="true"] .gemma__body { filter: brightness(.9); }
+
+.g-pose { display: none; }
+.gemma[data-pose="walk"] .g-walk,
+.gemma[data-pose="jump"] .g-walk,
+.gemma[data-pose="sit"] .g-sit,
+.gemma[data-pose="sleep"] .g-sleep { display: inline; }
+
+.g-shadow { fill: rgba(40, 28, 20, .16); }
+.gemma[data-pose="jump"] .g-walk-shadow { display: none; }
+.g-yawn { opacity: 0; }
+.gemma.is-yawning .g-yawn { opacity: 1; }
+.gemma.is-yawning .g-eyes { transform: scaleY(.15); }
+.g-eyes { transform-box: fill-box; transform-origin: center; }
+.g-z { font: 500 9px/1 var(--pixel); fill: #9a8d80; opacity: .6; }
+
+/* jumping: legs stretch out, front reaching ahead, back pushing off */
+.g-leg { transform-box: fill-box; transform-origin: 50% 10%; }
+.gemma[data-pose="jump"] .g-front { transform: rotate(-42deg); }
+.gemma[data-pose="jump"] .g-back  { transform: rotate(42deg); }
+
+.gemma__bubble {
+  position: absolute;
+  left: 50%;
+  bottom: 96%;
+  padding: 4px 9px;
+  font: 400 12px/1.2 var(--pixel);
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 var(--ink);
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.gemma__bubble.is-on { opacity: 1; }
+.gemma__heart {
+  position: absolute;
+  left: var(--hx, 50%);
+  bottom: 70%;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--rose);
+  pointer-events: none;
+}
 
 /* --- drifting petals (day) and fireflies (night), behind everything --- */
 
@@ -961,10 +1047,14 @@ h1, h2, h3 {
   .note__detail { font-size: 11.5px; }
 
   .guide svg { width: 46px; }
-  .floor { flex-basis: 120px; min-height: 120px; margin-top: 56px; }
-  .floor__rug { width: 86%; top: 18px; }
-  .floor__fern { width: 84px; left: 10px; bottom: 54px; }
+  .floor { flex-basis: 150px; min-height: 150px; margin-top: 96px; }
+  .floor__stage { height: 150px; --base: 24px; }
+  .floor__rug { width: 64%; top: 10px; }
+  .floor__fern { width: 66px; left: -10px; }
   .floor__books { display: none; }
+  .cat-bed { width: 112px; left: calc(21% - 56px); }
+  .cat-tree { height: 172px; left: calc(82% - 46px); }
+  .gemma { --gw: 80px; }
 
   .page-head { grid-template-columns: 1fr; }
   .page-head .back { order: -2; margin-bottom: 14px; }
@@ -1033,6 +1123,34 @@ h1, h2, h3 {
 
   .guide svg { animation: bob 3.2s ease-in-out infinite; }
   .guide__bubble.is-new { animation: pop .25s ease; }
+
+  /* gemma: a four-legged walk, a swishing tail, breathing while she naps */
+  .gemma[data-pose="walk"] .g-leg-a { animation: g-step .5s ease-in-out infinite alternate; }
+  .gemma[data-pose="walk"] .g-leg-b { animation: g-step .5s ease-in-out infinite alternate-reverse; }
+  .gemma[data-pose="walk"] .g-walk-core { animation: g-bob .25s ease-in-out infinite alternate; }
+  .g-tail { animation: g-tail 2.6s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 88% 92%; }
+  .g-sit-tail { animation: g-swish 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 10% 90%; }
+  .g-eyes { animation: g-blink 5.5s infinite; }
+  .gemma.is-yawning .g-eyes { animation: none; }
+  .gemma[data-pose="sleep"] .g-sleep-core { animation: g-breathe 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+  .gemma[data-pose="sleep"] .g-z { animation: g-z 3.6s ease-in-out infinite; }
+  .gemma[data-pose="sleep"] .g-z2 { animation-delay: 1.2s; }
+  .gemma[data-pose="sleep"] .g-z3 { animation-delay: 2.4s; }
+  .gemma__bubble { transition: opacity .2s ease, transform .2s ease; }
+  .gemma__bubble.is-on { transform: translateX(-50%) translateY(-3px); }
+  .gemma__heart { animation: g-heart 1.4s ease-out forwards; }
+  .gemma:hover .g-eyes { animation-duration: 1.6s; }
+  .t-toy { animation: toy-swing 3s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 0; }
+
+  @keyframes g-step { from { transform: rotate(22deg); } to { transform: rotate(-22deg); } }
+  @keyframes g-bob { to { transform: translateY(-1.4px); } }
+  @keyframes g-tail { from { transform: rotate(-7deg); } to { transform: rotate(6deg); } }
+  @keyframes g-swish { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(-8deg); } 60% { transform: rotate(5deg); } }
+  @keyframes g-blink { 0%, 93%, 100% { transform: scaleY(1); } 95%, 97% { transform: scaleY(.1); } }
+  @keyframes g-breathe { 50% { transform: scaleY(1.045); } }
+  @keyframes g-z { 0% { opacity: 0; transform: translate(0, 4px); } 30% { opacity: .85; } 100% { opacity: 0; transform: translate(6px, -12px); } }
+  @keyframes g-heart { 0% { opacity: 0; transform: translateY(0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--hd, 0px), -46px) scale(1.15); } }
+  @keyframes toy-swing { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
 
   /* petals by day, fireflies by night, drifting behind the room */
   .ambient {

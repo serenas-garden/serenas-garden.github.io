@@ -96,6 +96,12 @@
     bubble.classList.add("is-new");
   }
 
+  // gemma.js borrows the guide to introduce her
+  window.Guide = {
+    say: function (text) { clearTimeout(resetTimer); say(text); },
+    rest: function () { resetTimer = setTimeout(function () { say(hello); }, 1800); }
+  };
+
   if (bubble) {
     say(hello);
     Array.prototype.forEach.call(things, function (el) {

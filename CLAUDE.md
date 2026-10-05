@@ -56,7 +56,7 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   and tonight's moon), the **window** with gingham curtains, ivy and a
   **flower box**, the **toadstool guide**, two wooden **shelves** of objects
   with paper **tags**, the **corkboard** of pinned "currently" notes, and a
-  plank **floor** with a rug, fern and candle. Petals drift by day and
+  plank **floor** with a rug, fern, candle, and **Gemma** (see below). Petals drift by day and
   fireflies by night (`.ambient`). **Only the objects are links.** Every
   decorative piece is `aria-hidden`.
 - **Each object has its own hover animation**, hooked by `o-*` classes in its
@@ -110,6 +110,38 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - `assets/style.css`: tokens, layout, and drawing classes.
 - `assets/favicon.svg`: toadstool.
 - `README.md`: a short public description, shown on the GitHub repo page.
+
+## Gemma
+
+Serena's cat: a **seal bicolor ragdoll, female**, and Serena adores her. She
+is the heart of the home page, so treat her with care.
+
+- **What she looks like (keep this accurate):** white chest, belly, legs and
+  paws; seal-brown (dark brown) ears, mask, back and big plumed tail; a white
+  inverted "V" running down her face between the eyes to the muzzle; blue eyes;
+  pink nose and inner ears. She wears a rose collar with a gold heart tag. Her
+  fur colours are fixed hex values (she's the same cat at night, just dimmed a
+  touch), unlike the room, which uses theme tokens.
+- **Where she lives:** `.floor__stage` in `index.html`: her bed (two SVG
+  halves, `.cat-bed--back` and `.cat-bed--front`, so she sleeps *between*
+  them; "gemma" is embroidered on the front), and her cat tree (`.cat-tree`:
+  condo, middle shelf, top perch, pom-pom toy). She is a `<button class="gemma">`
+  containing one SVG with three poses: `g-walk` (side view, also used for
+  `jump`), `g-sit` (front view, with a yawn), and `g-sleep` (curled up, with
+  drifting z's). `data-pose` picks which is shown.
+- **Her day** (`assets/gemma.js`): nap → wake, sit, yawn → hop out → stroll to
+  the tree (sometimes stopping halfway to look around) → jump condo → shelf →
+  top perch → sit there → down via the condo → walk home → step into bed →
+  circle → sleep. One loop is roughly 45 to 60 seconds. Spots are measured from
+  the bed and tree elements every time, so she follows any layout. Tree levels
+  are in the tree's own viewBox coordinates (`LEVELS` in gemma.js). Redraw the
+  tree, update those.
+- **Petting:** click or tap her for a "mrrp!" bubble and floating hearts
+  (asleep, she only stirs). A visually hidden live region announces it, and
+  hovering makes the toadstool guide introduce her (via `window.Guide`, which
+  garden.js exposes).
+- **Reduced motion:** she stays asleep in her bed and never moves. Petting
+  still shows her reply.
 
 ## Design system
 
