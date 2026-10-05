@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serena's Garden</title>
+<meta name="description" content="A little cottage at the edge of the forest: travels, baking, music, the moon, and an animal ranking that is definitely correct.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Serena's Garden">
+<meta property="og:description" content="Come in! Travels, baking, music, the moon, and Serena's Zoo.">
+<meta property="og:url" content="https://serenas-garden.github.io/">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/sky.js"></script>
+</head>
+<body>
+
+<!-- ============================ the door ============================ -->
+<div class="door-intro" hidden>
+  <div class="door-intro__inner">
+    <p class="door-sign">Serena's Garden</p>
+    <button class="door-btn" type="button" aria-label="Open the door and come in">
+      <svg viewBox="0 0 200 290" aria-hidden="true">
+        <!-- stone arch -->
+        <path d="M20 286 V110 a80 80 0 0 1 160 0 V286 Z" class="ink f-paper"/>
+        <!-- warm room behind the door -->
+        <path d="M38 280 V112 a62 62 0 0 1 124 0 V280 Z" class="door-glow"/>
+        <!-- the door itself -->
+        <g class="door-panel">
+          <path d="M38 280 V112 a62 62 0 0 1 124 0 V280 Z" class="ink f-moss"/>
+          <path d="M58 150 V120 a42 42 0 0 1 84 0 V150 Z" class="ink" style="stroke-width:2"/>
+          <rect x="58" y="168" width="84" height="40" rx="4" class="ink" style="stroke-width:2"/>
+          <rect x="58" y="222" width="84" height="44" rx="4" class="ink" style="stroke-width:2"/>
+          <circle cx="100" cy="98" r="14" class="ink f-gold"/>
+          <path d="M100 84 v28 M86 98 h28" class="ink" style="stroke-width:2"/>
+          <g class="door-knocker">
+            <circle cx="100" cy="186" r="9" class="ink" style="stroke:var(--gold);stroke-width:3"/>
+          </g>
+          <circle cx="146" cy="214" r="4" class="f-gold"/>
+        </g>
+        <!-- vines over the arch -->
+        <path d="M22 200 C14 150 30 70 100 34 C170 70 186 150 178 200" class="ink" style="stroke:var(--moss);stroke-width:3"/>
+        <g class="f-moss">
+          <ellipse cx="30" cy="150" rx="8" ry="4" transform="rotate(-50 30 150)"/>
+          <ellipse cx="44" cy="92" rx="8" ry="4" transform="rotate(-30 44 92)"/>
+          <ellipse cx="70" cy="52" rx="8" ry="4" transform="rotate(-15 70 52)"/>
+          <ellipse cx="130" cy="52" rx="8" ry="4" transform="rotate(15 130 52)"/>
+          <ellipse cx="156" cy="92" rx="8" ry="4" transform="rotate(30 156 92)"/>
+          <ellipse cx="170" cy="150" rx="8" ry="4" transform="rotate(50 170 150)"/>
+        </g>
+        <g class="f-rose">
+          <circle cx="36" cy="120" r="5"/><circle cx="58" cy="68" r="5"/>
+          <circle cx="100" cy="36" r="6"/><circle cx="142" cy="68" r="5"/>
+          <circle cx="164" cy="120" r="5"/>
+        </g>
+        <g class="f-gold">
+          <circle cx="36" cy="120" r="1.8"/><circle cx="58" cy="68" r="1.8"/>
+          <circle cx="100" cy="36" r="2"/><circle cx="142" cy="68" r="1.8"/>
+          <circle cx="164" cy="120" r="1.8"/>
+        </g>
+        <!-- toadstools by the step -->
+        <path d="M2 286 q10 -22 22 0 Z" class="ink f-berry"/>
+        <path d="M10 286 v-4 h6 v4" class="ink f-paper"/>
+        <path d="M176 286 q14 -28 28 0 Z" class="ink f-berry"/>
+        <circle cx="186" cy="276" r="2" class="f-paper"/><circle cx="194" cy="279" r="1.6" class="f-paper"/>
+      </svg>
+    </button>
+    <p class="door-hint">knock knock! click the door to come in</p>
+  </div>
+</div>
+
+<!-- ============================ the room ============================ -->
+<main id="cottage" class="wrap" tabindex="-1">
+  <header class="room-head">
+    <div>
+      <p class="eyebrow">welcome to</p>
+      <h1>Serena's Garden</h1>
+      <p class="today"></p>
+    </div>
+    <button class="sky-toggle" type="button" hidden>sky: auto</button>
+  </header>
+
+  <div class="room">
+
+    <!-- the window: Moon Paparazzi -->
+    <div>
+      <a class="window" href="moon.html" data-section="moon">
+        <svg viewBox="0 0 400 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <g class="firefly-field">
+            <circle class="firefly" cx="60" cy="70" r="1.6"/>
+            <circle class="firefly" cx="140" cy="40" r="1.2"/>
+            <circle class="firefly" cx="210" cy="90" r="1.4"/>
+            <circle class="firefly" cx="360" cy="160" r="1.2"/>
+            <circle class="firefly" cx="250" cy="30" r="1"/>
+          </g>
+          <!-- the real moon: sky.js gives the phase, garden.js draws it -->
+          <circle class="moon-dark" cx="300" cy="92" r="38"/>
+          <path id="moon-lit" class="moon-disc" d=""/>
+          <!-- forest -->
+          <path d="M0 250 l20 -50 l20 50 l14 -70 l22 70 l16 -44 l18 44 l20 -82 l24 82 l14 -38 l16 38 l22 -66 l22 66 l18 -50 l16 50 l22 -76 l24 76 l16 -40 l18 40 l20 -60 l20 60 V340 H0 Z" style="fill:var(--treeline)"/>
+          <path d="M0 290 q100 -26 200 -6 t200 -10 V340 H0 Z" style="fill:var(--meadow)"/>
+          <g>
+            <path d="M70 296 q10 -18 20 0 Z" class="f-berry"/><rect x="77" y="296" width="6" height="8" class="f-paper"/>
+            <path d="M300 288 q8 -14 16 0 Z" class="f-berry"/><rect x="305" y="288" width="5" height="7" class="f-paper"/>
+          </g>
+          <g class="firefly-field">
+            <circle class="firefly" cx="110" cy="260" r="2"/>
+            <circle class="firefly" cx="190" cy="236" r="1.6"/>
+            <circle class="firefly" cx="280" cy="262" r="2"/>
+            <circle class="firefly" cx="330" cy="230" r="1.6"/>
+          </g>
+        </svg>
+        <span class="label">Moon Paparazzi</span>
+      </a>
+      <div class="sill"></div>
+
+      <!-- the guide: a toadstool who explains things -->
+      <div class="guide">
+        <svg viewBox="0 0 60 70" aria-hidden="true">
+          <path d="M4 34 C4 8 56 8 56 34 Z" class="ink f-berry"/>
+          <circle cx="18" cy="22" r="4" class="f-paper"/>
+          <circle cx="34" cy="16" r="3" class="f-paper"/>
+          <circle cx="46" cy="26" r="3.5" class="f-paper"/>
+          <path d="M16 34 C14 50 14 62 20 66 H40 C46 62 46 50 44 34 Z" class="ink f-paper"/>
+          <circle cx="24" cy="46" r="2" class="f-ink"/>
+          <circle cx="36" cy="46" r="2" class="f-ink"/>
+          <ellipse cx="20" cy="52" rx="3" ry="2" class="f-rose"/>
+          <ellipse cx="40" cy="52" rx="3" ry="2" class="f-rose"/>
+          <path d="M27 52 q3 3 6 0" class="ink" style="stroke-width:1.6"/>
+        </svg>
+        <p class="guide__bubble" aria-live="polite">welcome in!</p>
+      </div>
+    </div>
+
+    <div>
+      <!-- the shelves -->
+      <nav class="shelf" aria-label="Rooms in the cottage">
+
+        <a class="thing" href="travels.html" data-section="travels">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="42" r="30" style="fill:#9cc4e2"/>
+            <path d="M28 30 q8 -8 16 -2 q4 7 -3 11 q-6 3 -8 10 q-7 -6 -5 -19z" class="f-moss"/>
+            <path d="M56 22 q12 2 16 14 q-7 2 -9 9 q-7 -7 -7 -23z" class="f-moss"/>
+            <path d="M52 52 q9 -2 13 6 q-4 9 -11 7 q-4 -7 -2 -13z" class="f-moss"/>
+            <circle cx="50" cy="42" r="30" class="ink"/>
+            <path d="M24 64 a36 36 0 0 0 50 -2" class="ink"/>
+            <path d="M50 76 v10 M34 94 h32 M40 94 q10 -12 20 0" class="ink"/>
+          </svg>
+          <span class="label">Travels</span>
+        </a>
+
+        <a class="thing" href="kitchen.html" data-section="kitchen">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M38 44 q-4 -7 0 -14 q4 -7 0 -14 M52 40 q-4 -7 0 -14 q4 -7 0 -14" class="ink" style="stroke-width:1.6;opacity:.5"/>
+            <ellipse cx="50" cy="84" rx="42" ry="9" class="ink f-paper"/>
+            <path d="M14 80 q36 -36 72 0 Z" class="ink f-gold"/>
+            <path d="M28 70 l12 10 M40 60 l20 20 M56 58 l16 16 M30 76 l22 -18 M46 80 l22 -20" class="ink" style="stroke-width:1.5"/>
+          </svg>
+          <span class="label">The Kitchen</span>
+        </a>
+
+        <a class="thing" href="music.html" data-section="music">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M74 20 v-10 l10 -3 v10 M74 20 a4 3 0 1 1 -1 -1 M84 17 a4 3 0 1 1 -1 -1" class="ink" style="stroke-width:1.8"/>
+            <path d="M14 48 H86 L94 82 H6 Z" class="ink f-rose"/>
+            <ellipse cx="46" cy="64" rx="28" ry="11" class="ink f-ink"/>
+            <ellipse cx="46" cy="64" rx="8" ry="3.2" class="f-berry"/>
+            <path d="M82 50 l2 8 l-18 12" class="ink"/>
+            <circle cx="82" cy="50" r="4" class="ink f-paper"/>
+            <rect x="6" y="82" width="88" height="10" rx="2" class="ink f-wood"/>
+          </svg>
+          <span class="label">Music</span>
+        </a>
+
+        <a class="thing" href="currently.html" data-section="currently">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M50 30 l-12 -16 M50 30 l12 -16" class="ink"/>
+            <rect x="24" y="30" width="52" height="38" rx="7" class="ink f-wood"/>
+            <rect x="29" y="35" width="32" height="28" rx="5" class="ink" style="fill:var(--sky-top)"/>
+            <circle cx="68" cy="42" r="3" class="f-paper"/><circle cx="68" cy="54" r="3" class="f-paper"/>
+            <rect x="18" y="68" width="64" height="12" rx="2" class="ink f-rose"/>
+            <rect x="12" y="80" width="76" height="12" rx="2" class="ink f-moss"/>
+          </svg>
+          <span class="label">Currently</span>
+        </a>
+
+        <a class="thing" href="zoo.html" data-section="zoo">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <ellipse cx="29" cy="30" rx="5.5" ry="15" transform="rotate(-12 29 30)" class="ink f-paper"/>
+            <ellipse cx="41" cy="29" rx="5.5" ry="15" transform="rotate(10 41 29)" class="ink f-paper"/>
+            <ellipse cx="29" cy="31" rx="2.2" ry="9" transform="rotate(-12 29 31)" class="f-rose"/>
+            <ellipse cx="41" cy="30" rx="2.2" ry="9" transform="rotate(10 41 30)" class="f-rose"/>
+            <ellipse cx="56" cy="74" rx="28" ry="20" class="ink f-paper"/>
+            <circle cx="80" cy="76" r="6" class="ink f-paper"/>
+            <circle cx="36" cy="54" r="15" class="ink f-paper"/>
+            <circle cx="31" cy="52" r="1.9" class="f-ink"/>
+            <ellipse cx="24" cy="58" rx="2" ry="1.4" class="f-rose"/>
+            <ellipse cx="40" cy="93" rx="9" ry="3.5" class="ink f-paper"/>
+            <circle cx="60" cy="64" r="7" class="ink f-gold"/>
+            <path d="M56 70 l-3 10 l5 -3 M64 70 l3 10 l-5 -3" class="ink f-berry" style="stroke-width:1.5"/>
+          </svg>
+          <span class="label">Serena's Zoo</span>
+        </a>
+
+        <a class="thing" href="art.html" data-section="art">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M30 96 L46 18 M70 96 L54 18 M50 72 V96" class="ink"/>
+            <rect x="22" y="24" width="56" height="44" rx="2" class="ink f-paper"/>
+            <path d="M23 60 q14 -14 26 -4 q12 -12 28 -2 V67 H23 Z" class="f-moss"/>
+            <circle cx="62" cy="38" r="6" class="f-gold"/>
+            <circle cx="36" cy="44" r="3.5" class="f-rose"/>
+            <path d="M36 48 v8" class="ink" style="stroke-width:1.5"/>
+            <path d="M16 72 H84" class="ink"/>
+          </svg>
+          <span class="label">Art</span>
+        </a>
+
+        <a class="thing" href="picks.html" data-section="picks">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M24 54 Q50 8 76 54" class="ink"/>
+            <circle cx="36" cy="48" r="7" class="ink f-rose"/>
+            <circle cx="52" cy="44" r="7" class="ink f-gold"/>
+            <ellipse cx="66" cy="48" rx="4" ry="9" transform="rotate(25 66 48)" class="ink f-moss"/>
+            <path d="M14 54 H86 L78 92 H22 Z" class="ink f-wood"/>
+            <path d="M18 66 H82 M20 78 H80 M36 54 l-3 38 M50 54 v38 M64 54 l3 38" class="ink" style="stroke-width:1.4;opacity:.6"/>
+          </svg>
+          <span class="label">Top Picks</span>
+        </a>
+
+        <a class="thing" href="mailbox.html" data-section="mailbox">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M74 22 c-3 -6 -11 -3 -8 3 l8 7 l8 -7 c3 -6 -5 -9 -8 -3z" class="f-rose"/>
+            <rect x="12" y="36" width="76" height="50" rx="4" class="ink f-paper"/>
+            <path d="M13 38 L50 66 L87 38" class="ink"/>
+            <circle cx="50" cy="64" r="8" class="ink f-berry"/>
+            <path d="M50 68 l-3.5 -3.5 a2 2 0 0 1 3.5 -2.5 a2 2 0 0 1 3.5 2.5 Z" class="f-paper"/>
+          </svg>
+          <span class="label">Send a Letter</span>
+        </a>
+      </nav>
+
+      <!-- what she's into right now -->
+      <section class="currently" aria-labelledby="currently-h">
+        <p class="eyebrow">right now</p>
+        <h2 id="currently-h">Currently</h2>
+        <ul>
+          <li><span class="kind">loading</span><span>…</span></li>
+        </ul>
+        <p class="note"></p>
+      </section>
+    </div>
+  </div>
+</main>
+
+
+
+<script src="assets/sections.js"></script>
+<script src="assets/currently-data.js"></script>
+<script src="assets/garden.js"></script>
+</body>
+</html>

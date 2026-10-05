@@ -1,0 +1,3 @@
+# Link-only site: please don't index any of it.
+User-agent: *
+Disallow: /

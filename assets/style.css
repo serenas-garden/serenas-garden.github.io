@@ -1,0 +1,430 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&display=swap");
+
+/* =============================== tokens ===============================
+   Day is a cottage in a sunlit garden; night is the same cottage with the
+   forest dark outside and the lamps on. sky.js sets data-dark on <html> from
+   the real sun, so the switch follows the visitor's actual evening. */
+
+:root {
+  --bg:        #f4efe2;  /* linen */
+  --paper:     #fbf8ef;
+  --wall:      #efe6d2;
+  --ink:       #2f3a2c;  /* deep forest */
+  --ink-soft:  #5d6a55;
+  --ink-faint: #97a08c;
+  --hairline:  #d9d2bd;
+
+  /* four accents, spent deliberately */
+  --moss:  #5f7d4f;
+  --rose:  #d99a9e;
+  --gold:  #d9a441;
+  --berry: #a8463f;     /* toadstool red */
+
+  --wood:  #a07850;
+  --glow:  rgba(240, 195, 94, 0);
+
+  --sky-top:    #a9cbe0;
+  --sky-bottom: #e8f0e4;
+  --treeline:   #4d6a43;
+  --meadow:     #6f8f5a;
+
+  --display: "Cormorant Garamond", Georgia, serif;
+  --body: "Nunito", system-ui, sans-serif;
+  --pixel: "Pixelify Sans", ui-monospace, monospace;
+
+  --radius: 14px;
+  color-scheme: light;
+}
+
+:root[data-dark="true"] {
+  --bg:        #172019;
+  --paper:     #1f2a22;
+  --wall:      #1b251e;
+  --ink:       #ece6d6;
+  --ink-soft:  #b9b8a5;
+  --ink-faint: #7f8a78;
+  --hairline:  #34423a;
+
+  --moss:  #8fae7c;
+  --rose:  #e3a9ad;
+  --gold:  #f0c35e;
+  --berry: #d0685f;
+
+  --wood:  #7d5f43;
+  --glow:  rgba(240, 195, 94, 0.18);
+
+  --sky-top:    #0b1426;
+  --sky-bottom: #1d2b3f;
+  --treeline:   #0e1a12;
+  --meadow:     #22331f;
+  color-scheme: dark;
+}
+
+/* the window's sky, phase by phase */
+:root[data-sky="dawn"],
+:root[data-sky="nightfall"]   { --sky-top: #1a2340; --sky-bottom: #4a4a6e; }
+:root[data-sky="first-light"],
+:root[data-sky="twilight"]    { --sky-top: #3a4a78; --sky-bottom: #d79a8c; }
+:root[data-sky="sunrise"],
+:root[data-sky="sunset"]      { --sky-top: #8fb0d6; --sky-bottom: #f2c09a; }
+:root[data-sky="morning"],
+:root[data-sky="afternoon"]   { --sky-top: #9cc4e2; --sky-bottom: #eaf1df; }
+:root[data-sky="midday"]      { --sky-top: #86bde3; --sky-bottom: #e4f0e6; }
+
+/* ================================ base ================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+}
+
+/* faint wallpaper sprig, drawn in CSS so there's no image to load */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12px 12px, var(--hairline) 1.4px, transparent 2px),
+    radial-gradient(circle at 36px 36px, var(--hairline) 1.4px, transparent 2px);
+  background-size: 48px 48px;
+  opacity: .55;
+}
+
+a { color: inherit; }
+a:focus-visible, button:focus-visible {
+  outline: 2px dashed var(--berry);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.wrap {
+  width: min(1040px, 100% - 32px);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font: 500 13px/1.2 var(--pixel);
+  letter-spacing: .06em;
+  text-transform: lowercase;
+  color: var(--moss);
+}
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ============================== the door ==============================
+   The first thing a visitor sees on index.html. Clicking it swings the door
+   open onto the cottage. Remembered for the browser session, so it greets
+   you once and then gets out of the way. */
+
+.door-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 85%, var(--glow), transparent 60%),
+    linear-gradient(var(--sky-top), var(--sky-bottom) 70%, var(--treeline) 70.2%);
+}
+.door-intro[hidden] { display: none; }
+.door-intro.is-gone { opacity: 0; visibility: hidden; }
+
+.door-intro__inner {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.door-sign {
+  font: italic 500 clamp(30px, 6vw, 46px)/1 var(--display);
+  color: var(--paper);
+  text-shadow: 0 1px 0 rgba(0,0,0,.25);
+}
+:root:not([data-dark="true"]) .door-sign { color: var(--ink); text-shadow: none; }
+
+.door-btn {
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  perspective: 900px;
+}
+.door-btn svg { width: min(240px, 58vw); height: auto; display: block; overflow: visible; }
+.door-panel { transform-origin: 0% 50%; transform-box: fill-box; }
+.door-glow  { fill: var(--gold); opacity: .85; }
+
+.door-hint {
+  font: 400 14px/1.3 var(--pixel);
+  color: var(--paper);
+  background: rgba(31, 42, 34, .55);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+/* ============================== the room ============================== */
+
+.room-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 40px 0 20px;
+  border-bottom: 1px solid var(--hairline);
+}
+.room-head h1 { font-size: clamp(40px, 7vw, 68px); }
+.room-head .today { font: 400 15px/1.4 var(--pixel); color: var(--ink-soft); margin-top: 6px; }
+
+.sky-toggle {
+  flex: none;
+  font: 400 13px/1 var(--pixel);
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.room {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 28px;
+  padding: 28px 0 40px;
+  align-items: start;
+}
+
+/* --- the window (it's the Moon Paparazzi object) --- */
+
+.window {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3.4;
+  border: 10px solid var(--wood);
+  border-radius: 140px 140px 10px 10px;
+  overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.08);
+}
+.window svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.window::after { /* the mullions */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(var(--wood), var(--wood)) center / 8px 100% no-repeat,
+    linear-gradient(var(--wood), var(--wood)) 0 58% / 100% 8px no-repeat;
+  pointer-events: none;
+}
+.window .label { position: absolute; left: 12px; bottom: 12px; z-index: 2; }
+
+.moon-disc { fill: #fdf6df; }
+.moon-dark { fill: rgba(253, 246, 223, .12); }
+.sun-disc  { fill: #ffe7a3; }
+.firefly   { fill: var(--gold); visibility: hidden; }
+:root[data-dark="true"] .firefly { visibility: visible; }
+
+.sill {
+  height: 14px;
+  margin: 0 -14px;
+  background: var(--wood);
+  border-radius: 4px;
+  filter: brightness(.9);
+}
+
+/* --- the shelves of objects --- */
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 12px;
+  padding-bottom: 16px;
+  border-bottom: 10px solid var(--wood);
+  border-radius: 0 0 4px 4px;
+  margin-bottom: 22px;
+}
+
+.thing {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+.thing svg { width: 100%; max-width: 104px; height: auto; overflow: visible; }
+.thing .label { white-space: normal; text-align: center; border-radius: 10px; }
+
+.label {
+  font: 400 12px/1.2 var(--pixel);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.label { position: relative; }
+.soon-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+}
+
+/* drawing conventions shared by every object */
+.ink   { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.f-wood  { fill: var(--wood); }
+.f-paper { fill: var(--paper); }
+.f-moss  { fill: var(--moss); }
+.f-rose  { fill: var(--rose); }
+.f-gold  { fill: var(--gold); }
+.f-berry { fill: var(--berry); }
+.f-ink   { fill: var(--ink); }
+
+/* --- the "currently" card --- */
+
+.currently {
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+.currently h2 { font-size: 24px; margin-bottom: 8px; }
+.currently ul { list-style: none; margin: 0; padding: 0; }
+.currently li {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px dashed var(--hairline);
+}
+.currently .kind { font: 400 12px/1.6 var(--pixel); color: var(--moss); }
+.currently .title { font-weight: 700; }
+.currently .detail { color: var(--ink-soft); font-size: 15px; }
+.currently .note { margin: 10px 0 0; font: 400 12px/1.4 var(--pixel); color: var(--ink-faint); }
+
+/* ============================= the guide =============================
+   A little toadstool who explains what things are on hover/focus. */
+
+.guide {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  min-height: 84px;
+}
+.guide svg { width: 58px; height: auto; flex: none; }
+.guide__bubble {
+  position: relative;
+  max-width: 340px;
+  margin: 8px 0 0;
+  padding: 9px 12px;
+  font: 400 13px/1.35 var(--pixel);
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.guide__bubble::after {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 12px;
+  border: 6px solid transparent;
+  border-right: 8px solid var(--ink);
+}
+
+/* ============================ section stubs ============================ */
+
+.page-head { padding: 28px 0 22px; border-bottom: 1px solid var(--hairline); }
+.back {
+  display: inline-block;
+  margin-bottom: 26px;
+  font: 400 13px/1 var(--pixel);
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.back:hover { color: var(--berry); }
+.page-head h1 { font-size: clamp(40px, 8vw, 64px); margin-top: 8px; }
+.page-head p { max-width: 36em; color: var(--ink-soft); margin: 12px 0 0; }
+
+.stub-note {
+  margin: 32px 0 80px;
+  padding: 22px;
+  max-width: 36em;
+  background: var(--paper);
+  border: 1px dashed var(--ink-faint);
+  border-radius: var(--radius);
+}
+.stub-note h2 { font-size: 26px; margin-bottom: 6px; }
+.stub-note p { margin: 0; color: var(--ink-soft); }
+
+/* =============================== mobile =============================== */
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .room { grid-template-columns: 1fr; gap: 22px; padding-top: 20px; }
+  .room-head { padding-top: 28px; }
+  .shelf { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .guide svg { width: 46px; }
+}
+
+/* =============================== motion ===============================
+   Everything that moves lives here. Never move it outside this guard. */
+
+@media (prefers-reduced-motion: no-preference) {
+  body { transition: background-color .6s ease, color .6s ease; }
+  .door-intro { transition: opacity .7s ease, visibility .7s; }
+  .window { transition: background .8s ease; }
+
+  .door-panel { transition: transform 1s cubic-bezier(.6,.05,.3,1); }
+  .door-btn.is-open .door-panel { transform: rotateY(-78deg); }
+  .door-btn:hover .door-knocker { animation: knock .5s ease 2; transform-origin: center; transform-box: fill-box; }
+
+  .thing svg { transition: transform .25s ease; }
+  .thing:hover svg, .thing:focus-visible svg { transform: translateY(-4px) rotate(-2deg); }
+
+  .window:hover .moon-disc { filter: drop-shadow(0 0 10px rgba(255, 244, 214, .9)); }
+
+  .firefly { animation: drift 7s ease-in-out infinite alternate, blink 2.6s ease-in-out infinite; }
+  .firefly:nth-of-type(2n) { animation-duration: 9s, 3.4s; animation-delay: -3s, -1s; }
+  .firefly:nth-of-type(3n) { animation-duration: 11s, 2.2s; animation-delay: -6s, -2s; }
+
+  .guide svg { animation: bob 3.2s ease-in-out infinite; }
+  .guide__bubble.is-new { animation: pop .25s ease; }
+
+  @keyframes knock { 50% { transform: rotate(-12deg); } }
+  @keyframes drift { to { transform: translate(14px, -18px); } }
+  @keyframes blink { 50% { opacity: .25; } }
+  @keyframes bob { 50% { transform: translateY(-4px); } }
+  @keyframes pop { from { transform: scale(.94); opacity: .4; } }
+}
