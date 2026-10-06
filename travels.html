@@ -45,10 +45,23 @@
     </div>
   </header>
 
-  <section class="voyage" aria-label="The globe">
-    <ul class="voyage__tally" data-tally aria-label="So far"></ul>
+  <section class="voyage" aria-label="The globe and the map">
+    <div class="voyage__bar">
+      <ul class="voyage__tally" data-tally aria-label="So far"></ul>
+      <div class="view-switch" role="group" aria-label="See it as" hidden>
+        <button type="button" data-view="globe" aria-pressed="true">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="8.5" r="6" class="ink"/><path d="M4 8.5 h12 M10 2.5 c-2.6 3.4 -2.6 8.6 0 12 c2.6 -3.4 2.6 -8.6 0 -12 M4.4 13.6 a7.6 7.6 0 0 0 11.2 0 M10 15.6 v2.4 M7 18.4 h6" class="ink"/></svg>
+          globe
+        </button>
+        <button type="button" data-view="map" aria-pressed="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 4 h11 v12 h-11 z M4.5 4 a1.6 1.6 0 0 0 0 3.2 M15.5 16 a1.6 1.6 0 0 0 0 -3.2 M7 8 q2 -1.5 3 .5 t3 .5 M7.5 11.5 q1.5 1 3 0 t2.5 .4" class="ink"/></svg>
+          flat map
+        </button>
+      </div>
+    </div>
 
     <div class="voyage__grid">
+      <div class="voyage__stage">
       <figure class="desk-globe">
         <div class="desk-globe__frame">
           <svg class="desk-globe__stand" viewBox="0 0 100 118" aria-hidden="true" focusable="false">
@@ -66,10 +79,36 @@
                aria-label="A globe with a little toadstool on every place Serena has been. Drag it to spin it."
                aria-describedby="globe-help"></div>
         </div>
-        <figcaption class="globe-help" id="globe-help">
+      </figure>
+
+      <figure class="scroll is-closed" data-scroll>
+        <div class="scroll__body">
+          <div class="scroll__sheet">
+            <div class="scroll__map" data-flatmap tabindex="0" role="img"
+                 aria-label="A flat map of the world with a little toadstool on every place Serena has been. Drag it to look around."
+                 aria-describedby="globe-help"></div>
+          </div>
+          <span class="scroll__roll scroll__roll--l" aria-hidden="true"><i class="scroll__rod"></i><b class="scroll__paper"></b></span>
+          <span class="scroll__roll scroll__roll--r" aria-hidden="true"><i class="scroll__rod"></i><b class="scroll__paper"></b></span>
+          <svg class="scroll__ribbon" viewBox="0 0 80 64" aria-hidden="true" focusable="false">
+            <g class="scroll__band">
+              <path d="M6 27 H74 V39 H6 Z" class="ribbon"/>
+              <path d="M6 30.5 H74" class="ribbon__shine"/>
+            </g>
+            <g class="scroll__bow">
+              <path d="M40 33 L32 52 L36.5 50 L38.5 55 Z M40 33 L48 52 L43.5 50 L41.5 55 Z" class="ribbon"/>
+              <path d="M40 31 C33 18 21 19 23.5 28.5 C25.5 36 34 35 40 31 Z M40 31 C47 18 59 19 56.5 28.5 C54.5 36 46 35 40 31 Z" class="ribbon"/>
+              <path d="M28 26 q4 0 8 3.6 M52 26 q-4 0 -8 3.6" class="ribbon__crease"/>
+              <ellipse cx="40" cy="32" rx="4.4" ry="4" class="ribbon"/>
+            </g>
+          </svg>
+        </div>
+      </figure>
+
+        <p class="globe-help" id="globe-help" data-help>
           drag to spin &middot; pinch or ctrl&nbsp;+&nbsp;scroll to zoom &middot; tap a toadstool
-        </figcaption>
-        <div class="globe-tools" role="group" aria-label="Globe controls">
+        </p>
+        <div class="globe-tools" role="group" aria-label="Map controls">
           <button type="button" class="globe-tools__round" data-act="out" aria-label="Zoom out">&minus;</button>
           <button type="button" class="globe-tools__round" data-act="in" aria-label="Zoom in">+</button>
           <button type="button" data-act="home">whole world</button>
@@ -77,7 +116,7 @@
           <button type="button" data-act="tour" aria-pressed="false">take the tour</button>
         </div>
         <noscript><p class="globe-help">The globe needs JavaScript to spin. Turn it on to see every place I&#x27;ve been.</p></noscript>
-      </figure>
+      </div>
 
       <article class="postcard" data-postcard aria-live="polite"></article>
     </div>

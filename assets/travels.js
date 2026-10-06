@@ -1,4 +1,5 @@
-/* The travels page (travels.html): the tally, the globe (globe.js), the
+/* The travels page (travels.html): the tally, the globe and the flat map on
+ * its scroll (both globe.js), the
  * postcard for whichever place is picked, the passport of countries, the far
  * corners, and the tour. Everything is built from travels-data.js, so adding
  * a place there is the only edit a new trip needs.
@@ -116,14 +117,16 @@
       "</svg>";
   }
 
-  /* -------------------------------- the globe -------------------------------- */
+  /* ------------------------------ globe and map ------------------------------ */
+  /* Two views of the same places: the globe, and the flat map on its scroll
+     (made the first time it's opened). atlas() is whichever is showing. */
 
-  var host = document.querySelector("[data-globe]");
-  var globe = null;
-  if (host && window.Globe && window.GLOBE_GEO) {
-    globe = window.Globe(host, {
+  function makeView(el, projection) {
+    if (!el || !window.Globe || !window.GLOBE_GEO) return null;
+    return window.Globe(el, {
       geo: window.GLOBE_GEO,
       places: places,
+      projection: projection,
       tint: order.map(function (k) { return countries[k]; })
         .filter(function (c) { return c.geo; })
         .map(function (c) { return { geo: c.geo, box: c.tintBox || null }; }),
@@ -131,6 +134,9 @@
       onMove: function () { stopTour(); }
     });
   }
+  var globe = makeView(document.querySelector("[data-globe]"), "globe");
+  var flatmap = null, mode = "globe";
+  function atlas() { return mode === "map" ? flatmap : globe; }
   if (!globe) {
     var stage = document.querySelector(".desk-globe");
     if (stage) stage.classList.add("is-broken");
@@ -183,7 +189,7 @@
       '<h2 class="postcard__name">Everywhere, so far</h2>' +
       '<p class="postcard__blurb">' + say(places.length).replace(/^./, function (c) { return c.toUpperCase(); }) +
       " places in " + say(order.length) + " countries, across " + say(continents.length) +
-      " continents. Spin the globe and tap a toadstool for a postcard from each one, or take the tour.</p>" +
+      " continents. Spin the globe or unroll the map, and tap a toadstool for a postcard from each one, or take the tour.</p>" +
       live +
       '<p class="postcard__actions"><button type="button" class="postcard__go" data-act="tour">take the tour</button></p>' +
       "</div>";
@@ -262,7 +268,7 @@
     current = p;
     renderPlace(p);
     tick();
-    if (globe) globe.focus(id, then);
+    if (atlas()) atlas().focus(id, then);
     else if (then) then();
     setHash(id);
     markPassport(id);
@@ -293,7 +299,7 @@
         "</nav></div>";
       pop();
     }
-    if (globe) { globe.clear(); globe.fit(here.map(function (p) { return p.id; })); }
+    if (atlas()) { atlas().clear(); atlas().fit(here.map(function (p) { return p.id; })); }
     setHash("");
     markPassport(null);
   }
@@ -302,7 +308,7 @@
     current = null;
     renderIntro();
     clearInterval(ticker);
-    if (globe) globe.reset();
+    if (atlas()) atlas().reset();
     setHash("");
     markPassport(null);
   }
@@ -351,14 +357,13 @@
 
   var tools = document.querySelector(".globe-tools");
   var spinBtn = tools && tools.querySelector('[data-act="spin"]');
-  if (spinBtn && (!globe || !globe.canSpin)) spinBtn.hidden = true;
   if (tools) {
     tools.addEventListener("click", function (e) {
       var b = e.target.closest("button");
-      if (!b || !globe) return;
+      if (!b || !atlas()) return;
       var act = b.getAttribute("data-act");
-      if (act === "in") { stopTour(); globe.zoomBy(1.8); }
-      else if (act === "out") { stopTour(); globe.zoomBy(1 / 1.8); }
+      if (act === "in") { stopTour(); atlas().zoomBy(1.8); }
+      else if (act === "out") { stopTour(); atlas().zoomBy(1 / 1.8); }
       else if (act === "home") { stopTour(); home(); }
       else if (act === "tour") toggleTour();
       else if (act === "spin") {
@@ -368,6 +373,174 @@
       }
     });
   }
+
+  /* ------------------------- the scroll: globe <-> map -------------------------
+     To the map: the globe and postcard fade, a rolled-up scroll tied with a
+     ribbon appears, the ribbon slips off, and the two rollers glide apart to
+     unroll the map. Back to the globe: it rolls up, the ribbon ties itself
+     again, and the globe comes back. Every animation is the Web Animations
+     API with fill "both", cancelled at the end once the classes describe the
+     same final state, so nothing is left fighting the stylesheet. */
+
+  var voyage = document.querySelector(".voyage");
+  var scrollEl = document.querySelector("[data-scroll]");
+  var deskGlobe = document.querySelector(".desk-globe");
+  var helpEl = document.querySelector("[data-help]");
+  var switcher = document.querySelector(".view-switch");
+  var switching = false;
+  var HELP = {
+    globe: "drag to spin \u00b7 pinch or ctrl\u00a0+\u00a0scroll to zoom \u00b7 tap a toadstool",
+    map: "drag to look around \u00b7 pinch or ctrl\u00a0+\u00a0scroll to zoom \u00b7 tap a toadstool"
+  };
+  var animated = !reduceMotion && !!(document.body.animate);
+  var running = [];
+
+  function anim(el, frames, ms, easing, delay) {
+    if (!animated || !el) return Promise.resolve();
+    var a = el.animate(frames, { duration: ms, easing: easing || "ease", delay: delay || 0, fill: "both" });
+    running.push(a);
+    return a.finished.catch(function () {});
+  }
+  function settle() {                            // the classes now say it all
+    running.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+    running = [];
+  }
+  function part(sel) { return scrollEl ? scrollEl.querySelector(sel) : null; }
+  /* How far each roller travels to meet the other in the middle. Rolled up,
+     the paper rolls are FAT times as wide, and they should just touch at the
+     centre of the sheet. Measured with offsets, which ignore transforms. */
+  var FAT = 1.6;
+  function setClosedDistance() {
+    var sheet = part(".scroll__sheet"), roll = part(".scroll__roll--l"), paper = part(".scroll__paper");
+    if (!sheet || !roll || !paper) return 0;
+    var centre = sheet.offsetLeft + sheet.offsetWidth / 2;
+    var rollCentre = roll.offsetLeft + roll.offsetWidth / 2;
+    var d = Math.max(0, centre - rollCentre - paper.offsetWidth / 2 * FAT);
+    scrollEl.style.setProperty("--close", d.toFixed(1) + "px");
+    return d;
+  }
+  function markView(next) {
+    if (!switcher) return;
+    switcher.querySelectorAll("[data-view]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-view") === next ? "true" : "false");
+    });
+  }
+  function syncTools() {
+    if (helpEl) helpEl.textContent = HELP[mode];
+    if (spinBtn) spinBtn.hidden = mode === "map" || !globe || !globe.canSpin;
+  }
+  // the newly shown view picks up where the other left off, without a flight
+  function syncView(v) {
+    if (!v) return;
+    v.redraw();
+    if (current) v.focus(current.id, null, true);
+    else v.reset(true);
+  }
+
+  function unroll() {
+    var body = part(".scroll__body"), d = setClosedDistance();
+    var ease = "cubic-bezier(.6, .04, .22, 1)", ms = 1250;
+    return anim(body, [{ opacity: 0, transform: "translateY(-14px) scale(.96)" }, { opacity: 1, transform: "none" }], 340, "cubic-bezier(.2, .8, .3, 1)")
+      .then(function () {
+        return Promise.all([
+          anim(part(".scroll__bow"), [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-8px) scale(.5) rotate(-24deg)" }], 300, "ease-in"),
+          anim(part(".scroll__band"), [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(22px) scaleX(.9)" }], 380, "ease-in", 90)
+        ]);
+      })
+      .then(function () {
+        scrollEl.classList.remove("is-closed");
+        return Promise.all([
+          anim(part(".scroll__sheet"), [{ clipPath: "inset(0 50% 0 50%)" }, { clipPath: "inset(0 0% 0 0%)" }], ms, ease),
+          anim(part(".scroll__roll--l"), [{ transform: "translateX(" + d + "px)" }, { transform: "translateX(0)" }], ms, ease),
+          anim(part(".scroll__roll--r"), [{ transform: "translateX(" + -d + "px)" }, { transform: "translateX(0)" }], ms, ease),
+          // the paper rolls turn and slim down as the paper pays out
+          anim(part(".scroll__roll--l .scroll__paper"), [{ transform: "scaleX(" + FAT + ")", backgroundPosition: "0 0, 0 0, 0 0" },
+                                                          { transform: "scaleX(1)", backgroundPosition: "0 0, 66px 0, 0 0" }], ms, ease),
+          anim(part(".scroll__roll--r .scroll__paper"), [{ transform: "scaleX(" + FAT + ")", backgroundPosition: "0 0, 0 0, 0 0" },
+                                                          { transform: "scaleX(1)", backgroundPosition: "0 0, -66px 0, 0 0" }], ms, ease)
+        ]);
+      });
+  }
+
+  function rollUp() {
+    var d = setClosedDistance();
+    var ease = "cubic-bezier(.55, 0, .3, 1)", ms = 1000;
+    return Promise.all([
+      anim(part(".scroll__sheet"), [{ clipPath: "inset(0 0% 0 0%)" }, { clipPath: "inset(0 50% 0 50%)" }], ms, ease),
+      anim(part(".scroll__roll--l"), [{ transform: "translateX(0)" }, { transform: "translateX(" + d + "px)" }], ms, ease),
+      anim(part(".scroll__roll--r"), [{ transform: "translateX(0)" }, { transform: "translateX(" + -d + "px)" }], ms, ease),
+      anim(part(".scroll__roll--l .scroll__paper"), [{ transform: "scaleX(1)", backgroundPosition: "0 0, 66px 0, 0 0" },
+                                                      { transform: "scaleX(" + FAT + ")", backgroundPosition: "0 0, 0 0, 0 0" }], ms, ease),
+      anim(part(".scroll__roll--r .scroll__paper"), [{ transform: "scaleX(1)", backgroundPosition: "0 0, -66px 0, 0 0" },
+                                                      { transform: "scaleX(" + FAT + ")", backgroundPosition: "0 0, 0 0, 0 0" }], ms, ease)
+    ]).then(function () {
+      scrollEl.classList.add("is-closed");
+      return Promise.all([
+        anim(part(".scroll__band"), [{ opacity: 0, transform: "translateY(22px) scaleX(.9)" }, { opacity: 1, transform: "none" }], 300, "ease-out"),
+        anim(part(".scroll__bow"), [{ opacity: 0, transform: "translateY(-8px) scale(.5) rotate(-24deg)" }, { opacity: 1, transform: "none" }], 320, "cubic-bezier(.3, 1.5, .5, 1)", 160)
+      ]);
+    }).then(function () {
+      return anim(part(".scroll__body"), [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-14px) scale(.96)" }], 300, "ease-in", 120);
+    });
+  }
+
+  function toMap() {
+    return Promise.all([
+      anim(deskGlobe, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "scale(.92) rotate(-6deg)" }], 340, "ease-in"),
+      anim(card, [{ opacity: 1 }, { opacity: 0 }], 240, "ease-in")
+    ]).then(function () {
+      scrollEl.classList.add("is-closed");
+      voyage.classList.add("is-map");
+      mode = "map";
+      if (!flatmap) flatmap = makeView(document.querySelector("[data-flatmap]"), "flat");
+      syncView(flatmap);
+      syncTools();
+      if (!animated) { scrollEl.classList.remove("is-closed"); return; }
+      return unroll().then(function () {
+        return anim(card, [{ opacity: 0 }, { opacity: 1 }], 320, "ease-out");
+      });
+    });
+  }
+
+  function toGlobe() {
+    return anim(card, [{ opacity: 1 }, { opacity: 0 }], 220, "ease-in")
+      .then(function () { return animated ? rollUp() : null; })
+      .then(function () {
+        settle();
+        voyage.classList.remove("is-map");
+        scrollEl.classList.add("is-closed");
+        mode = "globe";
+        syncView(globe);
+        syncTools();
+        return Promise.all([
+          anim(deskGlobe, [{ opacity: 0, transform: "scale(.92) rotate(6deg)" }, { opacity: 1, transform: "none" }], 420, "cubic-bezier(.2, .8, .3, 1)"),
+          anim(card, [{ opacity: 0 }, { opacity: 1 }], 320, "ease-out", 120)
+        ]);
+      });
+  }
+
+  function setView(next) {
+    if (next === mode || switching || !scrollEl || !voyage) return;
+    if (next === "map" && !window.Path2D) return;
+    stopTour();
+    switching = true;
+    voyage.classList.add("is-switching");
+    markView(next);
+    (next === "map" ? toMap() : toGlobe()).then(function () {
+      settle();
+      switching = false;
+      voyage.classList.remove("is-switching");
+    });
+  }
+
+  if (switcher && globe && window.Path2D) {
+    switcher.hidden = false;
+    switcher.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-view]");
+      if (b) setView(b.getAttribute("data-view"));
+    });
+  }
+  syncTools();
 
   /* -------------------------------- passport -------------------------------- */
 

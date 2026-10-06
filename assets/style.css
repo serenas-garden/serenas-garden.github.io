@@ -1327,12 +1327,20 @@ h1, h2, h3 {
 }
 
 .voyage { margin: 26px 0 56px; }
+.voyage__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin: 0 0 8px;
+}
 .voyage__tally {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 0 0 8px;
+  margin: 0;
   padding: 0;
 }
 .voyage__tally li {
@@ -1480,6 +1488,146 @@ h1, h2, h3 {
 .globe-tools .globe-tools__round { width: 36px; height: 36px; padding: 0; font-size: 18px; }
 .globe-tools [aria-pressed="true"] { background: var(--moss); border-color: var(--moss); color: var(--paper); }
 .globe-tools [aria-pressed="true"]:hover { color: var(--paper); }
+
+/* --- globe or flat map --- */
+.view-switch {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+}
+.view-switch[hidden] { display: none; }
+.view-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 400 13px/1 var(--pixel);
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 13px 7px 9px;
+  cursor: pointer;
+}
+.view-switch svg { flex: none; width: 18px; height: 18px; }
+.view-switch .ink { stroke-width: 1.4; }
+.view-switch button:not([aria-pressed="true"]):hover { color: var(--moss); }
+.view-switch [aria-pressed="true"] { color: var(--paper); background: var(--moss); }
+.view-switch [aria-pressed="true"] .ink { stroke: var(--paper); }
+.voyage.is-switching .view-switch button { cursor: progress; }
+
+.voyage__stage { min-width: 0; }
+.scroll { display: none; margin: 0; }
+.voyage.is-map .scroll { display: block; }
+.voyage.is-map .desk-globe { display: none; }
+.voyage.is-map .voyage__grid { grid-template-columns: minmax(0, 1fr); }
+.voyage.is-map .postcard { width: 100%; max-width: 620px; justify-self: center; min-height: 0; }
+
+/* --- the flat map, on a parchment scroll that unrolls between two rollers.
+   .is-closed is the rolled-up, ribboned state; travels.js animates between. --- */
+.scroll__body { position: relative; padding: 14px 30px; }
+.scroll__sheet {
+  position: relative;
+  padding: 14px 16px;
+  background-color: #f2e3bf;
+  background-image:
+    radial-gradient(ellipse at 50% 45%, rgba(255, 251, 238, .75), rgba(255, 251, 238, 0) 72%),
+    radial-gradient(circle at 18% 80%, rgba(176, 138, 70, .12), rgba(176, 138, 70, 0) 30%),
+    radial-gradient(circle at 84% 22%, rgba(176, 138, 70, .1), rgba(176, 138, 70, 0) 26%);
+  box-shadow:
+    inset 0 14px 16px -14px rgba(110, 78, 28, .5),
+    inset 0 -14px 16px -14px rgba(110, 78, 28, .5),
+    0 20px 28px -20px rgba(0, 0, 0, .55);
+}
+:root[data-dark="true"] .scroll__sheet { background-color: #d8c79f; }
+.scroll__map {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  box-shadow: 0 0 0 1.5px #5e4a2e, 0 0 0 4.5px #f2e3bf, 0 0 0 5.5px #5e4a2e;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+:root[data-dark="true"] .scroll__map { box-shadow: 0 0 0 1.5px #5e4a2e, 0 0 0 4.5px #d8c79f, 0 0 0 5.5px #5e4a2e; }
+.scroll__map:focus-visible { outline: 2px dashed var(--berry); outline-offset: 9px; }
+.scroll__map.is-pointing { cursor: pointer; }
+.scroll__map.is-dragging { cursor: grabbing; }
+.scroll__map .globe__canvas { border-radius: 0; }
+.deco__title { font: italic 600 11.5px var(--display); fill: #2f3a2c; text-anchor: middle; }
+
+.scroll__roll {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  z-index: 2;
+  width: 30px;
+  pointer-events: none;
+}
+.scroll__roll--l { left: 4px; }
+.scroll__roll--r { right: 4px; }
+.scroll__rod {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 10px;
+  margin-left: -5px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--wood-dark), var(--wood-lite) 42%, var(--wood) 68%, var(--wood-dark));
+}
+.scroll__rod::before,
+.scroll__rod::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 18px;
+  height: 11px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, var(--wood-lite), var(--wood) 55%, var(--wood-dark));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+}
+.scroll__rod::before { top: -5px; }
+.scroll__rod::after { bottom: -5px; }
+.scroll__paper {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 1px;
+  right: 1px;
+  border-radius: 10px / 6px;
+  background:
+    linear-gradient(90deg, rgba(92, 62, 22, .38), rgba(92, 62, 22, 0) 22%, rgba(255, 252, 240, .6) 46%, rgba(92, 62, 22, 0) 66%, rgba(92, 62, 22, .42)),
+    repeating-linear-gradient(90deg, rgba(120, 88, 40, 0) 0 5px, rgba(120, 88, 40, .17) 5px 6px),
+    #efdcb0;
+  box-shadow: 0 8px 12px -8px rgba(0, 0, 0, .45);
+}
+:root[data-dark="true"] .scroll__paper { background-color: #d6c296; }
+.scroll.is-closed .scroll__sheet { clip-path: inset(0 50% 0 50%); }
+.scroll.is-closed .scroll__paper { transform: scaleX(1.6); }   /* rolled up, the paper roll is fat */
+.scroll.is-closed .scroll__roll--l { transform: translateX(var(--close, 0px)); }
+.scroll.is-closed .scroll__roll--r { transform: translateX(calc(-1 * var(--close, 0px))); }
+.scroll__ribbon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: 112px;
+  height: 90px;
+  margin: -45px 0 0 -56px;
+  overflow: visible;
+  pointer-events: none;
+}
+.scroll:not(.is-closed) .scroll__ribbon { visibility: hidden; }
+.scroll__band, .scroll__bow { transform-box: fill-box; transform-origin: 50% 50%; }
+.ribbon { fill: #c45a63; stroke: #5e2a2a; stroke-width: 1.2; stroke-linejoin: round; }
+.ribbon__shine { fill: none; stroke: rgba(255, 235, 230, .55); stroke-width: 1.4; }
+.ribbon__crease { fill: none; stroke: #5e2a2a; stroke-width: 1; stroke-linecap: round; }
 
 /* --- the postcard --- */
 .postcard {
@@ -1726,6 +1874,12 @@ h1, h2, h3 {
 }
 @media (max-width: 640px) {
   .voyage { margin-top: 20px; }
+  .scroll__body { padding: 12px 19px; }
+  .scroll__sheet { padding: 9px 8px; }
+  .scroll__roll { width: 20px; }
+  .scroll__rod { width: 8px; margin-left: -4px; }
+  .scroll__rod::before, .scroll__rod::after { width: 14px; height: 9px; margin-left: -7px; }
+  .scroll__map { aspect-ratio: 3 / 2; }
   .postcard { padding: 16px 16px 16px; transform: rotate(.6deg); }
   .postcard .stamp { width: 70px; margin-left: 30px; }
   .postmark { top: 26px; right: -3px; width: 118px; }

@@ -175,8 +175,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 
 ## Travels
 
-`travels.html`: a desk globe you can spin, a postcard for each place, and a
-passport of country stamps. Rex asked for an interactive map that is less
+`travels.html`: a desk globe you can spin (or a flat map on a parchment
+scroll), a postcard for each place, and a passport of country stamps. Rex asked for an interactive map that is less
 "technical" than the one on his site, so this is its own engine, not his.
 
 - **The places** are in `assets/travels-data.js`, exactly as Serena listed them
@@ -205,6 +205,27 @@ passport of country stamps. Rex asked for an interactive map that is less
   picked, the visitor just touched it, it's off screen, or motion is reduced.
   On phones one finger turns it sideways and vertical swipes still scroll the
   page (`touch-action: pan-y`); two fingers pinch and tilt.
+- **The flat map** (Rex asked for it so all the places can be seen at once):
+  a "globe | flat map" switch above the globe. It's the same engine
+  (`Globe(el, { projection: "flat" })`), so toadstools, clusters, labels,
+  real night, sun, moon and sea drawings all match. It's a Miller cylindrical
+  projection cropped to 84 N .. 58 S, drawn from Path2D in map units through
+  one transform (under a millisecond a frame). Shapes crossing the 180th
+  meridian are unwrapped and drawn again a full turn east and west, and
+  rings round a pole close through the pole, so nothing streaks across it. It
+  never pans or zooms past the edge of the world. Home frames all her places
+  (2:1 on desktop, 3:2 on phones, which shows exactly Carmel to Niseko). On
+  the map every name that fits is shown, and picking a place only moves the
+  map if it has to (to part it from a neighbour, or bring it into view). One
+  finger sideways pans on phones; vertical swipes scroll the page.
+- **The scroll animation** (travels.js, Web Animations API): to the map, the
+  globe and postcard fade, a rolled-up scroll tied with a ribbon appears, the
+  bow and band slip off, and the two rollers glide apart while the sheet's
+  clip opens (the paper rolls start 1.6x fat and slim down as they unroll);
+  back to the globe it rolls up, re-ties and the globe returns. `.is-closed`
+  on `.scroll` is the rolled state; every animation is cancelled at the end so
+  only the classes remain. Reduced motion swaps instantly. The open place
+  carries across views. The view isn't remembered between visits.
 - **Real day and night:** `Sky.overhead()` in `sky.js` gives the point where
   the sun (and moon) is overhead right now; the globe shades every pixel by
   the sun's altitude there, with a soft twilight and a warm dusk band, and

@@ -1,9 +1,12 @@
-/* The travels globe on travels.html.
+/* The travels globe (and flat map) on travels.html.
  *
  * A desk globe drawn on a <canvas> from the Natural Earth outlines baked into
  * globe-geo.js, with Serena's places standing on it as little toadstools on
- * an SVG layer. travels.js builds the page around it (postcards, passport,
- * tour); this file is only the globe. No mapping library.
+ * an SVG layer. The same engine draws the flat map in the scroll
+ * (projection: "flat"): one set of toadstools, labels, clusters, real night,
+ * sun and moon, two ways of drawing the world. travels.js builds the page
+ * around it (postcards, passport, tour, the scroll); this file is only the
+ * map. No mapping library.
  *
  * How it works
  *  - Every point is a unit vector. A view is a centre (lon, lat) and a zoom k,
@@ -19,11 +22,19 @@
  *    sky.js) shades every pixel by the sun's altitude there, at low
  *    resolution and then smoothed, so twilight comes out soft. Toadstools
  *    where it's night glow like the mushrooms by the door.
+ *  - The flat map is a Miller cylindrical projection (the classic wall map),
+ *    cropped to 84 N .. 58 S, where everything but Antarctica lives. Its
+ *    outlines are built once as Path2D in map units and drawn through one
+ *    transform, so panning and zooming cost almost nothing. Rings that cross
+ *    the 180th meridian are "unwrapped" into one continuous shape and drawn
+ *    again shifted a full turn, so nothing streaks across the map, and rings
+ *    that go round a pole are closed through the pole.
  *  - It only draws when something changes. The idle spin pauses when the
  *    globe is off screen or the tab is hidden, and never runs for reduced
  *    motion (nor do the fly-to animations: they jump instead).
  *
- * Usage: var globe = Globe(element, { geo, places, tint, onPick, onMove });
+ * Usage: var globe = Globe(element, { geo, places, tint, onPick, onMove,
+ *                                     projection: "globe" | "flat" });
  *   places  [{ id, name, lat, lon }]
  *   tint    [{ geo: "Japan", box: [w, s, e, n] | null }]   countries to tint
  *   onPick  called with a place id when its toadstool is clicked
@@ -34,8 +45,13 @@
 
   var D2R = Math.PI / 180, R2D = 180 / Math.PI, TAU = Math.PI * 2;
   var SVGNS = "http://www.w3.org/2000/svg";
-  var MAX_K = 16;
+  var MAX_K = 16, MAX_KF = 40;
   var HOME = { lon: -32, lat: 26, k: 1 };
+
+  // Miller cylindrical, in degree-sized units so that x (longitude) and y match
+  function millerY(lat) { return 1.25 * Math.log(Math.tan(Math.PI / 4 + 0.4 * clamp(lat, -89.5, 89.5) * D2R)) * R2D; }
+  function millerLat(y) { return (2.5 * Math.atan(Math.exp(0.8 * y * D2R)) - 0.625 * Math.PI) * R2D; }
+  var MAP_N = 84, MAP_S = -58;
   var SPIN = 0.006;                // degrees per ms: one turn a minute
   var REDUCED = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
 
@@ -76,6 +92,49 @@
       v[3 * i + 2] = Math.sin(p);
     }
     return v;
+  }
+
+  // the same arcs as plain [lon, lat, lon, lat, ...] in degrees, for the flat map
+  function decodeLonLat(a) {
+    var n = a.length / 2, v = new Float64Array(n * 2), lon = 0, lat = 0;
+    for (var i = 0; i < n; i++) {
+      lon += a[2 * i]; lat += a[2 * i + 1];
+      v[2 * i] = lon / 100; v[2 * i + 1] = lat / 100;
+    }
+    return v;
+  }
+
+  /* Lay a run of lon/lat points out flat, with no jumps: wherever an edge
+     crosses the 180th meridian the longitude carries on past 180 (or -180)
+     instead of leaping across the map. Returns [x, y, x, y, ...] in map units. */
+  function unwrap(ll) {
+    var n = ll.length / 2, out = new Float64Array(n * 2), prev = ll[0], x = ll[0];
+    for (var i = 0; i < n; i++) {
+      var lon = ll[2 * i], d = lon - prev;
+      if (d > 180) d -= 360; else if (d < -180) d += 360;
+      if (i) x += d;
+      prev = lon;
+      out[2 * i] = x;
+      out[2 * i + 1] = millerY(ll[2 * i + 1]);
+    }
+    return out;
+  }
+  function short(d) { return d > 180 ? d - 360 : d < -180 ? d + 360 : d; }
+
+  // a ring of lon/lat from arc references, each point once (the flat map's joinRing)
+  function joinRingLL(refs, arcs) {
+    var n = 0, r, a, j, m, o = 0;
+    for (r = 0; r < refs.length; r++) n += arcs[refs[r] >= 0 ? refs[r] : ~refs[r]].length / 2 - 1;
+    var out = new Float64Array(n * 2);
+    for (r = 0; r < refs.length; r++) {
+      a = arcs[refs[r] >= 0 ? refs[r] : ~refs[r]];
+      m = a.length / 2;
+      for (j = 0; j < m - 1; j++) {
+        var i = refs[r] >= 0 ? j : m - 1 - j;
+        out[o++] = a[2 * i]; out[o++] = a[2 * i + 1];
+      }
+    }
+    return out;
   }
 
   // the smallest-ish cap (centre + angular radius) holding every point
@@ -162,6 +221,12 @@
       '<text class="deco__n" x="0" y="-18.5">N</text>' }
   ];
 
+  // a ribbon banner for the flat map, out in the South Pacific
+  var CARTOUCHE = { lon: -138, lat: -40, art:
+    '<path class="ink f-rose" d="M-50 -6 L-62 -6 L-56 1.5 L-62 9 L-50 9 Z M50 -6 L62 -6 L56 1.5 L62 9 L50 9 Z" style="stroke-width:1.1"/>' +
+    '<path class="ink f-paper" d="M-52 -9 H52 V6 H-52 Z" style="stroke-width:1.1"/>' +
+    '<text class="deco__title" x="0" y="1.6" textLength="90" lengthAdjust="spacingAndGlyphs">the world, so far</text>' };
+
   var SUN_ART =
     '<path class="ink sun-mark__rays" d="M0 -11 V-8 M0 8 V11 M-11 0 H-8 M8 0 H11 M-7.8 -7.8 L-5.7 -5.7 M5.7 5.7 L7.8 7.8 M-7.8 7.8 L-5.7 5.7 M5.7 -5.7 L7.8 -7.8"/>' +
     '<circle r="5.6" class="ink f-gold"/>';
@@ -196,55 +261,125 @@
     var nctx = night.getContext("2d");
     var nightImg = null;
 
+    var FLAT = opts.projection === "flat";
+    var maxK = FLAT ? MAX_KF : MAX_K;
+    var Y_TOP = millerY(MAP_N), Y_BOT = millerY(MAP_S);
+
     /* geometry */
     var G = opts.geo;
-    var arcs = G.arcs.map(decodeArc);
-    function strokes(ids) { return ids.map(function (i) { return { v: arcs[i], cap: capOf([arcs[i]]) }; }); }
-    var coast = strokes(G.coast), border = strokes(G.border);
-
     var tintBox = {};
     (opts.tint || []).forEach(function (t) { tintBox[t.geo] = t.box || null; });
-    var land = [], tinted = [];
+    function tintable(name, lon, lat) {
+      if (!(name in tintBox)) return false;
+      var box = tintBox[name];
+      return !box || (lon >= box[0] && lon <= box[2] && lat >= box[1] && lat <= box[3]);
+    }
+    var arcs, coast, border, land = [], tinted = [], grid = [], lines = [], flat = null;
+
+    // the flat map: every outline as a Path2D in map units (x = longitude, y = Miller)
+    function buildFlat() {
+      var ll = G.arcs.map(decodeLonLat);
+      var f = { land: new Path2D(), tint: new Path2D(), coast: new Path2D(), border: new Path2D(),
+                grid: new Path2D(), lines: new Path2D() };
+      function polyline(path, xy) {
+        path.moveTo(xy[0], xy[1]);
+        for (var i = 2; i < xy.length; i += 2) path.lineTo(xy[i], xy[i + 1]);
+      }
+      // a closed ring; one that goes right round a pole is closed through the pole
+      function ring(path, r, xy, shift) {
+        var n = xy.length / 2, i;
+        path.moveTo(xy[0] + shift, xy[1]);
+        for (i = 1; i < n; i++) path.lineTo(xy[2 * i] + shift, xy[2 * i + 1]);
+        var drift = xy[2 * (n - 1)] + short(r[0] - r[2 * (n - 1)]) - xy[0];
+        if (Math.abs(drift) > 180) {
+          var lat = 0;
+          for (i = 0; i < n; i++) lat += r[2 * i + 1];
+          var pole = millerY(lat < 0 ? -89.5 : 89.5);
+          path.lineTo(xy[0] + drift + shift, xy[1]);
+          path.lineTo(xy[0] + drift + shift, pole);
+          path.lineTo(xy[0] + shift, pole);
+        }
+        path.closePath();
+      }
+      function meanX(xy) { var t = 0; for (var i = 0; i < xy.length; i += 2) t += xy[i]; return t / (xy.length / 2); }
+      G.countries.forEach(function (c) {
+        c.p.forEach(function (poly) {
+          var rings = poly.map(function (refs) { return joinRingLL(refs, ll); });
+          var outer = unwrap(rings[0]), mx = meanX(outer), lat = 0;
+          for (var i = 1; i < rings[0].length; i += 2) lat += rings[0][i];
+          lat /= rings[0].length / 2;
+          var paths = [f.land];
+          if (tintable(c.n, short(((mx + 180) % 360 + 360) % 360 - 180), lat)) paths.push(f.tint);
+          paths.forEach(function (path) {
+            ring(path, rings[0], outer, 0);
+            for (var h = 1; h < rings.length; h++) {           // holes sit beside their own outline
+              var xy = unwrap(rings[h]);
+              ring(path, rings[h], xy, 360 * Math.round((mx - meanX(xy)) / 360));
+            }
+          });
+        });
+      });
+      G.coast.forEach(function (i) { polyline(f.coast, unwrap(ll[i])); });
+      G.border.forEach(function (i) { polyline(f.border, unwrap(ll[i])); });
+      for (var x = -180; x <= 180; x += 30) { f.grid.moveTo(x, Y_BOT); f.grid.lineTo(x, Y_TOP); }
+      for (var la = -45; la <= 75; la += 15) if (la) { f.grid.moveTo(-180, millerY(la)); f.grid.lineTo(180, millerY(la)); }
+      [0, 23.4362, -23.4362, 66.5638].forEach(function (l) { f.lines.moveTo(-180, millerY(l)); f.lines.lineTo(180, millerY(l)); });
+      return f;
+    }
+
+    if (FLAT) flat = buildFlat();
+    else {
+    arcs = G.arcs.map(decodeArc);
+    var strokes = function (ids) { return ids.map(function (i) { return { v: arcs[i], cap: capOf([arcs[i]]) }; }); };
+    coast = strokes(G.coast); border = strokes(G.border);
     G.countries.forEach(function (c) {
       c.p.forEach(function (poly) {
         var rings = poly.map(function (refs) { return joinRing(refs, arcs); });
         var p = { rings: rings, cap: capOf(rings) };
         land.push(p);
-        if (c.n in tintBox) {
-          var box = tintBox[c.n], at = lonLat([p.cap.x, p.cap.y, p.cap.z]);
-          if (!box || (at.lon >= box[0] && at.lon <= box[2] && at.lat >= box[1] && at.lat <= box[3])) tinted.push(p);
-        }
+        var at = lonLat([p.cap.x, p.cap.y, p.cap.z]);
+        if (tintable(c.n, at.lon, at.lat)) tinted.push(p);
       });
     });
 
-    var grid = [], lines = [];
-    function meridian(lo) { return curve(function (t) { return [lo, t]; }, -90, 90, 2); }
-    function parallel(la) { return curve(function (t) { return [t, la]; }, -180, 180, 2); }
+    var meridian = function (lo) { return curve(function (t) { return [lo, t]; }, -90, 90, 2); };
+    var parallel = function (la) { return curve(function (t) { return [t, la]; }, -180, 180, 2); };
     for (var lo = -180; lo < 180; lo += 15) grid.push(meridian(lo));
     for (var la = -75; la <= 75; la += 15) if (la) grid.push(parallel(la));
     // the equator, the tropics and the polar circles, dashed like an old globe
     [0, 23.4362, -23.4362, 66.5638, -66.5638].forEach(function (l) { lines.push(parallel(l)); });
+    }
 
     /* places */
     var places = opts.places.map(function (p, i) {
       return { id: p.id, name: p.name, lon: p.lon, lat: p.lat, v: vec(p.lon, p.lat), order: i,
+               x: p.lon, y: millerY(p.lat),
                night: false, sx: 0, sy: 0, on: false, fade: 1, el: null, label: null, lw: 0, tf: "", shown: null };
     });
     var byId = {};
     places.forEach(function (p) {
       byId[p.id] = p;
       p.near = Math.PI;
-      places.forEach(function (q) { if (q !== p) p.near = Math.min(p.near, between(p.v, q.v)); });
+      p.nearXY = 1e9;                      // the same, measured on the flat map
+      places.forEach(function (q) {
+        if (q === p) return;
+        p.near = Math.min(p.near, between(p.v, q.v));
+        p.nearXY = Math.min(p.nearXY, Math.hypot(p.x - q.x, p.y - q.y));
+      });
     });
+
+    var minX = Infinity, maxX = -Infinity;
+    places.forEach(function (p) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); });
+    var HOME_F = { x: places.length ? (minX + maxX) / 2 : 0, y: (Y_TOP + Y_BOT) / 2, k: 1 };
 
     /* marks layer */
     var gDeco = svg("g", { "class": "globe__deco" }, marks);
     var gSky = svg("g", { "class": "globe__sky" }, marks);
     var gPins = svg("g", { "class": "globe__pins" }, marks);
-    var decos = DECO.map(function (d) {
+    var decos = DECO.concat(FLAT ? [CARTOUCHE] : []).map(function (d) {
       var g = svg("g", { "class": "deco" }, gDeco);
       g.innerHTML = d.art;
-      return { v: vec(d.lon, d.lat), el: g, tf: "" };
+      return { v: vec(d.lon, d.lat), lon: d.lon, lat: d.lat, el: g, tf: "" };
     });
     var sunMark = svg("g", { "class": "sun-mark" }, gSky);
     sunMark.innerHTML = SUN_ART;
@@ -285,18 +420,22 @@
     labels.appendChild(skyLabel);
 
     /* size */
-    var W = 0, R = 0, dpr = 1, PIN = 1;
+    var W = 0, HT = 0, R = 0, dpr = 1, PIN = 1;
     function measure() {
-      var w = host.clientWidth;
-      if (!w) return false;
+      var w = host.clientWidth, h = FLAT ? host.clientHeight : w;
+      if (!w || !h) return false;
       dpr = Math.min(2, window.devicePixelRatio || 1);
-      W = w; R = w / 2;
+      W = w; HT = h; R = w / 2;
       canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(w * dpr);
-      marks.setAttribute("viewBox", "0 0 " + w + " " + w);
-      var n = clamp(Math.round(w * dpr / 3), 72, 240);
-      if (night.width !== n) { night.width = night.height = n; nightImg = nctx.createImageData(n, n); }
-      PIN = clamp(w / 440, 0.8, 1.15);
+      canvas.height = Math.round(h * dpr);
+      marks.setAttribute("viewBox", "0 0 " + w + " " + h);
+      if (FLAT) {
+        if (!nightImg) { night.width = 320; night.height = 160; nightImg = nctx.createImageData(320, 160); nightDirty = true; }
+      } else {
+        var n = clamp(Math.round(w * dpr / 3), 72, 240);
+        if (night.width !== n) { night.width = night.height = n; nightImg = nctx.createImageData(n, n); }
+      }
+      PIN = FLAT ? clamp(w / 760, 0.8, 1.1) : clamp(w / 440, 0.8, 1.15);
       measureLabels();
       return true;
     }
@@ -324,12 +463,25 @@
       col.night = rgb("--globe-night", "22 28 58");
       col.dusk = rgb("--globe-dusk", "240 160 120");
       col.nightA = parseFloat(v("--globe-night-alpha", ".5")) || 0.5;
+      nightDirty = true;
     }
 
     /* the view */
-    var view = { lon: HOME.lon, lat: HOME.lat, k: HOME.k };
+    var view = FLAT ? { x: HOME_F.x, y: HOME_F.y, k: 1 } : { lon: HOME.lon, lat: HOME.lat, k: HOME.k };
+    var sc = 1;                                     // flat map: pixels per map unit
     var E = [0, 0, 0], N = [0, 0, 0], C = [0, 0, 0], S = 1, rho = Math.PI / 2;
+    function cover() { return Math.max(W / 360, HT / (Y_TOP - Y_BOT)); }
+    // keep the flat map filling its frame: never pan or zoom out past the edge of the world
+    function clampFlat() {
+      sc = cover() * view.k;
+      var hw = W / (2 * sc), hh = HT / (2 * sc), mid = (Y_TOP + Y_BOT) / 2, half = (Y_TOP - Y_BOT) / 2;
+      view.x = hw >= 180 ? 0 : clamp(view.x, -180 + hw, 180 - hw);
+      view.y = hh >= half ? mid : clamp(view.y, Y_BOT + hh, Y_TOP - hh);
+    }
+    function fx(x) { return W / 2 + (x - view.x) * sc; }
+    function fy(y) { return HT / 2 - (y - view.y) * sc; }
     function basis() {
+      if (FLAT) { clampFlat(); return; }
       var l = view.lon * D2R, p = view.lat * D2R;
       var sl = Math.sin(l), cl = Math.cos(l), sp = Math.sin(p), cp = Math.cos(p);
       E[0] = -sl;      E[1] = cl;       E[2] = 0;
@@ -443,13 +595,15 @@
     }
 
     /* night: the sun's altitude at every pixel, from where it's overhead now */
-    var sunV = null, moonV = null, moonInfo = null;
+    var sunV = null, moonV = null, moonInfo = null, sunLL = null, moonLL = null, nightDirty = true;
     function updateSky() {
       var o = null;
       try { o = window.Sky && window.Sky.overhead ? window.Sky.overhead(new Date()) : null; } catch (e) {}
       if (!o) { sunV = moonV = null; return; }
       sunV = vec(o.sun.lon, o.sun.lat);
       moonV = vec(o.moon.lon, o.moon.lat);
+      sunLL = o.sun; moonLL = o.moon;
+      nightDirty = true;
       moonInfo = o.moon;
       var dusk = Math.sin(-3 * D2R);
       places.forEach(function (p) {
@@ -459,6 +613,33 @@
       });
       moonLit.setAttribute("d", moonPath(5.4, moonInfo.illum, moonInfo.waxing));
     }
+    // the flat map's night, over the whole map at once; only redone when the sun moves
+    function paintNightFlat() {
+      if (!sunV || !nightImg) return false;
+      if (!nightDirty) return true;
+      nightDirty = false;
+      var nx = night.width, ny = night.height, d = nightImg.data;
+      var lo = Math.sin(0.8 * D2R), hi = Math.sin(-12 * D2R);
+      var nc = col.night, dc = col.dusk, A = col.nightA * 255;
+      for (var j = 0; j < ny; j++) {
+        var lat = millerLat(Y_TOP - (j + 0.5) * (Y_TOP - Y_BOT) / ny) * D2R, sl = Math.sin(lat), cl = Math.cos(lat);
+        for (var i = 0; i < nx; i++) {
+          var lon = (-180 + (i + 0.5) * 360 / nx) * D2R, o = (j * nx + i) * 4;
+          var f = (lo - (cl * Math.cos(lon) * sunV[0] + cl * Math.sin(lon) * sunV[1] + sl * sunV[2])) / (lo - hi);
+          if (f <= 0) { d[o + 3] = 0; continue; }
+          if (f > 1) f = 1;
+          f = f * f * (3 - 2 * f);
+          var w = f < 0.4 ? 1 - f / 0.4 : 0;
+          d[o] = nc[0] + (dc[0] - nc[0]) * w;
+          d[o + 1] = nc[1] + (dc[1] - nc[1]) * w;
+          d[o + 2] = nc[2] + (dc[2] - nc[2]) * w;
+          d[o + 3] = A * f;
+        }
+      }
+      nctx.putImageData(nightImg, 0, 0);
+      return true;
+    }
+
     function paintNight() {
       if (!sunV || !nightImg) return false;
       var n = night.width, d = nightImg.data, k = view.k;
@@ -491,6 +672,61 @@
 
     function draw() {
       if (!W) return;
+      if (FLAT) drawFlat(); else drawGlobe();
+    }
+
+    function drawFlat() {
+      basis();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, HT);
+      var L = fx(-180), Rt = fx(180), T = fy(Y_TOP), B = fy(Y_BOT);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(L, T, Rt - L, B - T);
+      ctx.clip();
+      var sea = ctx.createLinearGradient(0, T, 0, B);
+      sea.addColorStop(0, col.seaDeep);
+      sea.addColorStop(0.3, col.sea);
+      sea.addColorStop(0.7, col.sea);
+      sea.addColorStop(1, col.seaDeep);
+      ctx.fillStyle = sea;
+      ctx.fillRect(L, T, Rt - L, B - T);
+
+      // from here on, draw in map units: x east, y north
+      ctx.setTransform(dpr * sc, 0, 0, -dpr * sc, dpr * fx(0), dpr * fy(0));
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = col.grid;
+      ctx.lineWidth = 0.7 / sc;
+      ctx.stroke(flat.grid);
+      ctx.setLineDash([3 / sc, 4 / sc]);
+      ctx.strokeStyle = col.lines;
+      ctx.lineWidth = 0.9 / sc;
+      ctx.stroke(flat.lines);
+      ctx.setLineDash([]);
+      // everything again a full turn east and west, for the shapes that cross the 180th meridian
+      function each(fn) { [-360, 0, 360].forEach(function (sh) { ctx.save(); ctx.translate(sh, 0); fn(); ctx.restore(); }); }
+      ctx.fillStyle = col.land;
+      each(function () { ctx.fill(flat.land, "evenodd"); });
+      ctx.fillStyle = col.visited;
+      each(function () { ctx.fill(flat.tint, "evenodd"); });
+      ctx.strokeStyle = col.border;
+      ctx.lineWidth = 0.7 / sc;
+      each(function () { ctx.stroke(flat.border); });
+      ctx.strokeStyle = col.coast;
+      ctx.lineWidth = clamp(0.8 + view.k * 0.03, 0.8, 1.3) / sc;
+      each(function () { ctx.stroke(flat.coast); });
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (paintNightFlat()) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(night, L, T, Rt - L, B - T);
+      }
+      ctx.restore();
+      placeMarks();
+    }
+
+    function drawGlobe() {
       basis();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, W);
@@ -575,7 +811,13 @@
 
     var selected = null, hover = null, items = [];
 
-    function screenOf(v) {
+    // where a thing ({ v, lon, lat }) sits on screen, and whether it's on show
+    function screenOf(o) {
+      if (FLAT) {
+        var px = fx(o.lon), py = fy(millerY(o.lat));
+        return { x: px, y: py, z: 1, on: px >= 0 && px <= W && py >= 0 && py <= HT };
+      }
+      var v = o.v;
       var x = dot(v, E), y = dot(v, N), z = dot(v, C);
       var sx = R + x * S, sy = R - y * S, dx = sx - R, dy = sy - R;
       return { x: sx, y: sy, z: z, on: z > 0.02 && dx * dx + dy * dy < (R - 3) * (R - 3) };
@@ -588,28 +830,30 @@
       var gap = clusterGap(), vis = [];
 
       decos.forEach(function (d) {
-        var s = screenOf(d.v), sc = PIN * Math.min(view.k, 1.8);
-        var on = s.on && s.z > 0.12 && (s.x - R) * (s.x - R) + (s.y - R) * (s.y - R) < (R - 18 * sc) * (R - 18 * sc);
+        var s = screenOf(d), k = PIN * Math.min(view.k, 1.8);
+        var on = FLAT
+          ? s.x > 60 * k && s.x < W - 60 * k && s.y > 20 * k && s.y < HT - 20 * k
+          : s.on && s.z > 0.12 && (s.x - R) * (s.x - R) + (s.y - R) * (s.y - R) < (R - 18 * k) * (R - 18 * k);
         show(d, on);
         if (on) {
-          setTf(d, "translate(" + s.x.toFixed(1) + " " + s.y.toFixed(1) + ") scale(" + sc.toFixed(3) + ")");
-          d.el.style.opacity = clamp((s.z - 0.12) / 0.25, 0, 1).toFixed(2);
+          setTf(d, "translate(" + s.x.toFixed(1) + " " + s.y.toFixed(1) + ") scale(" + k.toFixed(3) + ")");
+          d.el.style.opacity = FLAT ? "" : clamp((s.z - 0.12) / 0.25, 0, 1).toFixed(2);
         }
       });
 
-      [[sunMark, sunV, "sun"], [moonMark, moonV, "moon"]].forEach(function (m) {
+      [[sunMark, sunV, sunLL, "sun"], [moonMark, moonV, moonLL, "moon"]].forEach(function (m) {
         var el = m[0];
         if (!m[1]) { el.style.visibility = "hidden"; return; }
-        var s = screenOf(m[1]);
+        var s = screenOf({ v: m[1], lon: m[2].lon, lat: m[2].lat });
         el.style.visibility = s.on && s.z > 0.08 ? "" : "hidden";
         if (s.on && s.z > 0.08) {
           el.setAttribute("transform", "translate(" + s.x.toFixed(1) + " " + s.y.toFixed(1) + ") scale(" + PIN.toFixed(3) + ")");
-          items.push({ type: m[2], hx: s.x, hy: s.y, x: s.x, y: s.y });
+          items.push({ type: m[3], hx: s.x, hy: s.y, x: s.x, y: s.y });
         }
       });
 
       places.forEach(function (p) {
-        var s = screenOf(p.v);
+        var s = screenOf(p);
         p.sx = s.x; p.sy = s.y; p.on = s.on;
         p.fade = clamp(s.z / 0.2, 0.25, 1);
         if (p.on) vis.push(p);
@@ -665,7 +909,7 @@
     }
 
     function placeLabels() {
-      var boxes = [], all = view.k >= 2.2, H = 22;
+      var boxes = [], all = FLAT || view.k >= 2.2, H = 22;
       // every toadstool on show is an obstacle, so a label never hides one
       items.forEach(function (it) {
         if (it.type === "place" || it.type === "cluster") {
@@ -673,7 +917,7 @@
         }
       });
       function fits(x, y, w, own) {
-        if (x < -40 || x + w > W + 40) return false;
+        if (FLAT ? (x < 3 || x + w > W - 3 || y < 3 || y + H > HT - 3) : (x < -40 || x + w > W + 40)) return false;
         for (var i = 0; i < boxes.length; i++) {
           var b = boxes[i];
           if (own && b.own === own) continue;
@@ -687,7 +931,11 @@
                      [x - w / 2, y - 26 * PIN - H], [x - w / 2, y + 5 * PIN]];
         var pick = null;
         for (var i = 0; i < tries.length && !pick; i++) if (fits(tries[i][0], tries[i][1], w, own)) pick = tries[i];
-        if (!pick && force) pick = tries[0];     // the picked place always gets its name
+        if (!pick && force) {                     // the picked place always gets its name
+          pick = tries[0];
+          if (FLAT) pick = [clamp(pick[0], 3, W - w - 3), clamp(pick[1], 3, HT - H - 3)];
+          if (FLAT && x + gx + w > W - 3) pick[0] = clamp(tries[1][0], 3, W - w - 3);
+        }
         if (!pick) { el.classList.remove("is-on"); return false; }
         boxes.push({ x: pick[0], y: pick[1], w: w });
         el.style.transform = "translate(" + pick[0].toFixed(1) + "px," + pick[1].toFixed(1) + "px)";
@@ -742,7 +990,7 @@
     /* ----------------------------- animation ----------------------------- */
 
     var raf = 0, last = 0, lastSpinDraw = 0, fly = null, inertia = null, drag = null, pinch = null;
-    var spinOn = !REDUCED, onScreen = true, idleUntil = 0, wake = 0;
+    var spinOn = !REDUCED && !FLAT, onScreen = true, idleUntil = 0, wake = 0;
 
     function invalidate() { if (!raf) raf = requestAnimationFrame(frame); }
     function spinning() {
@@ -757,9 +1005,14 @@
       if (fly) {
         var t = clamp((now - fly.t0) / fly.dur, 0, 1);
         var e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        view.lon = wrap(fly.lon0 + fly.dlon * e);
-        view.lat = fly.lat0 + (fly.lat1 - fly.lat0) * e;
-        view.k = clamp(Math.exp(fly.lk0 + (fly.lk1 - fly.lk0) * e - fly.dip * Math.sin(Math.PI * t)), 1, MAX_K);
+        if (fly.flat) {
+          view.x = fly.x0 + (fly.x1 - fly.x0) * e;
+          view.y = fly.y0 + (fly.y1 - fly.y0) * e;
+        } else {
+          view.lon = wrap(fly.lon0 + fly.dlon * e);
+          view.lat = fly.lat0 + (fly.lat1 - fly.lat0) * e;
+        }
+        view.k = clamp(Math.exp(fly.lk0 + (fly.lk1 - fly.lk0) * e - fly.dip * Math.sin(Math.PI * t)), 1, maxK);
         if (t >= 1) { var done = fly.done; fly = null; if (done) done(); }
         else more = true;
       } else if (inertia) {
@@ -790,16 +1043,48 @@
     }
 
     function turn(dx, dy) {
+      if (FLAT) {                                   // the flat map slides
+        clampFlat();
+        view.x -= dx / sc;
+        view.y += dy / sc;
+        clampFlat();
+        invalidate();
+        return;
+      }
       view.lon = wrap(view.lon - dx / S * R2D);
       view.lat = clamp(view.lat + dy / S * R2D, -80, 80);
       invalidate();
     }
 
-    function flyTo(lon, lat, k, done) {
+    // the flat map's flight: glide across, easing out a little on long trips
+    function flyFlat(x, y, k, done, instant) {
+      inertia = null;
+      var from = { x: view.x, y: view.y, k: view.k };
+      view.k = clamp(k, 1, maxK); view.x = x; view.y = y;
+      clampFlat();                                  // where it will really end up
+      var to = { x: view.x, y: view.y, k: view.k };
+      if (REDUCED || instant) { fly = null; invalidate(); if (done) done(); return; }
+      view.x = from.x; view.y = from.y; view.k = from.k;
+      clampFlat();
+      var dist = Math.hypot(to.x - from.x, to.y - from.y) * sc / Math.max(W, 1);   // in screen widths
+      var lk0 = Math.log(from.k), lk1 = Math.log(to.k);
+      fly = {
+        flat: true,
+        t0: performance.now(),
+        dur: clamp(420 + dist * 520 + Math.abs(lk1 - lk0) * 170, 420, 1800),
+        x0: from.x, y0: from.y, x1: to.x, y1: to.y,
+        lk0: lk0, lk1: lk1,
+        dip: Math.min(1.4, dist * 0.7),
+        done: done
+      };
+      invalidate();
+    }
+
+    function flyTo(lon, lat, k, done, instant) {
       inertia = null;
       k = clamp(k, 1, MAX_K);
       lat = clamp(lat, -80, 80);
-      if (REDUCED) {
+      if (REDUCED || instant) {
         view.lon = wrap(lon); view.lat = lat; view.k = k;
         fly = null;
         invalidate();
@@ -821,6 +1106,21 @@
     }
 
     function zoomAt(f, x, y) {
+      if (FLAT) {                                   // keep the point under the pointer exactly still
+        clampFlat();
+        var s0 = sc, kf = clamp(view.k * f, 1, maxK);
+        fly = null; inertia = null;
+        if (kf === view.k) return;
+        var px = x == null ? W / 2 : x, py = y == null ? HT / 2 : y;
+        var mx = view.x + (px - W / 2) / s0, my = view.y - (py - HT / 2) / s0;
+        view.k = kf;
+        var s1 = cover() * kf;
+        view.x = mx - (px - W / 2) / s1;
+        view.y = my + (py - HT / 2) / s1;
+        clampFlat();
+        invalidate();
+        return;
+      }
       var k0 = view.k, k1 = clamp(k0 * f, 1, MAX_K);
       fly = null; inertia = null;
       if (k1 === k0) return;
@@ -845,7 +1145,35 @@
     function focusZoom(p) {
       return clamp(Math.max(2.4, clusterGap() * 1.8 / (p.near * R)), 1, MAX_K);
     }
+
+    /* Picking a place on the flat map only moves the map if it has to: zoom in
+       just enough to part it from its nearest neighbour, and glide over only
+       if it isn't comfortably in view already. */
+    function focusFlat(p, done, instant) {
+      clampFlat();
+      var need = clusterGap() * 1.8 / (p.nearXY * cover());
+      var k = clamp(Math.max(view.k, need), 1, maxK);
+      var px = fx(p.x), py = fy(p.y);
+      var inView = px > W * 0.12 && px < W * 0.88 && py > HT * 0.18 && py < HT * 0.88;
+      if (k <= view.k + 1e-6 && inView) { fly = null; invalidate(); if (done) done(); return; }
+      flyFlat(p.x, p.y, k, done, instant);
+    }
+    function fitFlat(list, separate, done) {
+      if (list.length === 1) { focusFlat(list[0], done); return; }
+      var x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, near = Infinity;
+      list.forEach(function (p, i) {
+        x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y);
+        list.forEach(function (q, j) { if (j > i) near = Math.min(near, Math.hypot(p.x - q.x, p.y - q.y)); });
+      });
+      var c = cover();
+      var fit = Math.min(W * 0.72 / Math.max((x1 - x0) * c, 1e-6), HT * 0.62 / Math.max((y1 - y0) * c, 1e-6));
+      var k = fit;
+      if (separate) k = Math.min(Math.max(clusterGap() * 1.9 / (near * c), view.k * 1.6), fit * 1.25);
+      flyFlat((x0 + x1) / 2, (y0 + y1) / 2, clamp(k, 1, maxK), done);
+    }
+
     function fitPlaces(list, separate, done) {
+      if (FLAT) { fitFlat(list, separate, done); return; }
       if (list.length === 1) { flyTo(list[0].lon, list[0].lat, focusZoom(list[0]), done); return; }
       var c = [0, 0, 0];
       list.forEach(function (p) { c[0] += p.v[0]; c[1] += p.v[1]; c[2] += p.v[2]; });
@@ -983,6 +1311,22 @@
     });
 
     host.addEventListener("keydown", function (e) {
+      if (FLAT) {
+        clampFlat();
+        var gx = W * 0.15 / sc, gy = HT * 0.15 / sc;
+        switch (e.key) {
+          case "ArrowLeft":  touched(); flyFlat(view.x - gx, view.y, view.k); break;
+          case "ArrowRight": touched(); flyFlat(view.x + gx, view.y, view.k); break;
+          case "ArrowUp":    touched(); flyFlat(view.x, view.y + gy, view.k); break;
+          case "ArrowDown":  touched(); flyFlat(view.x, view.y - gy, view.k); break;
+          case "+": case "=": touched(); flyFlat(view.x, view.y, view.k * 1.6); break;
+          case "-": case "_": touched(); flyFlat(view.x, view.y, view.k / 1.6); break;
+          case "0": case "Home": api.reset(); break;
+          default: return;
+        }
+        e.preventDefault();
+        return;
+      }
       var step = 14 / view.k;
       switch (e.key) {
         case "ArrowLeft":  touched(); flyTo(view.lon - step, view.lat, view.k); break;
@@ -1024,19 +1368,28 @@
     invalidate();
 
     var api = {
-      focus: function (id, done) {
+      focus: function (id, done, instant) {
         var p = byId[id];
         if (!p) return;
         select(p);
-        flyTo(p.lon, p.lat, focusZoom(p), done);
+        if (FLAT) focusFlat(p, done, instant);
+        else flyTo(p.lon, p.lat, focusZoom(p), done, instant);
       },
       fit: function (ids, done) {
         var list = ids.map(function (id) { return byId[id]; }).filter(Boolean);
         if (list.length) fitPlaces(list, false, done);
       },
       clear: function () { select(null); },
-      reset: function () { select(null); touched(); idleUntil = 0; flyTo(HOME.lon, HOME.lat, HOME.k); },
-      zoomBy: function (f) { touched(); flyTo(view.lon, view.lat, view.k * f); },
+      reset: function (instant) {
+        select(null); touched(); idleUntil = 0;
+        if (FLAT) flyFlat(HOME_F.x, HOME_F.y, HOME_F.k, null, instant);
+        else flyTo(HOME.lon, HOME.lat, HOME.k, null, instant);
+      },
+      zoomBy: function (f) {
+        touched();
+        if (FLAT) { clampFlat(); flyFlat(view.x, view.y, view.k * f); }
+        else flyTo(view.lon, view.lat, view.k * f);
+      },
       setSpin: function (on) {
         spinOn = !!on && !REDUCED;
         if (spinOn) idleUntil = 0;
@@ -1044,10 +1397,15 @@
         return spinOn;
       },
       spins: function () { return spinOn; },
-      canSpin: !REDUCED,
+      canSpin: !REDUCED && !FLAT,
       zoomed: function () { return view.k > 1.01; },
-      redraw: function () { readColors(); updateSky(); draw(); },
-      jump: function (lon, lat, k) { fly = null; inertia = null; view.lon = wrap(lon); view.lat = clamp(lat, -80, 80); view.k = clamp(k || 1, 1, MAX_K); invalidate(); },
+      redraw: function () { if (measure()) { readColors(); updateSky(); draw(); } },
+      jump: function (lon, lat, k) {
+        fly = null; inertia = null;
+        if (FLAT) { view.x = lon; view.y = millerY(lat); view.k = clamp(k || 1, 1, maxK); clampFlat(); }
+        else { view.lon = wrap(lon); view.lat = clamp(lat, -80, 80); view.k = clamp(k || 1, 1, MAX_K); }
+        invalidate();
+      },
       nightAt: function (id) { var p = byId[id]; return p ? p.night : false; }
     };
     return api;
