@@ -205,6 +205,8 @@
   };
 
   var windowMoon = document.getElementById("moon-lit");
+  var doorMoon = document.getElementById("door-moon");
+  var doorMoon2 = document.getElementById("door-moon-2");
   var calMoon = document.getElementById("cal-moon");
   var cal = document.querySelector(".calendar");
   var toggle = document.querySelector(".switch");
@@ -221,6 +223,8 @@
       var dark = moon.illum < 0.03;
       if (windowMoon) windowMoon.setAttribute("d", dark ? "" : moonPath(300, 92, 38, moon.illum, litRight));
       if (calMoon) calMoon.setAttribute("d", dark ? "" : moonPath(20, 20, 15, moon.illum, litRight));
+      if (doorMoon) doorMoon.setAttribute("d", dark ? "" : moonPath(1260, 150, 42, moon.illum, litRight));
+      if (doorMoon2) doorMoon2.setAttribute("d", dark ? "" : moonPath(50, 50, 40, moon.illum, litRight));
     }
 
     if (cal) {

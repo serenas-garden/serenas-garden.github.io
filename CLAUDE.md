@@ -59,6 +59,23 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   (once per browser session) shows a green fairy door set into a giant mossy
   tree: a leafy canopy with wisteria and fairy lights, lights on the carved
   arch, a lantern, a fern, a rose bush and glowing mushrooms among the roots.
+  **The tree stands in a full garden** (`.door-scene`, one 1600×1000 SVG,
+  scaled by `--s` and anchored bottom-centre; the door is stood at scene point
+  (800, 882) by `.door-intro__inner`). The garden has rolling hills and a
+  treeline, a meadow with grass texture and wildflower patches (smaller toward
+  the horizon), flowering bushes, two framing trees (the left one has a rope
+  swing), a picket fence with climbing roses and a cottage flower bed, a
+  birdhouse with a bluebird, a pond with lily pads, a water lily, cattails and
+  a frog, the path to the door, and three layers of swaying grass blades.
+  Living things: four bunnies hop about at different depths (hop timelines are
+  generated `@keyframes hop-a` … `hop-d`), butterflies by day, 44 lightning
+  bugs by night, clouds and the sun by day, and stars and the real moon by
+  night (the moon is reflected in the pond). `.door-sky` gives tall phone
+  screens their own sun, clouds and moon, since the scene doesn't reach the
+  top there. Flowers are reusable `<g id="fl-…">` shapes placed with `<use>`.
+  Keep them as groups, not `<symbol>`s with a viewBox: a `<use>` without a
+  size stretches a symbol to fill the whole scene. Rex asked for this garden
+  to be full and lively; keep it that way.
   It opens onto:
   a bunting-and-fairy-light **garland** (pennant/bulb positions along the sag
   are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
