@@ -3,7 +3,7 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status:** the cottage hub and **Travels** are built. The mailbox form is
+**Status:** the cottage hub, **Travels** and **the Kitchen** are built. The mailbox form is
 built but closed until its access key is pasted in. Every other section is a
 labelled "still decorating" stub.
 
@@ -112,7 +112,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   it also tips the scope up, glints the lens, and makes the moon glow. `moon.html` only redirects there, so an old `moon.html` link
   still works. A separate sunrise/sunset page could come later.
 - `travels.html`: built. See **Travels** below.
-- `kitchen.html`, `music.html`, `currently.html`, `moon.html`,
+- `kitchen.html`: built. See **The Kitchen** below.
+- `music.html`, `currently.html`, `moon.html`,
   `zoo.html`, `art.html`, `picks.html`: section stubs, all from one template.
   Each has a `.page-head` (back link, title, blurb, and that section's object
   drawn as `.page-art`), a `.stub-note`, and the rooms nav. When building one,
@@ -273,6 +274,51 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
 - **Links:** `travels.html#kyoto` opens on a place (the id from the data).
 - Caveat is loaded on this page too, for the handwritten notes.
 
+## The Kitchen
+
+`kitchen.html`: another room of the cottage, drawn as a little dollhouse room
+(`.kitchen`) with strawberry wallpaper and a string of fairy lights. Built to
+Rex's brief; everything it says is in `assets/kitchen-data.js`, and the
+behaviour is `assets/kitchen.js`.
+
+- **The wall:** open shelves (flour, sugar and cocoa canisters, plates,
+  cookbooks, mugs on hooks, a pothos), the window over the garden (real sky,
+  sun by day, the real moon phase, stars and fireflies by night, the fairy
+  tree far off) with gingham valance and café curtains, and a chalkboard of
+  "kitchen notes" telling visitors what to tap. It's HTML so it stays
+  readable on phones.
+- **Tabitha**, Serena's sourdough starter, is the jar on the windowsill. Her
+  tag ("meet Tabitha, my sourdough starter!") shows on hover, keyboard focus
+  or tap, and the starter bubbles and rises a little.
+- **The counter run** is two runs (`.k-run--a`: fridge and coffee corner;
+  `.k-run--b`: crock, sourdough, fruit bowl, range). Each is one backdrop SVG
+  (tiles, countertop, sage cabinets) plus objects placed in its own units with
+  `--x/--y/--w/--h` over `--rw` x 392, so the whole run scales together and
+  the counter heights always line up. On screens up to 860px the runs stack,
+  with a strip of floor between them.
+- **The coffee machine:** tap it and it brews into the glass mug (the first
+  time), then her order prints out of the top on a ticket: "Double shot
+  americano, with a splash of milk". Tap again to put the ticket away.
+- **The oven** (on the vintage range): tap and the door really swings down
+  (a CSS 3D door, front and back faces, viewed from slightly above), showing
+  a tray of cookies with a "my cookie recipes!" tag. Tap the cookies for the
+  recipe box (a `<dialog>`): her favorites, pan-banging chocolate chip,
+  pumpkin marshmallow, brown butter chocolate chip, and maple. Each recipe
+  can later get a `link` or a `note` in the data; until one does, the card
+  says the full recipes are coming soon.
+- **The sourdough** on the bread board has a tag too ("fresh sourdough, made
+  with Tabitha").
+- **For later (Rex's plan):** the fridge opens (a 3D door) to her **top
+  drinks**, and the fruit bowl shows her **top fruits**. Both lists are empty
+  in the data, so they say "coming soon"; filling `drinks` or `fruits` is the
+  only edit needed.
+- **The range clock** shows the real time in St. Petersburg (sky.js's time
+  zone), like the rest of the garden.
+- Food, paper, the chalkboard and the starter keep fixed colours (dimmed a
+  little at night); the room itself uses theme tokens (`--cab`, `--tile`,
+  `--enamel`, `--chrome`, `--fridge`, `--copper`, `--k-wall`, `--k-floor-*`).
+- Reduced motion: everything still works, instantly, with nothing moving.
+
 ## Gemma
 
 Serena's cat: a **seal bicolor ragdoll, female**, and Serena adores her. She
@@ -394,4 +440,6 @@ surname).
 - Real "currently" entries. Then set `sample: false`.
 - Travels: Serena's own `note` for each place and a `favorite` for each
   country (both empty), and her rewrite of the draft blurbs.
+- Kitchen: her top drinks (the fridge) and top fruits (the fruit bowl), and
+  any recipe links or notes for the cookies, all in `kitchen-data.js`.
 - Pick the next section to build.

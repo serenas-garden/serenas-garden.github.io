@@ -24,9 +24,9 @@ window.SECTIONS = [
     slug: "kitchen",
     title: "The Kitchen",
     object: "pie",
-    guide: "what's cooling on the windowsill: things i've baked and cooked",
-    blurb: "Things I've baked and cooked, the recipes, and how they actually turned out.",
-    status: "soon"
+    guide: "the kitchen! my coffee order, cookies in the oven, and tabitha, my sourdough starter",
+    blurb: "My coffee order, the cookies I keep coming back to, and Tabitha, my sourdough starter.",
+    status: "open"
   },
   {
     slug: "music",

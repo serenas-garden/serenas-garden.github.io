@@ -1896,6 +1896,514 @@ h1, h2, h3 {
   .corners button { font-size: 18px; }
 }
 
+/* ============================== the kitchen ==============================
+   kitchen.html: one more room in the cottage, framed like a dollhouse room
+   with strawberry wallpaper. The wall (shelves, the window with Tabitha on
+   the sill, the chalkboard), the counter run (fridge, coffee, bread, fruit,
+   range) and a tiled floor. Each counter run is one backdrop SVG plus objects
+   placed in its own units (--x/--y/--w/--h over --rw x 392), so everything
+   scales together. Food, paper and the chalkboard keep fixed colours. */
+
+:root {
+  --k-wall: #f7efda;
+  --cab: #a9bd96;
+  --cab-lite: #b8cba5;
+  --cab-dark: #7f9670;
+  --tile: #fbf8ef;
+  --grout: #e2dac6;
+  --enamel: #f3e8cf;
+  --chrome: #d5dadd;
+  --chrome-dark: #9aa3a8;
+  --fridge: #f4dfa8;
+  --copper: #cc8552;
+  --copper-dark: #9c5c35;
+  --k-floor-a: #f3ead6;
+  --k-floor-b: #c8d5b3;
+}
+:root[data-dark="true"] {
+  --k-wall: #1e2820;
+  --cab: #4c6145;
+  --cab-lite: #587051;
+  --cab-dark: #354631;
+  --tile: #2c362e;
+  --grout: #3b473d;
+  --enamel: #b9ae95;
+  --chrome: #8f989c;
+  --chrome-dark: #656e73;
+  --fridge: #b8a67a;
+  --copper: #9a6040;
+  --copper-dark: #6f4229;
+  --k-floor-a: #3a3f35;
+  --k-floor-b: #2a3329;
+}
+.f-cab { fill: var(--cab); }
+.f-cab-lite { fill: var(--cab-lite); }
+.f-cab-dark { fill: var(--cab-dark); }
+.f-tile { fill: var(--tile); }
+.f-enamel { fill: var(--enamel); }
+.f-chrome { fill: var(--chrome); }
+.f-chrome-dark { fill: var(--chrome-dark); }
+.f-fridge { fill: var(--fridge); }
+.f-copper { fill: var(--copper); }
+.f-lilac { fill: var(--lilac); }
+.f-wood-lite { fill: var(--wood-lite); }
+
+.kitchen {
+  position: relative;
+  isolation: isolate;
+  margin: 30px 0 48px;
+  padding: 50px 26px 0;
+  overflow: clip;
+  background: var(--k-wall);
+  border-radius: 18px 18px 8px 8px;
+  box-shadow: inset 0 0 0 1.5px var(--hairline), 0 26px 40px -30px rgba(0, 0, 0, .55);
+}
+.kitchen::before { /* strawberry wallpaper */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath d='M22 30 c-7 0 -10 5 -9 10 c1 6 6 11 9 13 c3 -2 8 -7 9 -13 c1 -5 -2 -10 -9 -10z' fill='%23e58c90'/%3E%3Cpath d='M16 28 q6 -4 12 0 q-3 3 -6 1 q-3 2 -6 -1z' fill='%2389a978'/%3E%3Cg fill='%23fff3d6'%3E%3Ccircle cx='19' cy='36' r='.9'/%3E%3Ccircle cx='25' cy='37' r='.9'/%3E%3Ccircle cx='22' cy='42' r='.9'/%3E%3Ccircle cx='18' cy='44' r='.8'/%3E%3Ccircle cx='26' cy='44' r='.8'/%3E%3C/g%3E%3Cg transform='translate(70 72)'%3E%3Ccircle r='3.6' cx='0' cy='-4' fill='%23fffaf0'/%3E%3Ccircle r='3.6' cx='4' cy='0' fill='%23fffaf0'/%3E%3Ccircle r='3.6' cx='0' cy='4' fill='%23fffaf0'/%3E%3Ccircle r='3.6' cx='-4' cy='0' fill='%23fffaf0'/%3E%3Ccircle r='2.2' fill='%23e8c35c'/%3E%3C/g%3E%3Cpath d='M64 26 q4 -6 10 -4 M76 82 q-6 2 -8 -4' stroke='%2389a978' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 96px 96px;
+  opacity: .5;
+}
+:root[data-dark="true"] .kitchen::before { opacity: .16; }
+
+.k-lights { position: absolute; top: 0; left: 0; right: 0; height: 44px; pointer-events: none; z-index: 6; }
+.k-lights svg { position: absolute; inset: 0; width: 100%; height: 40px; overflow: visible; }
+.k-lights path { fill: none; stroke: var(--ink-soft); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+
+/* little drawing helpers */
+.k-shadow { fill: rgba(0, 0, 0, .12); }
+.k-grout { fill: none; stroke: var(--grout); stroke-width: 1.2; }
+.k-plank-lite { fill: none; stroke: var(--wood-lite); stroke-width: 2.4; stroke-linecap: round; }
+.k-label { font: 500 9px var(--pixel); fill: #2f3a2c; text-anchor: middle; }
+.k-label--tiny { font-size: 6.4px; }
+.k-glass { fill: rgba(220, 238, 244, .55); }
+.k-jar { fill: rgba(228, 243, 247, .6); }
+.k-food { }
+:root[data-dark="true"] .k-food, :root[data-dark="true"] .k-dough { filter: brightness(.82); }
+
+/* ------------------------------ the wall ------------------------------ */
+.k-wall {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 0 30px;
+  align-items: end;
+}
+.k-shelves { display: block; width: 100%; max-width: 290px; height: auto; margin: 0 auto 30px; overflow: visible; }
+
+.k-window-wrap { position: relative; margin: 6px 14px 0; }
+.k-window {
+  position: relative;
+  aspect-ratio: 4 / 3.1;
+  overflow: hidden;
+  border: 13px solid var(--wood);
+  border-radius: 6px;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .1), 0 14px 24px -18px rgba(0, 0, 0, .6);
+}
+.k-window::after { /* the mullions */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--wood), var(--wood)) center / 9px 100% no-repeat,
+    linear-gradient(var(--wood), var(--wood)) 0 50% / 100% 9px no-repeat;
+}
+.k-view { position: absolute; inset: 0; width: 100%; height: 100%; }
+.k-sun { fill: #fbe39a; }
+.k-cloud ellipse { fill: #fffdf6; opacity: .92; }
+.k-night { display: none; }
+:root[data-dark="true"] .k-night { display: inline; }
+:root[data-dark="true"] .k-day { display: none; }
+.k-window__valance {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 3;
+  height: 17%;
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(217, 154, 158, .5) 0 7px, transparent 7px 14px),
+    repeating-linear-gradient(90deg, rgba(217, 154, 158, .5) 0 7px, transparent 7px 14px);
+  -webkit-mask: radial-gradient(circle at 50% 100%, transparent 9px, #000 9.5px) 0 0 / 28px 100%;
+  mask: radial-gradient(circle at 50% 100%, transparent 9px, #000 9.5px) 0 0 / 28px 100%;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, .06);
+}
+.k-window__curtain {
+  position: absolute;
+  bottom: 0;
+  z-index: 3;
+  width: 22%;
+  height: 46%;
+  background-color: var(--paper);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .07) 0 3px, transparent 3px 18px),
+    repeating-linear-gradient(0deg, rgba(217, 154, 158, .5) 0 7px, transparent 7px 14px),
+    repeating-linear-gradient(90deg, rgba(217, 154, 158, .5) 0 7px, transparent 7px 14px);
+  box-shadow: inset 0 3px 0 var(--berry);
+}
+.k-window__curtain--l { left: 0; clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%); }
+.k-window__curtain--r { right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 100%); }
+
+.k-sill { position: absolute; left: -26px; right: -26px; bottom: -18px; height: 24px; z-index: 4; }
+.k-sill__board { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.k-sill__basil, .k-sill__rosemary { position: absolute; bottom: 20px; width: 56px; height: auto; overflow: visible; }
+.k-sill__basil { left: 9%; }
+.k-sill__rosemary { right: 10%; }
+
+.k-obj {
+  display: block;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.k-obj svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.k-obj:focus-visible { outline: 2px dashed var(--berry); outline-offset: 4px; border-radius: 8px; }
+
+.k-starter { position: absolute; bottom: 20px; left: calc(40% - 29px); width: 58px; height: 80px; }
+.k-bubble { fill: none; stroke: #b8a780; stroke-width: 1.1; }
+.k-dough { fill: #f2e8d2; }
+
+/* the paper tags that say what things are */
+.k-tag {
+  position: absolute;
+  z-index: 8;
+  max-width: 220px;
+  padding: 6px 10px 5px;
+  font: 400 12.5px/1.35 var(--pixel);
+  text-align: center;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 5px;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, .45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 4px) rotate(-2deg);
+}
+.k-tag b { display: block; font-weight: 500; color: var(--berry); }
+.k-tag ol { margin: 4px 0 0; padding: 0 0 0 18px; text-align: left; }
+.k-tag--starter { left: 40%; bottom: 108px; width: max-content; max-width: 200px; }
+.k-starter:hover + .k-tag--starter,
+.k-starter:focus-visible + .k-tag--starter,
+.k-starter.is-on + .k-tag--starter { opacity: 1; visibility: visible; transform: translate(-50%, 0) rotate(-2deg); }
+
+/* the chalkboard */
+.k-board { position: relative; display: grid; justify-items: center; padding-bottom: 34px; }
+.k-board__herbs { position: absolute; top: -40px; right: 4px; width: 62px; height: auto; z-index: 2; }
+.k-chalk {
+  position: relative;
+  width: 100%;
+  max-width: 290px;
+  padding: 16px 18px 20px;
+  color: #f3f0e4;
+  background-color: #2f4a3f;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, .08), rgba(255, 255, 255, 0) 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0) 50%);
+  border: 10px solid var(--wood);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .3), 0 14px 22px -16px rgba(0, 0, 0, .6);
+  transform: rotate(1deg);
+}
+.k-chalk__title {
+  margin: 0 0 6px;
+  font: 600 25px/1.1 "Caveat", var(--display);
+  text-align: center;
+  text-decoration: underline wavy rgba(243, 240, 228, .55);
+  text-underline-offset: 6px;
+}
+.k-chalk__list { list-style: none; margin: 0; padding: 0; }
+.k-chalk__list li {
+  position: relative;
+  padding-left: 18px;
+  font: 600 19px/1.25 "Caveat", var(--display);
+  opacity: .92;
+}
+.k-chalk__list li + li { margin-top: 6px; }
+.k-chalk__list li::before { content: "*"; position: absolute; left: 0; top: 0; color: #f4c7cb; }
+.k-chalk__ledge {
+  position: absolute;
+  left: -10px; right: -10px; bottom: -22px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--wood-dark);
+}
+.k-chalk__ledge i { position: absolute; top: -5px; width: 18px; height: 6px; border-radius: 3px; background: #f7f3ea; }
+.k-chalk__ledge i:first-child { left: 22%; }
+.k-chalk__ledge i + i { left: 34%; width: 12px; background: #f4c7cb; transform: rotate(-8deg); }
+
+/* --------------------------- the counter run --------------------------- */
+.k-counter { display: flex; margin-top: 24px; }
+.k-run { position: relative; flex: var(--rw) 1 0; min-width: 0; aspect-ratio: var(--rw) / 392; }
+.k-run__back { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.k-obj-wrap {
+  position: absolute;
+  left: calc(var(--x) / var(--rw) * 100%);
+  top: calc(var(--y) / 392 * 100%);
+  width: calc(var(--w) / var(--rw) * 100%);
+  height: calc(var(--h) / 392 * 100%);
+  overflow: visible;
+}
+
+/* the fridge */
+.k-fridge { perspective: 900px; perspective-origin: 80% 40%; z-index: 2; }
+.k-fridge__body { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.k-liner { fill: #fbfaf3; }
+.k-fridge__light { fill: rgba(255, 246, 205, .75); }
+.k-fridge__bulb { fill: #fff3c4; }
+.k-glass-shelf { fill: none; stroke: rgba(150, 196, 212, .95); stroke-width: 3; }
+.k-crisper { fill: rgba(205, 228, 236, .55); stroke: var(--ink); stroke-width: 1.4; }
+.k-fridge__door {
+  position: absolute;
+  left: calc(8 / 176 * 100%);
+  top: calc(118 / 374 * 100%);
+  width: calc(160 / 176 * 100%);
+  height: calc(240 / 374 * 100%);
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.k-fridge.is-open .k-fridge__door { transform: rotateY(-112deg); }
+.k-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.k-face svg { display: block; width: 100%; height: 100%; }
+.k-fridge__door .k-face--back { transform: rotateY(180deg); }
+.k-fridge__btn { position: absolute; inset: 0; width: 100%; height: 100%; }
+.k-polaroid { font: 600 10px "Caveat", var(--display); fill: #2f3a2c; text-anchor: middle; }
+.k-note-text { font: 600 16px "Caveat", var(--display); fill: #2f3a2c; text-anchor: middle; }
+.k-note-text--small { font-size: 13px; fill: #5d6a55; }
+.k-fridge__note {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 50%;
+  z-index: 1;
+  padding: 7px 8px 8px;
+  font: 600 16px/1.15 "Caveat", var(--display);
+  text-align: center;
+  color: #2f3a2c;
+  background: #fff6c9;
+  box-shadow: 0 4px 8px -4px rgba(0, 0, 0, .4);
+  transform: rotate(-3deg);
+  opacity: 0;
+  visibility: hidden;
+}
+.k-fridge__note b { display: block; font: 500 10px/1.3 var(--pixel); color: #a8463f; letter-spacing: .03em; }
+.k-fridge__note ol { margin: 3px 0 0; padding: 0 0 0 18px; text-align: left; font-size: 15px; }
+.k-fridge.is-open .k-fridge__note { opacity: 1; visibility: visible; }
+
+/* the coffee corner */
+.k-coffee { z-index: 3; }
+.k-coffee.is-ticket { z-index: 12; }     /* the ticket floats over the windowsill */
+.k-coffee__btn { position: absolute; inset: 0; width: 100%; height: 100%; }
+.k-led { fill: #8b7a5c; }
+.k-coffee.is-brewing .k-led { fill: #ffd35c; filter: drop-shadow(0 0 3px rgba(255, 211, 92, .9)); }
+.k-needle { transform-box: view-box; transform-origin: 84px 46px; }
+.k-coffee.is-brewing .k-needle { transform: rotate(118deg); }
+.k-stream { fill: none; stroke: #6b4226; stroke-width: 2.6; stroke-dasharray: 5 3; opacity: 0; }
+.k-coffee.is-brewing .k-stream { opacity: 1; }
+.k-coffee__fill { fill: #6b4226; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); }
+.k-coffee.is-brewing .k-coffee__fill,
+.k-coffee.is-ready .k-coffee__fill { transform: scaleY(1); }
+.k-coffee__milk { fill: #c99a6b; opacity: 0; }
+.k-coffee.is-ready .k-coffee__milk { opacity: .95; }
+.k-cup-steam { fill: none; stroke: var(--ink-soft); stroke-width: 1.4; stroke-linecap: round; opacity: 0; }
+
+.k-ticket {
+  position: absolute;
+  left: calc(84 / 236 * 100%);
+  bottom: calc(100% - 12 / 148 * 100%);
+  z-index: 9;
+  width: 214px;
+  padding: 14px 12px 10px;
+  text-align: center;
+  color: #2f3a2c;
+  background: #fffdf6;
+  box-shadow: 0 10px 16px -10px rgba(0, 0, 0, .5);
+  clip-path: polygon(0 6px, 6% 0, 12% 6px, 18% 0, 24% 6px, 30% 0, 36% 6px, 42% 0, 48% 6px, 54% 0, 60% 6px, 66% 0, 72% 6px, 78% 0, 84% 6px, 90% 0, 96% 6px, 100% 0, 100% 100%, 0 100%);
+  transform: translateX(-50%);
+  visibility: hidden;
+}
+.k-coffee.is-ticket .k-ticket { visibility: visible; }
+.k-ticket__title { margin: 0 0 4px; font: 500 10.5px/1.2 var(--pixel); letter-spacing: .1em; text-transform: uppercase; color: #a8463f; }
+.k-ticket__line { margin: 0; font: 600 22px/1.1 "Caveat", var(--display); white-space: nowrap; }
+.k-ticket__line + .k-ticket__line { font-size: 18px; color: #5d6a55; }
+.k-ticket__heart { display: block; margin-top: 4px; font: 400 10px/1 var(--pixel); color: #d99a9e; letter-spacing: .3em; }
+
+/* bread and fruit */
+.k-bread, .k-fruit { z-index: 3; }
+.k-bread-steam { fill: none; stroke: var(--ink-soft); stroke-width: 1.3; stroke-linecap: round; opacity: 0; }
+.k-tag--bread { left: calc((62 + 71) / 540 * 100%); bottom: calc((392 - 46) / 392 * 100%); }
+.k-tag--fruit { left: calc((204 + 40) / 540 * 100%); bottom: calc((392 - 104) / 392 * 100%); }
+.k-bread:hover + .k-tag--bread,
+.k-bread:focus-visible + .k-tag--bread,
+.k-bread.is-on + .k-tag--bread,
+.k-fruit:hover + .k-tag--fruit,
+.k-fruit:focus-visible + .k-tag--fruit,
+.k-fruit.is-on + .k-tag--fruit { opacity: 1; visibility: visible; transform: translate(-50%, 0) rotate(-2deg); }
+.k-crock { z-index: 2; }
+
+/* the range and its oven */
+.k-range { z-index: 2; perspective: 760px; perspective-origin: 50% -30%; }
+.k-range__body { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.k-cavity { fill: #2f2620; }
+.k-glow { fill: url(#k-oven-light); opacity: .35; }
+.k-range.is-open .k-glow { opacity: 1; }
+.k-rack { fill: none; stroke: #8d8378; stroke-width: 2; }
+.k-cookies ellipse { fill: #d29a56; stroke: #6b4a2a; stroke-width: 1.2; }
+.k-chips circle { fill: #4a2f1f; }
+.k-heat { fill: none; stroke: rgba(255, 224, 176, .7); stroke-width: 1.4; stroke-linecap: round; opacity: 0; }
+.k-kettle-steam { fill: none; stroke: var(--ink-soft); stroke-width: 1.4; stroke-linecap: round; opacity: .35; }
+.k-oven-glass { fill: #3a3029; }
+.k-oven-glow { fill: rgba(255, 178, 92, .28); }
+.k-towel { fill: url(#k-gingham); }
+.k-oven-brand { font: italic 600 12px var(--display); fill: var(--ink-soft); text-anchor: middle; }
+.k-door-inner { fill: #5b534b; }
+.k-oven__door {
+  position: absolute;
+  left: calc(16 / 246 * 100%);
+  top: calc(84 / 296 * 100%);
+  width: calc(214 / 246 * 100%);
+  height: calc(166 / 296 * 100%);
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.k-range.is-open .k-oven__door { transform: rotateX(-94deg); }
+.k-oven__door .k-face--back { transform: rotateX(180deg); }
+.k-oven__toggle { position: absolute; inset: 0; width: 100%; height: 100%; }
+.k-oven__tray {
+  position: absolute;
+  left: calc(26 / 246 * 100%);
+  top: calc(142 / 296 * 100%);
+  width: calc(194 / 246 * 100%);
+  height: calc(70 / 296 * 100%);
+  z-index: 3;
+  visibility: hidden;
+}
+.k-range.is-open .k-oven__tray { visibility: visible; }
+.k-tag--cookies { left: 50%; top: calc(98 / 296 * 100%); white-space: nowrap; }
+.k-range.is-open .k-tag--cookies { opacity: 1; visibility: visible; transform: translate(-50%, 0) rotate(-2deg); }
+
+/* ------------------------------ the floor ------------------------------ */
+.k-floor {
+  position: relative;
+  height: 74px;
+  margin: 0 -26px;
+  background:
+    linear-gradient(rgba(0, 0, 0, .14), rgba(0, 0, 0, 0) 40%),
+    repeating-conic-gradient(var(--k-floor-a) 0 25%, var(--k-floor-b) 0 50%) 0 0 / 46px 46px;
+}
+.k-floor__rug { position: absolute; right: 9%; top: 8px; width: 30%; max-width: 300px; height: auto; }
+
+/* --------------------------- the recipe box --------------------------- */
+.recipe-box {
+  width: min(460px, calc(100% - 32px));
+  max-width: none;
+  padding: 0;
+  overflow: visible;
+  color: #2f3a2c;
+  background: none;
+  border: 0;
+}
+.recipe-box::backdrop { background: rgba(28, 34, 26, .5); }
+.recipe-card {
+  position: relative;
+  padding: 24px 24px 20px;
+  background-color: #fffdf6;
+  background-image:
+    linear-gradient(transparent 0 92px, rgba(214, 120, 120, .55) 92px 94px, transparent 94px),
+    repeating-linear-gradient(transparent 0 37px, rgba(126, 168, 204, .4) 37px 38px);
+  background-position: 0 0, 0 108px;
+  background-repeat: no-repeat, repeat;
+  border-radius: 4px;
+  box-shadow: 0 30px 50px -24px rgba(0, 0, 0, .65);
+  transform: rotate(-1deg);
+}
+.recipe-card::before { /* the index tab */
+  content: "cookies";
+  position: absolute;
+  top: -22px;
+  right: 34px;
+  padding: 5px 14px 6px;
+  font: 400 11px/1 var(--pixel);
+  color: #2f3a2c;
+  background: #f4c7cb;
+  border-radius: 6px 6px 0 0;
+}
+.recipe-card__eyebrow { margin: 0; font: 400 12px/1.2 var(--pixel); letter-spacing: .04em; color: #5d6a55; }
+.recipe-card__title { margin: 6px 0 0; font-size: 36px; line-height: 1.05; }
+.recipe-card__list { list-style: none; margin: 30px 0 0; padding: 0; }
+.recipe-card__list li { display: flex; align-items: center; gap: 12px; min-height: 38px; }
+.recipe-card__list svg { flex: none; width: 30px; height: 30px; }
+.recipe-card__name { font: 600 24px/1.1 "Caveat", var(--display); }
+.recipe-card__name a { color: inherit; text-decoration-color: #d99a9e; text-underline-offset: 3px; }
+.recipe-card__note { display: block; font: 400 14px/1.3 var(--body); color: #5d6a55; }
+.recipe-card__soon { margin: 12px 0 0; font: 400 12px/1.4 var(--pixel); color: #6f6656; }
+.recipe-card__soon[hidden] { display: none; }
+.recipe-card__close {
+  margin-top: 18px;
+  font: 500 14px/1 var(--pixel);
+  color: #fff8ef;
+  background: #a8463f;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 18px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #2f3a2c;
+}
+.recipe-card__close:focus-visible { outline: 2px dashed #a8463f; outline-offset: 4px; }
+
+@media (max-width: 860px) {
+  .k-wall { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "win win" "shelf board"; gap: 34px 18px; }
+  .k-window-wrap { grid-area: win; max-width: 480px; width: 100%; justify-self: center; }
+  .k-shelves { grid-area: shelf; margin-bottom: 0; }
+  .k-board { grid-area: board; }
+  .k-counter { flex-direction: column; margin-top: 34px; }
+  .k-run--a { width: 100%; }
+  .k-run--a::after { /* a strip of floor under the first run */
+    content: "";
+    position: absolute;
+    left: -26px; right: -26px; top: 100%;
+    height: 26px;
+    background:
+      linear-gradient(rgba(0, 0, 0, .14), rgba(0, 0, 0, 0) 60%),
+      repeating-conic-gradient(var(--k-floor-a) 0 25%, var(--k-floor-b) 0 50%) 0 0 / 46px 46px;
+  }
+  .k-run--b { margin-top: 26px; }
+  .k-floor__rug { width: 42%; right: 6%; }
+}
+@media (max-width: 640px) {
+  .kitchen { padding: 44px 12px 0; border-radius: 14px 14px 6px 6px; }
+  .k-run--a::after { left: -12px; right: -12px; }
+  .k-floor { margin: 0 -12px; height: 56px; }
+  .k-wall { gap: 30px 12px; }
+  .k-window-wrap { margin: 6px 12px 0; }
+  .k-chalk { padding: 12px 10px 14px; border-width: 8px; }
+  .k-chalk__title { font-size: 21px; }
+  .k-chalk__list li { font-size: 16.5px; padding-left: 14px; }
+  .k-board__herbs { width: 46px; top: -32px; }
+  .k-sill__basil, .k-sill__rosemary { width: 46px; }
+  .k-starter { width: 50px; height: 69px; left: calc(40% - 25px); }
+  .k-tag--starter { bottom: 96px; }
+  .k-tag { font-size: 11.5px; }
+  .k-ticket { width: 178px; padding: 12px 8px 8px; }
+  .k-ticket__line { font-size: 19px; }
+  .k-ticket__line + .k-ticket__line { font-size: 16px; }
+  .recipe-card { padding: 22px 18px 18px; }
+  .recipe-card__title { font-size: 31px; }
+  .recipe-card__name { font-size: 21px; }
+}
+
 /* =============================== mobile =============================== */
 
 @media (max-width: 860px) {
@@ -2539,4 +3047,35 @@ h1, h2, h3 {
   @keyframes pin-pop { from { transform: scale(0); } }
   @keyframes halo-turn { to { transform: rotate(360deg); } }
   @keyframes card-in { from { opacity: 0; transform: translateY(10px) rotate(-1.5deg) scale(.98); } }
+
+  /* the kitchen: bubbles in Tabitha, steam, the coffee pouring, the oven and
+     fridge doors swinging, tags and the ticket popping up */
+  .k-bubble { animation: k-bubble 3.4s ease-in infinite; transform-box: fill-box; }
+  .k-bubble:nth-of-type(2n) { animation-duration: 4.2s; animation-delay: -1.6s; }
+  .k-bubble:nth-of-type(3n) { animation-duration: 2.9s; animation-delay: -.8s; }
+  .k-starter__goo { transition: transform .5s cubic-bezier(.3, 1.5, .5, 1); transform-box: view-box; }
+  .k-starter:hover .k-starter__goo, .k-starter.is-on .k-starter__goo { transform: translateY(-5px); }
+  .k-tag { transition: opacity .2s ease, transform .25s cubic-bezier(.3, 1.4, .5, 1), visibility .2s; }
+  .k-kettle-steam { animation: steam 3.2s ease-in-out infinite; transform-box: fill-box; }
+  .k-bread:hover .k-bread-steam, .k-bread.is-on .k-bread-steam { animation: steam 2.2s ease-in-out infinite; transform-box: fill-box; }
+  .k-needle { transition: transform .6s cubic-bezier(.3, 1.6, .5, 1); }
+  .k-stream { animation: k-pour .35s linear infinite; }
+  .k-coffee__fill { transition: transform 1.9s linear; }
+  .k-coffee__milk { transition: opacity .6s ease .1s; }
+  .k-coffee.is-ready .k-cup-steam { animation: steam 2.4s ease-in-out infinite; transform-box: fill-box; }
+  .k-coffee.is-ticket .k-ticket { animation: k-print .7s cubic-bezier(.25, .9, .3, 1); }
+  .k-led { transition: fill .3s ease; }
+  .k-fridge__door { transition: transform .85s cubic-bezier(.45, .05, .2, 1); }
+  .k-fridge__note { transition: opacity .3s ease .35s, visibility .3s .35s; }
+  .k-oven__door { transition: transform .95s cubic-bezier(.5, 0, .2, 1); }
+  .k-glow { transition: opacity .8s ease; }
+  .k-range.is-open .k-heat { animation: k-heat 2.6s ease-in-out infinite; transform-box: fill-box; }
+  .k-range.is-open .k-tag--cookies { transition-delay: .7s; }
+  .k-range.is-open .k-oven__tray { animation: k-nudge 2.4s ease-in-out 1.4s infinite; }
+  .recipe-box[open] .recipe-card { animation: card-in .45s cubic-bezier(.3, 1.3, .5, 1); }
+  @keyframes k-bubble { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
+  @keyframes k-pour { to { stroke-dashoffset: -8; } }
+  @keyframes k-print { from { clip-path: polygon(0 100%, 6% 100%, 12% 100%, 18% 100%, 24% 100%, 30% 100%, 36% 100%, 42% 100%, 48% 100%, 54% 100%, 60% 100%, 66% 100%, 72% 100%, 78% 100%, 84% 100%, 90% 100%, 96% 100%, 100% 100%, 100% 100%, 0 100%); } }
+  @keyframes k-heat { 0% { transform: translateY(4px); opacity: 0; } 40% { opacity: .9; } 100% { transform: translateY(-10px); opacity: 0; } }
+  @keyframes k-nudge { 0%, 80%, 100% { transform: none; } 88% { transform: translateY(-2px); } }
 }
