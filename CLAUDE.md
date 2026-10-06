@@ -276,10 +276,27 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
 
 ## The Kitchen
 
-`kitchen.html`: another room of the cottage, drawn as a little dollhouse room
-(`.kitchen`) with strawberry wallpaper and a string of fairy lights. Built to
-Rex's brief; everything it says is in `assets/kitchen-data.js`, and the
-behaviour is `assets/kitchen.js`.
+`kitchen.html`: another room of the cottage. Built to Rex's brief;
+everything it says is in `assets/kitchen-data.js`, and the behaviour is
+`assets/kitchen.js`.
+
+- **It fills the screen, like the cottage** (Rex found the first, boxed
+  version too flat). The strawberry wallpaper is the page itself
+  (`body[data-section="kitchen"]::before`), the cottage's bunting-and-lights
+  garland hangs across the top, the hanging wooden sign is the heading (with
+  a "back inside" link beside it), and `.kroom` is a full-height column like
+  `.cottage`. The room links sit on the floor.
+- **Depth:** the countertops show their top surface (objects stand on it),
+  with a shadow under the counter lip, bevelled cabinet doors, a recessed toe
+  kick and a baseboard; the appliances have a soft sheen and drop shadows;
+  daylight glows on the wall around the window and the room's corners fall
+  into a little shade. **The floor is a real plane in perspective**
+  (`.k-floor__plane`, rotateX 90deg seen from eye height), with the window's
+  light lying on it by day, a rug, and a warm glow in front of the oven when
+  it's open (`:has()`). The 3D floor is kept in its own layer
+  (`.k-floor__view`): without that, Chrome depth-sorts it in front of
+  Gemma's bowls and the links. Things placed on the plane spread out by
+  perspective, so the rug's position is worked out, not eyeballed.
 
 - **The wall:** open shelves (flour, sugar and cocoa canisters, plates,
   cookbooks, mugs on hooks, a pothos), the window over the garden (real sky,

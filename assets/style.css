@@ -1948,30 +1948,59 @@ h1, h2, h3 {
 .f-lilac { fill: var(--lilac); }
 .f-wood-lite { fill: var(--wood-lite); }
 
-.kitchen {
-  position: relative;
-  isolation: isolate;
-  margin: 30px 0 48px;
-  padding: 50px 26px 0;
-  overflow: clip;
-  background: var(--k-wall);
-  border-radius: 18px 18px 8px 8px;
-  box-shadow: inset 0 0 0 1.5px var(--hairline), 0 26px 40px -30px rgba(0, 0, 0, .55);
-}
-.kitchen::before { /* strawberry wallpaper */
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
+/* The kitchen fills the page, like the cottage: its wallpaper is the page,
+   the garland hangs across the top of the screen, and the floor runs edge to
+   edge to the bottom of the window as a plane in perspective. */
+body[data-section="kitchen"] { background: var(--k-wall); }
+body[data-section="kitchen"]::before {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath d='M22 30 c-7 0 -10 5 -9 10 c1 6 6 11 9 13 c3 -2 8 -7 9 -13 c1 -5 -2 -10 -9 -10z' fill='%23e58c90'/%3E%3Cpath d='M16 28 q6 -4 12 0 q-3 3 -6 1 q-3 2 -6 -1z' fill='%2389a978'/%3E%3Cg fill='%23fff3d6'%3E%3Ccircle cx='19' cy='36' r='.9'/%3E%3Ccircle cx='25' cy='37' r='.9'/%3E%3Ccircle cx='22' cy='42' r='.9'/%3E%3Ccircle cx='18' cy='44' r='.8'/%3E%3Ccircle cx='26' cy='44' r='.8'/%3E%3C/g%3E%3Cg transform='translate(70 72)'%3E%3Ccircle r='3.6' cx='0' cy='-4' fill='%23fffaf0'/%3E%3Ccircle r='3.6' cx='4' cy='0' fill='%23fffaf0'/%3E%3Ccircle r='3.6' cx='0' cy='4' fill='%23fffaf0'/%3E%3Ccircle r='3.6' cx='-4' cy='0' fill='%23fffaf0'/%3E%3Ccircle r='2.2' fill='%23e8c35c'/%3E%3C/g%3E%3Cpath d='M64 26 q4 -6 10 -4 M76 82 q-6 2 -8 -4' stroke='%2389a978' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") 0 0 / 96px 96px;
   opacity: .5;
 }
-:root[data-dark="true"] .kitchen::before { opacity: .16; }
+:root[data-dark="true"] body[data-section="kitchen"]::before { opacity: .15; }
 
-.k-lights { position: absolute; top: 0; left: 0; right: 0; height: 44px; pointer-events: none; z-index: 6; }
-.k-lights svg { position: absolute; inset: 0; width: 100%; height: 40px; overflow: visible; }
-.k-lights path { fill: none; stroke: var(--ink-soft); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.kroom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+.k-head { grid-template-columns: 1fr auto 1fr; padding-bottom: 6px; }
+.k-head .sign { grid-column: 2; }
+.k-back {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  align-self: center;
+  padding: 8px 12px 7px;
+  font: 400 13px/1 var(--pixel);
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  box-shadow: 0 6px 12px -8px rgba(0, 0, 0, .45);
+}
+.k-back:hover { color: var(--berry); border-color: var(--berry); }
+.kroom::before { /* the room's corners fall into a little shade */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(90, 60, 25, 0) 55%, rgba(90, 60, 25, .13));
+}
+:root[data-dark="true"] .kroom::before { background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .35)); }
+.kroom > .wrap { position: relative; z-index: 2; }
+.kitchen { position: relative; margin: 12px 0 0; }
+.k-baseboard {
+  position: relative;
+  z-index: 1;
+  height: 16px;
+  margin-top: -16px;
+  background: linear-gradient(var(--wood-lite) 0 3px, var(--wood) 3px 13px, var(--wood-dark) 13px);
+}
 
 /* little drawing helpers */
 .k-shadow { fill: rgba(0, 0, 0, .12); }
@@ -1980,6 +2009,14 @@ h1, h2, h3 {
 .k-label { font: 500 9px var(--pixel); fill: #2f3a2c; text-anchor: middle; }
 .k-label--tiny { font-size: 6.4px; }
 .k-glass { fill: rgba(220, 238, 244, .55); }
+.k-bevel-lite, .k-bevel-lite-in { fill: none; stroke: rgba(255, 255, 255, .42); stroke-width: 2; stroke-linecap: round; }
+.k-bevel-dark, .k-bevel-dark-in { fill: none; stroke: rgba(0, 0, 0, .16); stroke-width: 2; stroke-linecap: round; }
+.k-grain { fill: none; stroke: var(--wood); stroke-width: 1; opacity: .45; }
+.k-overhang { fill: rgba(30, 24, 14, .2); }
+.k-toe-shadow { fill: rgba(0, 0, 0, .22); }
+.k-knob-shine { fill: #fff6d6; opacity: .8; }
+.k-splash-shade { fill: url(#k-splash-light); }
+.k-bowl-name { font: 500 6.4px var(--pixel); fill: #fffaf0; text-anchor: middle; letter-spacing: .06em; }
 .k-jar { fill: rgba(228, 243, 247, .6); }
 .k-food { }
 :root[data-dark="true"] .k-food, :root[data-dark="true"] .k-dough { filter: brightness(.82); }
@@ -1991,9 +2028,19 @@ h1, h2, h3 {
   gap: 0 30px;
   align-items: end;
 }
-.k-shelves { display: block; width: 100%; max-width: 290px; height: auto; margin: 0 auto 30px; overflow: visible; }
+.k-shelves { display: block; width: 100%; max-width: 290px; height: auto; margin: 0 auto 30px; overflow: visible; filter: drop-shadow(0 10px 8px rgba(60, 40, 20, .18)); }
+.k-crock, .k-bread svg, .k-fruit svg, .k-coffee__btn svg, .k-fridge__body, .k-range__body { filter: drop-shadow(0 8px 7px rgba(60, 40, 20, .2)); }
 
 .k-window-wrap { position: relative; margin: 6px 14px 0; }
+.k-window-wrap::before { /* daylight spilling onto the wall around the window */
+  content: "";
+  position: absolute;
+  inset: -22% -30% -10%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 244, 205, .75), rgba(255, 244, 205, 0) 62%);
+}
+:root[data-dark="true"] .k-window-wrap::before { background: radial-gradient(ellipse at 50% 45%, rgba(120, 150, 210, .12), rgba(120, 150, 210, 0) 60%); }
 .k-window {
   position: relative;
   aspect-ratio: 4 / 3.1;
@@ -2001,7 +2048,7 @@ h1, h2, h3 {
   border: 13px solid var(--wood);
   border-radius: 6px;
   background: linear-gradient(var(--sky-top), var(--sky-bottom));
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .1), 0 14px 24px -18px rgba(0, 0, 0, .6);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .1), inset 0 10px 16px -8px rgba(0, 0, 0, .35), 0 18px 28px -18px rgba(0, 0, 0, .55);
 }
 .k-window::after { /* the mullions */
   content: "";
@@ -2242,8 +2289,8 @@ h1, h2, h3 {
 /* bread and fruit */
 .k-bread, .k-fruit { z-index: 3; }
 .k-bread-steam { fill: none; stroke: var(--ink-soft); stroke-width: 1.3; stroke-linecap: round; opacity: 0; }
-.k-tag--bread { left: calc((62 + 71) / 540 * 100%); bottom: calc((392 - 46) / 392 * 100%); }
-.k-tag--fruit { left: calc((204 + 40) / 540 * 100%); bottom: calc((392 - 104) / 392 * 100%); }
+.k-tag--bread { left: calc((62 + 71) / 540 * 100%); bottom: calc((392 - 41) / 392 * 100%); }
+.k-tag--fruit { left: calc((204 + 40) / 540 * 100%); bottom: calc((392 - 99) / 392 * 100%); }
 .k-bread:hover + .k-tag--bread,
 .k-bread:focus-visible + .k-tag--bread,
 .k-bread.is-on + .k-tag--bread,
@@ -2294,16 +2341,84 @@ h1, h2, h3 {
 .k-tag--cookies { left: 50%; top: calc(98 / 296 * 100%); white-space: nowrap; }
 .k-range.is-open .k-tag--cookies { opacity: 1; visibility: visible; transform: translate(-50%, 0) rotate(-2deg); }
 
-/* ------------------------------ the floor ------------------------------ */
+/* ------------------------------ the floor ------------------------------
+   A plane of tiles laid flat (rotateX 90deg) and seen from eye height, so it
+   really recedes to the wall; the window's light and the rug lie on it. */
 .k-floor {
   position: relative;
-  height: 74px;
-  margin: 0 -26px;
-  background:
-    linear-gradient(rgba(0, 0, 0, .14), rgba(0, 0, 0, 0) 40%),
-    repeating-conic-gradient(var(--k-floor-a) 0 25%, var(--k-floor-b) 0 50%) 0 0 / 46px 46px;
+  flex: 1 0 auto;            /* tall enough for what's on it, and fills the rest of the screen */
+  min-height: 240px;
+  overflow: hidden;
+  background: var(--k-floor-a);
 }
-.k-floor__rug { position: absolute; right: 9%; top: 8px; width: 30%; max-width: 300px; height: auto; }
+/* the 3D floor lives in its own layer, so it's flattened there and anything
+   standing on the floor (the bowls, the room links) always draws on top */
+.k-floor__view {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  perspective: 640px;
+  perspective-origin: 50% -330px;
+}
+.k-floor::before { /* where the wall meets the floor */
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 2;
+  height: 26px;
+  background: linear-gradient(rgba(40, 30, 16, .28), rgba(40, 30, 16, 0));
+  pointer-events: none;
+}
+.k-floor__plane {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3200px;
+  height: 900px;
+  margin-left: -1600px;
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+  background:
+    radial-gradient(ellipse 900px 520px at 50% 0, rgba(255, 255, 255, 0), rgba(0, 0, 0, .1)),
+    repeating-conic-gradient(var(--k-floor-a) 0 25%, var(--k-floor-b) 0 50%) 0 0 / 64px 64px;
+}
+.k-floor__sun { /* the window, laid on the floor in light */
+  position: absolute;
+  left: calc(50% - 150px);
+  top: 70px;
+  width: 300px;
+  height: 260px;
+  background:
+    linear-gradient(transparent calc(50% - 7px), rgba(0, 0, 0, .07) calc(50% - 7px) calc(50% + 7px), transparent calc(50% + 7px)),
+    linear-gradient(90deg, transparent calc(50% - 7px), rgba(0, 0, 0, .07) calc(50% - 7px) calc(50% + 7px), transparent calc(50% + 7px)),
+    rgba(255, 238, 180, .38);
+  filter: blur(6px);
+  transform: skewX(-24deg);
+}
+:root[data-dark="true"] .k-floor__sun { display: none; }
+.k-floor__ovenglow { /* warm light from the open oven, on the floor in front of it */
+  position: absolute;
+  left: calc(50% + 110px);
+  top: 0;
+  width: 260px;
+  height: 220px;
+  background: radial-gradient(ellipse at 50% 0, rgba(255, 170, 80, .5), rgba(255, 170, 80, 0) 70%);
+  opacity: 0;
+}
+.kroom:has(.k-range.is-open) .k-floor__ovenglow { opacity: 1; }
+.k-floor__rug { position: absolute; left: calc(50% + 96px); top: 150px; width: 300px; height: 170px; }
+.k-floor__stage {
+  position: relative;
+  z-index: 1;
+  width: min(1040px, 100% - 32px);
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+.k-bowls { position: absolute; left: 22%; top: 12px; width: 120px; height: auto; overflow: visible; }
+.k-rooms { margin: 0; padding-top: 118px; text-align: center; }
+.k-rooms ul { justify-content: center; }
+.k-rooms .eyebrow { text-align: center; }
 
 /* --------------------------- the recipe box --------------------------- */
 .recipe-box {
@@ -2373,19 +2488,27 @@ h1, h2, h3 {
   .k-run--a::after { /* a strip of floor under the first run */
     content: "";
     position: absolute;
-    left: -26px; right: -26px; top: 100%;
+    left: -16px; right: -16px; top: 100%;
     height: 26px;
     background:
       linear-gradient(rgba(0, 0, 0, .14), rgba(0, 0, 0, 0) 60%),
       repeating-conic-gradient(var(--k-floor-a) 0 25%, var(--k-floor-b) 0 50%) 0 0 / 46px 46px;
   }
   .k-run--b { margin-top: 26px; }
-  .k-floor__rug { width: 42%; right: 6%; }
+  .k-floor__view { perspective-origin: 50% -260px; }
+  .k-floor__rug { left: calc(50% - 60px); }
 }
 @media (max-width: 640px) {
-  .kitchen { padding: 44px 12px 0; border-radius: 14px 14px 6px 6px; }
-  .k-run--a::after { left: -12px; right: -12px; }
-  .k-floor { margin: 0 -12px; height: 56px; }
+  .k-head.room-head { grid-template-columns: 1fr; }
+  .k-head .sign { grid-column: 1 / -1; grid-row: 1; }
+  .k-back { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
+  .k-floor { min-height: 200px; }
+  .k-floor__view { perspective: 520px; perspective-origin: 50% -200px; }
+  .k-floor__sun { width: 220px; height: 200px; left: calc(50% - 110px); }
+  .k-floor__rug { left: calc(50% + 10px); top: 70px; width: 150px; height: 84px; }
+  .k-floor__ovenglow { left: calc(50% + 20px); width: 150px; height: 150px; }
+  .k-bowls { width: 96px; top: 10px; left: 8%; }
+  .k-rooms { padding-top: 96px; }
   .k-wall { gap: 30px 12px; }
   .k-window-wrap { margin: 6px 12px 0; }
   .k-chalk { padding: 12px 10px 14px; border-width: 8px; }
@@ -3069,6 +3192,7 @@ h1, h2, h3 {
   .k-fridge__note { transition: opacity .3s ease .35s, visibility .3s .35s; }
   .k-oven__door { transition: transform .95s cubic-bezier(.5, 0, .2, 1); }
   .k-glow { transition: opacity .8s ease; }
+  .k-floor__ovenglow { transition: opacity .9s ease .2s; }
   .k-range.is-open .k-heat { animation: k-heat 2.6s ease-in-out infinite; transform-box: fill-box; }
   .k-range.is-open .k-tag--cookies { transition-delay: .7s; }
   .k-range.is-open .k-oven__tray { animation: k-nudge 2.4s ease-in-out 1.4s infinite; }

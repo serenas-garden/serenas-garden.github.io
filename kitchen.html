@@ -26,44 +26,71 @@
 <script src="assets/sky.js"></script>
 </head>
 <body data-section="kitchen">
-<main class="wrap">
-  <header class="page-head">
-    <a class="back" href="./">&larr; back inside</a>
-    <p class="eyebrow">serena's garden</p>
-    <h1>The Kitchen</h1>
-    <p>My coffee order, the cookies I keep coming back to, and Tabitha, my sourdough starter.</p>
-    <div class="page-art" aria-hidden="true">
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M38 44 q-4 -7 0 -14 q4 -7 0 -14 M52 40 q-4 -7 0 -14 q4 -7 0 -14" class="ink" style="stroke-width:1.6;opacity:.5"/>
-      <ellipse cx="50" cy="84" rx="42" ry="9" class="ink f-paper"/>
-      <path d="M14 80 q36 -36 72 0 Z" class="ink f-gold"/>
-      <path d="M28 70 l12 10 M40 60 l20 20 M56 58 l16 16 M30 76 l22 -18 M46 80 l22 -20" class="ink" style="stroke-width:1.5"/>
-      </svg>
-    </div>
-  </header>
+<main class="kroom">
+  <div class="garland" aria-hidden="true">
+    <svg viewBox="0 0 1000 72" preserveAspectRatio="none"><path d="M-10 4 Q500 76 1010 4"/></svg>
+    <span class="pennant" style="left:2.40%;top:7.6px;--r:6.3deg"></span>
+    <span class="pennant pennant--gingham pn--alt" style="left:9.20%;top:16.0px;--r:5.4deg"></span>
+    <span class="pennant pennant--moss" style="left:16.00%;top:23.0px;--r:4.5deg"></span>
+    <span class="pennant pennant--gold pn--alt" style="left:22.80%;top:28.8px;--r:3.6deg"></span>
+    <span class="pennant pennant--dots" style="left:29.60%;top:33.2px;--r:2.7deg"></span>
+    <span class="pennant pn--alt" style="left:36.40%;top:36.4px;--r:1.8deg"></span>
+    <span class="pennant pennant--gingham" style="left:43.20%;top:38.4px;--r:0.9deg"></span>
+    <span class="pennant pennant--moss pn--alt" style="left:50.00%;top:39.0px;--r:0.0deg"></span>
+    <span class="pennant pennant--gold" style="left:56.80%;top:38.4px;--r:-0.9deg"></span>
+    <span class="pennant pennant--dots pn--alt" style="left:63.60%;top:36.4px;--r:-1.8deg"></span>
+    <span class="pennant" style="left:70.40%;top:33.2px;--r:-2.7deg"></span>
+    <span class="pennant pennant--gingham pn--alt" style="left:77.20%;top:28.8px;--r:-3.6deg"></span>
+    <span class="pennant pennant--moss" style="left:84.00%;top:23.0px;--r:-4.5deg"></span>
+    <span class="pennant pennant--gold pn--alt" style="left:90.80%;top:16.0px;--r:-5.4deg"></span>
+    <span class="pennant pennant--dots" style="left:97.60%;top:7.6px;--r:-6.3deg"></span>
+    <span class="bulb bulb--alt" style="left:5.80%;top:13.0px;--c:#f4b6b0;--d:2.43s"></span>
+    <span class="bulb" style="left:12.60%;top:20.6px;--c:#fff1c1;--d:2.06s"></span>
+    <span class="bulb bulb--alt" style="left:19.40%;top:27.0px;--c:var(--gold);--d:1.69s"></span>
+    <span class="bulb" style="left:26.20%;top:32.2px;--c:#f4b6b0;--d:1.32s"></span>
+    <span class="bulb bulb--alt" style="left:33.00%;top:36.0px;--c:#fff1c1;--d:0.95s"></span>
+    <span class="bulb" style="left:39.80%;top:38.6px;--c:var(--gold);--d:0.58s"></span>
+    <span class="bulb bulb--alt" style="left:46.60%;top:39.8px;--c:#f4b6b0;--d:0.21s"></span>
+    <span class="bulb" style="left:53.40%;top:39.8px;--c:#fff1c1;--d:2.64s"></span>
+    <span class="bulb bulb--alt" style="left:60.20%;top:38.6px;--c:var(--gold);--d:2.27s"></span>
+    <span class="bulb" style="left:67.00%;top:36.0px;--c:#f4b6b0;--d:1.90s"></span>
+    <span class="bulb bulb--alt" style="left:73.80%;top:32.2px;--c:#fff1c1;--d:1.53s"></span>
+    <span class="bulb" style="left:80.60%;top:27.0px;--c:var(--gold);--d:1.16s"></span>
+    <span class="bulb bulb--alt" style="left:87.40%;top:20.6px;--c:#f4b6b0;--d:0.79s"></span>
+    <span class="bulb" style="left:94.20%;top:13.0px;--c:#fff1c1;--d:0.42s"></span>
+  </div>
+
+  <div class="wrap">
+    <header class="room-head k-head">
+      <a class="k-back" href="./">&larr; back inside</a>
+      <div class="sign">
+        <span class="sign__rope sign__rope--l" aria-hidden="true"></span>
+        <span class="sign__rope sign__rope--r" aria-hidden="true"></span>
+        <svg class="sign__bloom sign__bloom--l" viewBox="0 0 60 44" aria-hidden="true">
+          <ellipse cx="16" cy="26" rx="12" ry="5" transform="rotate(-30 16 26)" class="f-moss"/>
+          <ellipse cx="36" cy="30" rx="11" ry="4.5" transform="rotate(20 36 30)" class="f-moss"/>
+          <circle cx="22" cy="16" r="9" class="f-rose"/><path d="M18 16 a4 4 0 1 1 4 4" class="ink" style="stroke:var(--berry);stroke-width:1.5"/>
+          <circle cx="38" cy="20" r="6" class="f-paper"/><circle cx="38" cy="20" r="2.4" class="f-gold"/>
+          <circle cx="10" cy="34" r="4" class="f-gold"/>
+        </svg>
+        <svg class="sign__bloom sign__bloom--r" viewBox="0 0 60 44" aria-hidden="true">
+          <ellipse cx="16" cy="26" rx="12" ry="5" transform="rotate(-30 16 26)" class="f-moss"/>
+          <ellipse cx="36" cy="30" rx="11" ry="4.5" transform="rotate(20 36 30)" class="f-moss"/>
+          <circle cx="22" cy="16" r="9" class="f-rose"/><path d="M18 16 a4 4 0 1 1 4 4" class="ink" style="stroke:var(--berry);stroke-width:1.5"/>
+          <circle cx="38" cy="20" r="6" class="f-paper"/><circle cx="38" cy="20" r="2.4" class="f-gold"/>
+          <circle cx="10" cy="34" r="4" class="f-gold"/>
+        </svg>
+        <p class="sign__eyebrow">and this is</p>
+        <h1>The Kitchen</h1>
+      </div>
+      <p class="visually-hidden">My coffee order, the cookies I keep coming back to, and Tabitha, my sourdough starter.</p>
+    </header>
 
   <!-- The kitchen: one more room in the cottage. Wall (shelves, window,
        chalkboard), then the counter run (fridge, coffee, bread, fruit, range),
        then the floor. Only the objects are buttons; everything else is
        decoration. kitchen.js wires them up from assets/kitchen-data.js. -->
   <section class="kitchen" aria-label="The kitchen">
-    <div class="k-lights" aria-hidden="true">
-      <svg viewBox="0 0 1000 40" preserveAspectRatio="none"><path d="M0 4 Q500 40 1000 4"/></svg>
-      <span class="bulb" style="left:3.85%;top:6.7px;--c:#f4b6b0;--d:0.40s"></span>
-      <span class="bulb bulb--alt" style="left:11.54%;top:11.3px;--c:#fff1c1;--d:0.77s"></span>
-      <span class="bulb" style="left:19.23%;top:15.2px;--c:var(--gold);--d:1.14s"></span>
-      <span class="bulb bulb--alt" style="left:26.92%;top:18.2px;--c:#f4b6b0;--d:1.51s"></span>
-      <span class="bulb" style="left:34.62%;top:20.3px;--c:#fff1c1;--d:1.88s"></span>
-      <span class="bulb bulb--alt" style="left:42.31%;top:21.6px;--c:var(--gold);--d:2.25s"></span>
-      <span class="bulb" style="left:50.00%;top:22.0px;--c:#f4b6b0;--d:0.42s"></span>
-      <span class="bulb bulb--alt" style="left:57.69%;top:21.6px;--c:#fff1c1;--d:0.79s"></span>
-      <span class="bulb" style="left:65.38%;top:20.3px;--c:var(--gold);--d:1.16s"></span>
-      <span class="bulb bulb--alt" style="left:73.08%;top:18.2px;--c:#f4b6b0;--d:1.53s"></span>
-      <span class="bulb" style="left:80.77%;top:15.2px;--c:#fff1c1;--d:1.90s"></span>
-      <span class="bulb bulb--alt" style="left:88.46%;top:11.3px;--c:var(--gold);--d:2.27s"></span>
-      <span class="bulb" style="left:96.15%;top:6.7px;--c:#f4b6b0;--d:0.44s"></span>
-    </div>
-
     <!-- ============================ the wall ============================ -->
     <div class="k-wall">
 
@@ -266,12 +293,24 @@
               <rect width="4" height="8" fill="#d97880" fill-opacity=".42"/>
               <rect width="8" height="4" fill="#d97880" fill-opacity=".42"/>
             </pattern>
+            <linearGradient id="k-splash-light" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#000" stop-opacity=".1"/>
+              <stop offset=".45" stop-color="#000" stop-opacity="0"/>
+              <stop offset="1" stop-color="#3a2a14" stop-opacity=".14"/>
+            </linearGradient>
+            <linearGradient id="k-sheen" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity=".34"/>
+              <stop offset=".16" stop-color="#fff" stop-opacity=".06"/>
+              <stop offset=".7" stop-color="#000" stop-opacity="0"/>
+              <stop offset="1" stop-color="#000" stop-opacity=".16"/>
+            </linearGradient>
             <radialGradient id="k-oven-light" cx="50%" cy="62%" r="62%">
               <stop offset="0" stop-color="#ffb35c" stop-opacity=".8"/>
               <stop offset="1" stop-color="#ffb35c" stop-opacity="0"/>
             </radialGradient>
           </defs>
-          <rect x="188" y="40" width="312" height="130" fill="url(#k-subway)"/>
+          <rect x="188" y="40" width="312" height="112" fill="url(#k-subway)"/>
+          <rect x="188" y="40" width="312" height="112" class="k-splash-shade"/>
           <rect x="186" y="34" width="314" height="8" class="ink f-wood" style="stroke-width:1.6"/>
           <path d="M404 64 H496" class="ink" style="stroke:var(--wood-dark);stroke-width:4"/>
           <g>
@@ -281,19 +320,31 @@
             <path d="M466 64 v6 q0 4 4 4" class="ink" style="stroke:var(--gold);stroke-width:1.8"/>
             <path d="M458 76 h22 v18 q0 5 -5 5 h-12 q-5 0 -5 -5 Z" class="ink f-lilac"/><path d="M480 80 q6 0 6 5 q0 5 -6 5" class="ink"/>
           </g>
-          <rect x="186" y="168" width="318" height="16" rx="2" class="ink f-wood"/>
-          <path d="M190 171.5 H500" class="k-plank-lite"/>
-          <rect x="190" y="184" width="314" height="196" class="ink f-cab"/>
-          <rect x="198" y="191" width="140" height="34" rx="3" class="ink f-cab-lite"/>
-          <rect x="346" y="191" width="150" height="34" rx="3" class="ink f-cab-lite"/>
-          <path d="M256 208 h24 M408 208 h24" class="ink" style="stroke:var(--gold);stroke-width:4"/>
+          <!-- the countertop: its top seen from a little above, then its front edge -->
+          <path d="M190 152 H500 L504 170 H186 Z" class="ink f-wood-lite" style="stroke-width:1.8"/>
+          <path d="M198 158.5 H470 M230 164 H494" class="k-grain"/>
+          <rect x="186" y="170" width="318" height="15" rx="2" class="ink f-wood"/>
+          <path d="M192 173.5 H500" class="k-plank-lite"/>
+          <!-- the cabinets -->
+          <rect x="190" y="185" width="314" height="195" class="ink f-cab"/>
+          <rect x="198" y="192" width="140" height="33" rx="3" class="ink f-cab-lite"/>
+          <path d="M200.5 222.5 V194.5 H335.5" class="k-bevel-lite"/><path d="M335.5 194.5 V222.5 H200.5" class="k-bevel-dark"/>
+          <rect x="346" y="192" width="150" height="33" rx="3" class="ink f-cab-lite"/>
+          <path d="M348.5 222.5 V194.5 H493.5" class="k-bevel-lite"/><path d="M493.5 194.5 V222.5 H348.5" class="k-bevel-dark"/>
           <rect x="198" y="232" width="140" height="140" rx="3" class="ink f-cab-lite"/>
-          <rect x="210" y="244" width="116" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.45"/>
+          <path d="M200.5 369.5 V234.5 H335.5" class="k-bevel-lite"/><path d="M335.5 234.5 V369.5 H200.5" class="k-bevel-dark"/>
           <rect x="346" y="232" width="150" height="140" rx="3" class="ink f-cab-lite"/>
-          <rect x="358" y="244" width="126" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.45"/>
-          <circle cx="328" cy="304" r="4.4" class="ink f-gold" style="stroke-width:1.6"/>
-          <circle cx="356" cy="304" r="4.4" class="ink f-gold" style="stroke-width:1.6"/>
-          <rect x="190" y="380" width="314" height="12" class="ink f-cab-dark"/>
+          <path d="M348.5 369.5 V234.5 H493.5" class="k-bevel-lite"/><path d="M493.5 234.5 V369.5 H348.5" class="k-bevel-dark"/>
+          <rect x="210" y="244" width="116" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.4"/>
+          <path d="M212.5 357.5 V246.5 H323.5" class="k-bevel-dark-in"/><path d="M323.5 246.5 V357.5 H212.5" class="k-bevel-lite-in"/>
+          <rect x="358" y="244" width="126" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.4"/>
+          <path d="M360.5 357.5 V246.5 H481.5" class="k-bevel-dark-in"/><path d="M481.5 246.5 V357.5 H360.5" class="k-bevel-lite-in"/>
+          <path d="M256 208 h24 M408 208 h24" class="ink" style="stroke:var(--gold);stroke-width:4"/>
+          <circle cx="328" cy="304" r="4.6" class="ink f-gold" style="stroke-width:1.6"/><circle cx="326.6" cy="302.6" r="1.4" class="k-knob-shine"/>
+          <circle cx="356" cy="304" r="4.6" class="ink f-gold" style="stroke-width:1.6"/><circle cx="354.6" cy="302.6" r="1.4" class="k-knob-shine"/>
+          <rect x="190" y="185" width="314" height="10" class="k-overhang"/>
+          <rect x="194" y="380" width="306" height="12" class="ink f-cab-dark"/>
+          <rect x="194" y="380" width="306" height="4" class="k-toe-shadow"/>
         </svg>
 
         <!-- the fridge: it opens. Inside, her top drinks (or a note: coming soon) -->
@@ -319,6 +370,7 @@
               <circle cx="120" cy="326" r="9" class="ink" style="fill:#c0453c;stroke-width:1.6"/>
             </g>
             <path d="M8 40 Q8 8 40 8 H136 Q168 8 168 40 V116 H8 Z" class="ink f-fridge"/>
+            <path d="M8 40 Q8 8 40 8 H136 Q168 8 168 40 V116 H8 Z" fill="url(#k-sheen)"/>
             <rect x="140" y="54" width="10" height="44" rx="5" class="ink f-chrome"/>
             <rect x="64" y="22" width="48" height="12" rx="6" class="ink f-chrome" style="stroke-width:1.4"/>
             <path d="M84 28 a2 2 0 0 1 4 0 a2 2 0 0 1 4 0 q0 2.4 -4 4.4 q-4 -2 -4 -4.4z" class="f-berry"/>
@@ -330,6 +382,7 @@
             <div class="k-face k-face--front">
               <svg viewBox="0 0 160 240">
                 <rect x="1" y="1" width="158" height="238" rx="4" class="ink f-fridge"/>
+                <rect x="1" y="1" width="158" height="238" rx="4" fill="url(#k-sheen)"/>
                 <rect x="132" y="22" width="10" height="96" rx="5" class="ink f-chrome"/>
                 <g transform="rotate(-6 54 62)">
                   <rect x="26" y="30" width="56" height="64" rx="2" class="ink" style="fill:#fffdf6;stroke-width:1.6"/>
@@ -377,7 +430,7 @@
         </div>
 
         <!-- the coffee corner: tap for her order -->
-        <div class="k-obj-wrap k-coffee" style="--x:214;--y:20;--w:236;--h:148">
+        <div class="k-obj-wrap k-coffee" style="--x:214;--y:15;--w:236;--h:148">
           <div class="k-ticket" id="k-ticket" role="status" aria-live="polite"></div>
           <button type="button" class="k-obj k-coffee__btn" aria-expanded="false" aria-controls="k-ticket">
             <span class="visually-hidden">The coffee machine: my coffee order</span>
@@ -386,6 +439,7 @@
               <path d="M38 10 h20 l-2 -8 h-16 z M66 10 h20 l-2 -8 h-16 z" class="ink f-paper" style="stroke-width:1.6"/>
               <rect x="16" y="10" width="136" height="7" rx="3" class="ink f-chrome" style="stroke-width:1.8"/>
               <path d="M14 17 H154 V116 Q154 128 142 128 H26 Q14 128 14 116 Z" class="ink f-rose"/>
+              <path d="M14 17 H154 V116 Q154 128 142 128 H26 Q14 128 14 116 Z" fill="url(#k-sheen)"/>
               <path d="M20 22 V110" style="stroke:#fff;stroke-width:3;opacity:.35;stroke-linecap:round"/>
               <rect x="42" y="26" width="84" height="38" rx="10" class="ink f-chrome"/>
               <circle cx="84" cy="44" r="13" class="ink f-paper"/>
@@ -440,7 +494,8 @@
       <!-- run B: bread, fruit, and the range -->
       <div class="k-run k-run--b" style="--rw:540">
         <svg class="k-run__back" viewBox="0 0 540 392" aria-hidden="true">
-          <rect x="0" y="40" width="540" height="130" fill="url(#k-subway)"/>
+          <rect x="0" y="40" width="540" height="114" fill="url(#k-subway)"/>
+          <rect x="0" y="40" width="540" height="114" class="k-splash-shade"/>
           <rect x="0" y="34" width="290" height="8" class="ink f-wood" style="stroke-width:1.6"/>
           <!-- the copper hood -->
           <path d="M330 4 H490 L520 62 Q522 70 512 70 H308 Q298 70 300 62 Z" class="ink f-copper"/>
@@ -456,23 +511,35 @@
             <rect x="86" y="64" width="118" height="8" rx="2" class="ink f-wood" style="stroke-width:1.6"/>
             <path d="M100 72 v10 l10 -10 M190 72 v10 l-10 -10" class="ink f-wood" style="stroke-width:1.4"/>
           </g>
-          <rect x="0" y="168" width="290" height="16" rx="2" class="ink f-wood"/>
-          <path d="M4 171.5 H286" class="k-plank-lite"/>
-          <rect x="0" y="184" width="286" height="196" class="ink f-cab"/>
-          <rect x="7" y="191" width="132" height="34" rx="3" class="ink f-cab-lite"/>
-          <rect x="147" y="191" width="132" height="34" rx="3" class="ink f-cab-lite"/>
-          <path d="M61 208 h24 M201 208 h24" class="ink" style="stroke:var(--gold);stroke-width:4"/>
+          <!-- the countertop: its top seen from a little above, then its front edge -->
+          <path d="M0 152 H286 L290 170 H0 Z" class="ink f-wood-lite" style="stroke-width:1.8"/>
+          <path d="M8 158.5 H256 M40 164 H280" class="k-grain"/>
+          <rect x="0" y="170" width="290" height="15" rx="2" class="ink f-wood"/>
+          <path d="M4 173.5 H286" class="k-plank-lite"/>
+          <!-- the cabinets -->
+          <rect x="0" y="185" width="286" height="195" class="ink f-cab"/>
+          <rect x="7" y="192" width="132" height="33" rx="3" class="ink f-cab-lite"/>
+          <path d="M9.5 222.5 V194.5 H136.5" class="k-bevel-lite"/><path d="M136.5 194.5 V222.5 H9.5" class="k-bevel-dark"/>
+          <rect x="147" y="192" width="132" height="33" rx="3" class="ink f-cab-lite"/>
+          <path d="M149.5 222.5 V194.5 H276.5" class="k-bevel-lite"/><path d="M276.5 194.5 V222.5 H149.5" class="k-bevel-dark"/>
           <rect x="7" y="232" width="132" height="140" rx="3" class="ink f-cab-lite"/>
-          <rect x="19" y="244" width="108" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.45"/>
+          <path d="M9.5 369.5 V234.5 H136.5" class="k-bevel-lite"/><path d="M136.5 234.5 V369.5 H9.5" class="k-bevel-dark"/>
           <rect x="147" y="232" width="132" height="140" rx="3" class="ink f-cab-lite"/>
-          <rect x="159" y="244" width="108" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.45"/>
-          <circle cx="129" cy="304" r="4.4" class="ink f-gold" style="stroke-width:1.6"/>
-          <circle cx="157" cy="304" r="4.4" class="ink f-gold" style="stroke-width:1.6"/>
-          <rect x="0" y="380" width="286" height="12" class="ink f-cab-dark"/>
+          <path d="M149.5 369.5 V234.5 H276.5" class="k-bevel-lite"/><path d="M276.5 234.5 V369.5 H149.5" class="k-bevel-dark"/>
+          <rect x="19" y="244" width="108" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.4"/>
+          <path d="M21.5 357.5 V246.5 H124.5" class="k-bevel-dark-in"/><path d="M124.5 246.5 V357.5 H21.5" class="k-bevel-lite-in"/>
+          <rect x="159" y="244" width="108" height="116" rx="2" class="ink" style="stroke-width:1.4;opacity:.4"/>
+          <path d="M161.5 357.5 V246.5 H264.5" class="k-bevel-dark-in"/><path d="M264.5 246.5 V357.5 H161.5" class="k-bevel-lite-in"/>
+          <path d="M61 208 h24 M201 208 h24" class="ink" style="stroke:var(--gold);stroke-width:4"/>
+          <circle cx="129" cy="304" r="4.6" class="ink f-gold" style="stroke-width:1.6"/><circle cx="127.6" cy="302.6" r="1.4" class="k-knob-shine"/>
+          <circle cx="157" cy="304" r="4.6" class="ink f-gold" style="stroke-width:1.6"/><circle cx="155.6" cy="302.6" r="1.4" class="k-knob-shine"/>
+          <rect x="0" y="185" width="286" height="10" class="k-overhang"/>
+          <rect x="4" y="380" width="282" height="12" class="ink f-cab-dark"/>
+          <rect x="4" y="380" width="282" height="4" class="k-toe-shadow"/>
         </svg>
 
         <!-- a crock of spoons -->
-        <svg class="k-obj-wrap k-crock" style="--x:12;--y:88;--w:50;--h:80" viewBox="0 0 50 80" aria-hidden="true">
+        <svg class="k-obj-wrap k-crock" style="--x:12;--y:83;--w:50;--h:80" viewBox="0 0 50 80" aria-hidden="true">
           <path d="M16 40 L10 4" class="ink" style="stroke:var(--wood-dark);stroke-width:3"/>
           <ellipse cx="9.5" cy="6" rx="5" ry="7" transform="rotate(-10 9.5 6)" class="ink f-wood" style="stroke-width:1.6"/>
           <path d="M26 40 V10" class="ink" style="stroke:var(--chrome-dark);stroke-width:2"/>
@@ -485,7 +552,7 @@
         </svg>
 
         <!-- the sourdough -->
-        <button type="button" class="k-obj-wrap k-obj k-bread" style="--x:62;--y:50;--w:142;--h:118" aria-describedby="k-bread-tag" aria-label="A loaf of sourdough on the bread board">
+        <button type="button" class="k-obj-wrap k-obj k-bread" style="--x:62;--y:45;--w:142;--h:118" aria-describedby="k-bread-tag" aria-label="A loaf of sourdough on the bread board">
           <svg viewBox="0 0 142 118" aria-hidden="true">
             <ellipse cx="70" cy="116" rx="66" ry="3" class="k-shadow"/>
             <g transform="rotate(7 72 112)">
@@ -521,7 +588,7 @@
         <span class="k-tag k-tag--bread" id="k-bread-tag" role="tooltip"></span>
 
         <!-- the fruit bowl: her top fruits (coming soon) -->
-        <button type="button" class="k-obj-wrap k-obj k-fruit" style="--x:204;--y:108;--w:80;--h:60" aria-expanded="false" aria-controls="k-fruit-tag" aria-label="The fruit bowl: my top fruits">
+        <button type="button" class="k-obj-wrap k-obj k-fruit" style="--x:204;--y:103;--w:80;--h:60" aria-expanded="false" aria-controls="k-fruit-tag" aria-label="The fruit bowl: my top fruits">
           <svg viewBox="0 0 80 60" aria-hidden="true">
             <ellipse cx="40" cy="58" rx="34" ry="2.6" class="k-shadow"/>
             <g class="k-food">
@@ -546,6 +613,7 @@
           <svg class="k-range__body" viewBox="0 0 246 296" aria-hidden="true">
             <ellipse cx="123" cy="294" rx="118" ry="3" class="k-shadow"/>
             <rect x="4" y="2" width="238" height="56" rx="10" class="ink f-enamel"/>
+            <rect x="4" y="2" width="238" height="56" rx="10" fill="url(#k-sheen)"/>
             <circle cx="123" cy="30" r="19" class="ink f-paper"/>
             <g class="k-clock" style="stroke:var(--ink);stroke-linecap:round">
               <path d="M123 14 v3 M123 43 v3 M107 30 h3 M136 30 h3" style="stroke-width:1.4"/>
@@ -557,8 +625,9 @@
             <circle cx="62" cy="30" r="9" class="ink f-chrome" style="stroke-width:1.8"/><path d="M62 23 v6" class="ink" style="stroke-width:1.6"/>
             <circle cx="184" cy="30" r="9" class="ink f-chrome" style="stroke-width:1.8"/><path d="M184 23 v6" class="ink" style="stroke-width:1.6"/>
             <circle cx="214" cy="30" r="9" class="ink f-chrome" style="stroke-width:1.8"/><path d="M214 23 v6" class="ink" style="stroke-width:1.6"/>
-            <rect x="0" y="56" width="246" height="18" rx="3" class="ink f-chrome-dark"/>
-            <path d="M18 62 h60 M168 62 h60" class="ink" style="stroke-width:3"/>
+            <path d="M4 56 H242 L246 64 H0 Z" class="ink f-chrome" style="stroke-width:1.6"/>
+            <rect x="0" y="64" width="246" height="10" rx="2" class="ink f-chrome-dark"/>
+            <path d="M18 60 h60 M168 60 h60" class="ink" style="stroke-width:2.4"/>
             <!-- the kettle, on the left burner -->
             <g transform="translate(20 8)">
               <path d="M14 16 Q16 6 34 6 Q52 6 54 16" class="ink" style="stroke:var(--ink);stroke-width:3"/>
@@ -569,6 +638,7 @@
               <path class="k-kettle-steam" d="M78 16 q4 -6 0 -12 q-4 -6 0 -12"/>
             </g>
             <rect x="4" y="74" width="238" height="206" rx="4" class="ink f-enamel"/>
+            <rect x="4" y="74" width="238" height="206" rx="4" fill="url(#k-sheen)"/>
             <!-- inside the oven (behind the door) -->
             <g class="k-oven__inside">
               <rect x="20" y="86" width="206" height="162" rx="4" class="k-cavity"/>
@@ -597,6 +667,7 @@
             <div class="k-face k-face--front">
               <svg viewBox="0 0 214 166">
                 <rect x="1" y="1" width="212" height="164" rx="5" class="ink f-enamel"/>
+                <rect x="1" y="1" width="212" height="164" rx="5" fill="url(#k-sheen)"/>
                 <rect x="22" y="8" width="170" height="9" rx="4.5" class="ink f-chrome" style="stroke-width:1.8"/>
                 <rect x="40" y="40" width="134" height="84" rx="10" class="ink k-oven-glass"/>
                 <path d="M52 50 L74 50 L58 112 L48 112 Z" style="fill:#fff;opacity:.12"/>
@@ -625,20 +696,44 @@
       </div>
     </div>
 
-    <!-- ============================ the floor ============================ -->
-    <div class="k-floor" aria-hidden="true">
-      <svg class="k-floor__rug" viewBox="0 0 300 50">
-        <ellipse cx="150" cy="25" rx="146" ry="22" class="f-rose"/>
-        <ellipse cx="150" cy="25" rx="128" ry="18" class="f-paper"/>
-        <ellipse cx="150" cy="25" rx="110" ry="14" class="f-moss"/>
-        <ellipse cx="150" cy="25" rx="92" ry="10" class="f-gold"/>
-        <ellipse cx="150" cy="25" rx="72" ry="6" class="f-rose"/>
+  </section>
+  </div>
+
+  <div class="k-baseboard" aria-hidden="true"></div>
+  <!-- the floor: a real receding plane of tiles, with the window's light on it -->
+  <div class="k-floor">
+    <div class="k-floor__view" aria-hidden="true"><div class="k-floor__plane">
+      <span class="k-floor__sun"></span>
+      <span class="k-floor__ovenglow"></span>
+      <svg class="k-floor__rug" viewBox="0 0 300 120" preserveAspectRatio="none">
+        <ellipse cx="150" cy="60" rx="148" ry="58" class="f-rose"/>
+        <ellipse cx="150" cy="60" rx="130" ry="50" class="f-paper"/>
+        <ellipse cx="150" cy="60" rx="112" ry="42" class="f-moss"/>
+        <ellipse cx="150" cy="60" rx="94" ry="34" class="f-gold"/>
+        <ellipse cx="150" cy="60" rx="74" ry="25" class="f-rose"/>
+        <ellipse cx="150" cy="60" rx="52" ry="16" class="f-paper"/>
         <g class="ink" style="stroke-width:1.2;stroke-dasharray:4 4;opacity:.28">
-          <ellipse cx="150" cy="25" rx="137" ry="20"/><ellipse cx="150" cy="25" rx="119" ry="16"/><ellipse cx="150" cy="25" rx="101" ry="12"/><ellipse cx="150" cy="25" rx="82" ry="8"/>
+          <ellipse cx="150" cy="60" rx="139" ry="54"/><ellipse cx="150" cy="60" rx="121" ry="46"/><ellipse cx="150" cy="60" rx="103" ry="38"/><ellipse cx="150" cy="60" rx="84" ry="29"/><ellipse cx="150" cy="60" rx="63" ry="20"/>
         </g>
       </svg>
+    </div></div>
+    <div class="k-floor__stage">
+      <!-- Gemma's bowls, by the fridge -->
+      <svg class="k-bowls" viewBox="0 0 150 50" aria-hidden="true">
+        <ellipse cx="75" cy="44" rx="72" ry="5" class="k-shadow"/>
+        <path d="M6 22 H66 L60 42 Q59 46 54 46 H18 Q13 46 12 42 Z" class="ink f-rose"/>
+        <ellipse cx="36" cy="22" rx="30" ry="6" class="ink f-paper"/>
+        <g style="fill:#b07a4a"><circle cx="26" cy="21" r="2.4"/><circle cx="33" cy="23" r="2.2"/><circle cx="40" cy="20" r="2.4"/><circle cx="46" cy="23" r="2.1"/><circle cx="30" cy="19" r="2"/></g>
+        <text x="36" y="38" class="k-bowl-name">gemma</text>
+        <path d="M84 22 H144 L138 42 Q137 46 132 46 H96 Q91 46 90 42 Z" class="ink f-moss"/>
+        <ellipse cx="114" cy="22" rx="30" ry="6" class="ink" style="fill:#bfe0ee"/>
+        <path d="M102 21 q6 -2 12 0" style="stroke:#fff;stroke-width:1.6;fill:none;opacity:.8;stroke-linecap:round"/>
+        <path d="M108 30 a2 2 0 0 1 4 0 a2 2 0 0 1 4 0 q0 2.4 -4 4.6 q-4 -2.2 -4 -4.6z" class="f-paper"/>
+      </svg>
+      <nav class="rooms k-rooms" aria-label="Other rooms" data-rooms hidden></nav>
     </div>
-  </section>
+  </div>
+</main>
 
   <!-- the recipe box: opened from the cookies in the oven -->
   <dialog class="recipe-box" id="k-recipes" aria-labelledby="k-recipes-title">
@@ -651,8 +746,6 @@
     </div>
   </dialog>
 
-  <nav class="rooms" aria-label="Other rooms" data-rooms hidden></nav>
-</main>
 <script src="assets/sections.js"></script>
 <script src="assets/rooms.js"></script>
 <script src="assets/kitchen-data.js"></script>
