@@ -31,6 +31,13 @@ labelled "still decorating" stub.
   "opens soon" note. The key is public-safe by Web3Forms' own design.
 - **Look:** fairy forest / cottagecore, from her own notes. The sky follows the
   real sun and moon: a sunlit garden by day, fireflies and stars at night.
+  **The room stays cottage.** In October 2026 Rex tried a bigger fairy-forest
+  restyle of the room (vine garland, moss shelves, fern wallpaper, a magic
+  window view) and scrapped it as too much. He kept two things from it: the
+  **tree door** on the intro and **small fairies** flying round the room. Add
+  fantasy touches sparingly, one at a time, and ask before restyling the room.
+- **Rex previews big design changes before they go live.** Build on a branch,
+  show him (local preview plus screenshots), and push only after he approves.
 - **Features:** borrowed as *ideas* from a site she liked
   (luvbugdiaries.blogspot.com): the door intro, objects as navigation, a guide
   character with hover tips, and a "currently" status card. **Ideas only.**
@@ -49,7 +56,10 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 ## Files
 
 - `index.html`: the cottage, drawn as one illustrated room. A door intro
-  (once per browser session: arch, rose bushes, lantern, forest) opens onto:
+  (once per browser session) shows a green fairy door set into a giant mossy
+  tree: a leafy canopy with wisteria and fairy lights, lights on the carved
+  arch, a lantern, a fern, a rose bush and glowing mushrooms among the roots.
+  It opens onto:
   a bunting-and-fairy-light **garland** (pennant/bulb positions along the sag
   are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
   **light switch** (the sky toggle), a tear-off **wall calendar** (real date
@@ -58,7 +68,12 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   standing outside in the meadow, aimed at the moon, is the Moon Paparazzi
   link), the **toadstool guide**, two wooden **shelves** of objects
   with paper **tags**, the **corkboard** of pinned "currently" notes, and a
-  plank **floor** with a rug, fern, candle, and **Gemma** (see below). Petals drift by day and
+  plank **floor** with a rug, fern, candle, and **Gemma** (see below).
+  **Fairies** (`.fairies`): three tiny winged lights (two by day, three at
+  night) wander over the room in front of everything. They never block
+  clicks, and they're hidden for reduced motion. Each `.fairy` is a long
+  flight path. Its inner `<i>` is the bobbing body, with fluttering wings on
+  `::before` and `::after`. Petals drift by day and
   fireflies by night (`.ambient`). **Only the objects are links.** Every
   decorative piece is `aria-hidden`.
 - **Each object has its own hover animation**, hooked by `o-*` classes in its
@@ -153,6 +168,9 @@ is the heart of the home page, so treat her with care.
 - **Palette** (`:root`, redefined under `[data-dark="true"]`): linen bg, paper,
   wall, deep-forest ink (`--ink`, `--ink-soft`, `--ink-faint`), hairline.
   **Four accents:** `--moss`, `--rose`, `--gold`, `--berry` (toadstool red).
+  The tree door and the fairies add `--lilac`, `--fae` and `--fae-glow` (off by
+  day), plus `--bark`, `--bark-dark` and `--moss-deep`. Keep those to magical
+  things.
   Room materials: `--wood`, `--wood-lite`, `--wood-dark`, `--floor`, `--cork`.
   Sky tokens (`--sky-top`, `--sky-bottom`, `--treeline`, `--meadow`) shift by
   sun phase. The corkboard notes use fixed `--note-*` paper colours with

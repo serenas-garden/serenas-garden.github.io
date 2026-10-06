@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://serenas-garden.github.io/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A green cottage door under a vine arch at the edge of a fairy forest, with a crescent moon overhead">
+<meta property="og:image:alt" content="A green fairy door set into a giant mossy tree, with wisteria, fairy lights and glowing mushrooms">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -32,14 +32,31 @@
   <div class="door-intro__inner">
     <p class="door-sign">Serena's Garden</p>
     <button class="door-btn" type="button" aria-label="Open the door and come in">
-      <svg viewBox="-80 0 360 300" aria-hidden="true">
-        <!-- the forest behind the cottage, wide enough to reach both screen edges -->
+      <svg viewBox="-80 0 360 300" aria-hidden="true">        <!-- the forest behind the cottage, wide enough to reach both screen edges -->
         <path d="M-1600 284 l17 -44 l17 44 l24 -73 l24 73 l19 -54 l19 54 l26 -83 l26 83 l21 -64 l21 64 l28 -45 l28 45 l23 -74 l23 74 l18 -55 l18 55 l25 -84 l25 84 l20 -65 l20 65 l27 -46 l27 46 l22 -75 l22 75 l18 -56 l18 56 l24 -85 l24 85 l20 -66 l20 66 l26 -47 l26 47 l22 -76 l22 76 l18 -57 l18 57 l24 -86 l24 86 l20 -67 l20 67 l26 -48 l26 48 l22 -77 l22 77 l17 -58 l17 58 l24 -87 l24 87 l19 -68 l19 68 l26 -49 l26 49 l21 -78 l21 78 l28 -59 l28 59 l23 -88 l23 88 l18 -69 l18 69 l25 -50 l25 50 l20 -79 l20 79 l27 -60 l27 60 l22 -89 l22 89 l18 -70 l18 70 l24 -51 l24 51 l20 -80 l20 80 l26 -61 l26 61 l22 -90 l22 90 l18 -71 l18 71 l24 -52 l24 52 l20 -81 l20 81 l26 -62 l26 62 l22 -91 l22 91 l17 -72 l17 72 l24 -53 l24 53 l19 -82 l19 82 l26 -63 l26 63 l21 -44 l21 44 l28 -73 l28 73 l23 -54 l23 54 l18 -83 l18 83 l25 -64 l25 64 l20 -45 l20 45 l27 -74 l27 74 l22 -55 l22 55 l18 -84 l18 84 l24 -65 l24 65 l20 -46 l20 46 l26 -75 l26 75 l22 -56 l22 56 l18 -85 l18 85 l24 -66 l24 66 l20 -47 l20 47 l26 -76 l26 76 l22 -57 l22 57 l17 -86 l17 86 l24 -67 l24 67 l19 -48 l19 48 l26 -77 l26 77 l21 -58 l21 58 l28 -87 l28 87 l23 -68 l23 68 l18 -49 l18 49 l25 -78 l25 78 l20 -59 l20 59 l27 -88 l27 88 V300 H-1600 Z" style="fill:var(--treeline)"/>
         <path d="M-1600 278 Q100 262 1800 278 V1600 H-1600 Z" style="fill:var(--meadow)"/>
-        <!-- lantern light spills on the wall at night -->
+        <!-- the old tree the door is set into -->
+        <path d="M-46 292 C-18 268 4 236 9 176 C13 110 19 30 25 -64 H175 C181 30 187 110 191 176 C196 236 218 268 246 292 Z" class="ink" style="fill:var(--bark);stroke-width:2.4"/>
+        <path d="M-46 292 C-62 294 -78 297 -100 302 L-18 302 Z M246 292 C262 294 278 297 300 302 L218 302 Z M42 300 C30 296 18 296 2 302 Z M158 300 C170 296 182 296 198 302 Z" class="ink" style="fill:var(--bark);stroke-width:2"/>
+        <g class="ink" style="stroke:var(--bark-dark);stroke-width:2.2;opacity:.65">
+          <path d="M34 -60 C30 0 36 60 30 120 C26 170 34 210 22 262"/>
+          <path d="M48 -60 C46 -20 50 20 46 60"/>
+          <path d="M166 -60 C170 0 162 60 170 120 C174 170 166 220 180 266"/>
+          <path d="M152 -60 C154 -20 150 20 156 60"/>
+          <path d="M-18 240 C-10 256 -22 272 -14 288 M218 244 C210 260 222 274 214 290"/>
+        </g>
+        <ellipse cx="166" cy="-20" rx="7" ry="11" class="ink" style="fill:var(--bark-dark);stroke-width:1.6"/>
+        <g class="f-moss" opacity=".9"><circle cx="-34" cy="284" r="6"/><circle cx="-24" cy="280" r="7"/><circle cx="-12" cy="283" r="5"/><circle cx="-28" cy="274" r="4"/><circle cx="214" cy="282" r="6"/><circle cx="226" cy="278" r="7"/><circle cx="236" cy="283" r="5"/><circle cx="222" cy="272" r="4"/><circle cx="14" cy="180" r="4"/><circle cx="10" cy="170" r="5"/><circle cx="16" cy="160" r="3.5"/><circle cx="186" cy="120" r="4"/><circle cx="190" cy="110" r="5"/><circle cx="184" cy="100" r="3.5"/></g>
+        <!-- the canopy overhead, wisteria hanging from it, fairy lights in the branches -->
+        <g style="fill:var(--moss-deep)"><circle cx="100" cy="-170" r="150"/><circle cx="-50" cy="-120" r="104"/><circle cx="250" cy="-120" r="104"/><circle cx="-150" cy="-40" r="74"/><circle cx="350" cy="-40" r="74"/><circle cx="20" cy="-260" r="116"/><circle cx="190" cy="-262" r="116"/><circle cx="100" cy="-70" r="86"/><circle cx="-20" cy="-40" r="60"/><circle cx="220" cy="-40" r="60"/></g>
+        <g class="f-moss" opacity=".32"><circle cx="60" cy="-150" r="60"/><circle cx="170" cy="-200" r="54"/><circle cx="-40" cy="-140" r="42"/><circle cx="250" cy="-150" r="44"/><circle cx="110" cy="-60" r="40"/><circle cx="-120" cy="-60" r="30"/><circle cx="320" cy="-60" r="30"/></g>
+        <g class="f-lilac"><circle cx="-12" cy="10" r="4.2"/><circle cx="-8" cy="17" r="3.8"/><circle cx="-12" cy="24" r="3.3"/><circle cx="-8" cy="31" r="2.9"/><circle cx="-12" cy="38" r="2.4"/><circle cx="-8" cy="45" r="2.0"/><circle cx="208" cy="10" r="4.2"/><circle cx="212" cy="17" r="3.8"/><circle cx="208" cy="24" r="3.3"/><circle cx="212" cy="31" r="2.9"/><circle cx="208" cy="38" r="2.4"/><circle cx="212" cy="45" r="2.0"/><circle cx="328" cy="20" r="4.2"/><circle cx="332" cy="27" r="3.8"/><circle cx="328" cy="34" r="3.3"/><circle cx="332" cy="41" r="2.9"/><circle cx="328" cy="48" r="2.4"/></g>
+        <circle cx="-90" cy="-60" r="3" class="arch-light" style="--c:var(--gold)"/><circle cx="10" cy="-90" r="3" class="arch-light" style="--c:var(--lilac)"/><circle cx="120" cy="-110" r="3" class="arch-light" style="--c:var(--fae)"/><circle cx="220" cy="-80" r="3" class="arch-light" style="--c:var(--gold)"/><circle cx="320" cy="-90" r="3" class="arch-light" style="--c:var(--lilac)"/><circle cx="40" cy="-180" r="3" class="arch-light" style="--c:var(--fae)"/>
+        <!-- lantern light spills on the bark at night -->
         <circle cx="203" cy="156" r="30" class="lantern-glow"/>
-        <!-- stone arch -->
-        <path d="M20 286 V110 a80 80 0 0 1 160 0 V286 Z" class="ink f-paper"/>
+        <!-- the carved doorframe -->
+        <path d="M24 288 V110 a76 76 0 0 1 152 0 V288" class="ink" style="fill:none;stroke:var(--wood-lite);stroke-width:9"/>
+        <path d="M24 288 V110 a76 76 0 0 1 152 0 V288" class="ink" style="fill:none;stroke-width:1.6"/>
         <!-- warm room behind the door -->
         <path d="M38 280 V112 a62 62 0 0 1 124 0 V280 Z" class="door-glow"/>
         <!-- the door itself -->
@@ -55,54 +72,58 @@
           </g>
           <circle cx="146" cy="214" r="4" class="f-gold"/>
         </g>
-        <!-- vines over the arch -->
-        <path d="M22 200 C14 150 30 70 100 34 C170 70 186 150 178 200" class="ink" style="stroke:var(--moss);stroke-width:3"/>
+        <!-- fairy lights draped over the arch -->
+        <path d="M14 112 a86 86 0 0 1 172 0" class="ink" style="stroke:var(--bark-dark);stroke-width:1.2"/>
+        <circle cx="14.0" cy="112.0" r="2.6" class="arch-light" style="--c:var(--gold)"/><circle cx="30.4" cy="61.5" r="2.6" class="arch-light" style="--c:var(--lilac)"/><circle cx="49.5" cy="46.4" r="2.6" class="arch-light" style="--c:var(--gold)"/><circle cx="100.0" cy="30.0" r="2.6" class="arch-light" style="--c:var(--lilac)"/><circle cx="126.6" cy="30.2" r="2.6" class="arch-light" style="--c:var(--gold)"/><circle cx="169.6" cy="61.5" r="2.6" class="arch-light" style="--c:var(--lilac)"/><circle cx="181.8" cy="89.4" r="2.6" class="arch-light" style="--c:var(--gold)"/>
+        <!-- ivy and wisteria round the frame -->
+        <path d="M18 220 C10 170 24 90 70 46" class="ink" style="stroke:var(--moss-deep);stroke-width:2.4"/>
         <g class="f-moss">
-          <ellipse cx="30" cy="150" rx="8" ry="4" transform="rotate(-50 30 150)"/>
-          <ellipse cx="44" cy="92" rx="8" ry="4" transform="rotate(-30 44 92)"/>
-          <ellipse cx="70" cy="52" rx="8" ry="4" transform="rotate(-15 70 52)"/>
-          <ellipse cx="130" cy="52" rx="8" ry="4" transform="rotate(15 130 52)"/>
-          <ellipse cx="156" cy="92" rx="8" ry="4" transform="rotate(30 156 92)"/>
-          <ellipse cx="170" cy="150" rx="8" ry="4" transform="rotate(50 170 150)"/>
+          <ellipse cx="16" cy="196" rx="8" ry="4" transform="rotate(-70 16 196)"/>
+          <ellipse cx="22" cy="150" rx="8" ry="4" transform="rotate(-55 22 150)"/>
+          <ellipse cx="36" cy="104" rx="8" ry="4" transform="rotate(-40 36 104)"/>
+          <ellipse cx="56" cy="64" rx="8" ry="4" transform="rotate(-25 56 64)"/>
         </g>
-        <g class="f-rose">
-          <circle cx="36" cy="120" r="5"/><circle cx="58" cy="68" r="5"/>
-          <circle cx="100" cy="36" r="6"/><circle cx="142" cy="68" r="5"/>
-          <circle cx="164" cy="120" r="5"/>
-        </g>
-        <g class="f-gold">
-          <circle cx="36" cy="120" r="1.8"/><circle cx="58" cy="68" r="1.8"/>
-          <circle cx="100" cy="36" r="2"/><circle cx="142" cy="68" r="1.8"/>
-          <circle cx="164" cy="120" r="1.8"/>
+        <g class="f-lilac">
+          <circle cx="176" cy="60" r="4"/><circle cx="172" cy="67" r="3.6"/><circle cx="177" cy="73" r="3.3"/><circle cx="173" cy="79" r="2.8"/><circle cx="176" cy="85" r="2.2"/>
+          <circle cx="160" cy="44" r="3.6"/><circle cx="157" cy="51" r="3.2"/><circle cx="161" cy="57" r="2.6"/>
         </g>
         <!-- the lantern on its bracket -->
         <path d="M180 132 h22 v8" class="ink" style="stroke-width:2"/>
         <path d="M195 140 h14 l-2 6 h-10 z" class="ink f-ink" style="stroke-width:1.5"/>
         <rect x="196" y="146" width="12" height="18" rx="2" class="ink" style="fill:#ffe6a6;stroke-width:1.6"/>
         <path d="M194 164 h16 l-3 5 h-10 z" class="ink f-ink" style="stroke-width:1.5"/>
-        <!-- garden -->
+        <!-- stepping stones -->
         <g class="ink" style="stroke-width:1.6">
-          <ellipse cx="100" cy="290" rx="24" ry="6" style="fill:var(--hairline)"/>
-          <ellipse cx="68" cy="298" rx="15" ry="4" style="fill:var(--hairline)"/>
-          <ellipse cx="134" cy="298" rx="14" ry="4" style="fill:var(--hairline)"/>
+          <ellipse cx="100" cy="292" rx="24" ry="6" style="fill:var(--hairline)"/>
+          <ellipse cx="68" cy="299" rx="15" ry="4" style="fill:var(--hairline)"/>
+          <ellipse cx="134" cy="299" rx="14" ry="4" style="fill:var(--hairline)"/>
+        </g>
+        <!-- a fern on the left, a rose bush on the right -->
+        <g class="ink" style="stroke:var(--moss-deep);stroke-width:2.2">
+          <path d="M-52 300 C-60 270 -78 252 -96 246 M-50 300 C-50 262 -40 236 -26 220 M-48 300 C-38 276 -16 262 2 258 M-50 300 C-62 280 -60 250 -56 230"/>
+        </g>
+        <g class="f-moss">
+          <ellipse cx="-80" cy="254" rx="7" ry="3" transform="rotate(30 -80 254)"/><ellipse cx="-66" cy="266" rx="7" ry="3" transform="rotate(40 -66 266)"/>
+          <ellipse cx="-38" cy="232" rx="7" ry="3" transform="rotate(-50 -38 232)"/><ellipse cx="-44" cy="250" rx="7" ry="3" transform="rotate(-60 -44 250)"/>
+          <ellipse cx="-14" cy="262" rx="7" ry="3" transform="rotate(-15 -14 262)"/><ellipse cx="-30" cy="270" rx="7" ry="3" transform="rotate(-25 -30 270)"/>
+          <ellipse cx="-58" cy="240" rx="6" ry="3" transform="rotate(-80 -58 240)"/>
         </g>
         <g>
-          <circle cx="-44" cy="252" r="30" class="f-moss"/><circle cx="-14" cy="260" r="24" class="f-moss"/>
-          <circle cx="-64" cy="266" r="20" class="f-moss"/><circle cx="-30" cy="244" r="14" style="fill:var(--treeline);opacity:.35"/>
-          <circle cx="-50" cy="236" r="5" class="f-rose"/><circle cx="-24" cy="250" r="5" class="f-rose"/>
-          <circle cx="-62" cy="258" r="4.5" class="f-berry"/><circle cx="-8" cy="266" r="4.5" class="f-rose"/>
-          <circle cx="-40" cy="268" r="4" class="f-berry"/>
-          <circle cx="244" cy="252" r="30" class="f-moss"/><circle cx="214" cy="260" r="24" class="f-moss"/>
-          <circle cx="264" cy="266" r="20" class="f-moss"/><circle cx="230" cy="244" r="14" style="fill:var(--treeline);opacity:.35"/>
-          <circle cx="250" cy="236" r="5" class="f-rose"/><circle cx="224" cy="250" r="5" class="f-berry"/>
-          <circle cx="262" cy="258" r="4.5" class="f-rose"/><circle cx="208" cy="266" r="4.5" class="f-rose"/>
-          <circle cx="240" cy="268" r="4" class="f-berry"/>
+          <circle cx="250" cy="262" r="24" class="f-moss"/><circle cx="228" cy="272" r="18" class="f-moss"/>
+          <circle cx="268" cy="276" r="16" class="f-moss"/><circle cx="242" cy="254" r="10" style="fill:var(--treeline);opacity:.35"/>
+          <circle cx="252" cy="248" r="5" class="f-rose"/><circle cx="234" cy="264" r="5" class="f-berry"/>
+          <circle cx="266" cy="266" r="4.5" class="f-rose"/><circle cx="222" cy="278" r="4.5" class="f-rose"/>
+        </g>
+        <!-- glowing mushrooms among the roots -->
+        <g class="glow-shrooms">
+          <ellipse cx="-14" cy="292" rx="34" ry="13" class="shroom-glow"/>
+          <path d="M-30 300 v-9 h5 v9" class="f-paper"/><path d="M-38 292 q10 -15 21 0 Z" class="shroom-cap"/>
+          <path d="M-14 301 v-13 h6 v13" class="f-paper"/><path d="M-23 289 q12 -19 24 0 Z" class="shroom-cap"/>
+          <path d="M4 302 v-6 h4 v6" class="f-paper"/><path d="M-1 296 q8 -11 15 0 Z" class="shroom-cap"/>
         </g>
         <!-- toadstools by the step -->
-        <path d="M2 286 q10 -22 22 0 Z" class="ink f-berry"/>
-        <path d="M10 286 v-4 h6 v4" class="ink f-paper"/>
-        <path d="M176 286 q14 -28 28 0 Z" class="ink f-berry"/>
-        <circle cx="186" cy="276" r="2" class="f-paper"/><circle cx="194" cy="279" r="1.6" class="f-paper"/>
+        <path d="M150 300 q8 -18 18 0 Z" class="ink f-berry"/>
+        <path d="M156 300 v-3 h5 v3" class="ink f-paper"/>
       </svg>
     </button>
     <p class="door-hint">knock knock! click the door to come in</p>
@@ -635,6 +656,12 @@
   <span class="mote" style="--x:19%;--y:29%;--t:19s;--d:-11.9s"></span>
   <span class="mote" style="--x:48%;--y:70%;--t:15s;--d:-13.6s"></span>
   <span class="mote" style="--x:77%;--y:21%;--t:11s;--d:-15.3s"></span>
+</div>
+
+<div class="fairies" aria-hidden="true">
+  <span class="fairy fairy--1"><i></i></span>
+  <span class="fairy fairy--2"><i></i></span>
+  <span class="fairy fairy--3 fairy--night"><i></i></span>
 </div>
 
 <script src="assets/sections.js"></script>

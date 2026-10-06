@@ -21,6 +21,15 @@
   --gold:  #d9a441;
   --berry: #a8463f;     /* toadstool red */
 
+  /* fairy colours, used only by the tree door and the fairies:
+     lilac (wisteria, wings) and fae (glowing mushrooms, fairy lights) */
+  --lilac: #b29fd6;
+  --fae:   #7fcdbd;
+  --fae-glow: rgba(127, 205, 189, 0);   /* glow is off by day */
+  --moss-deep: #44603d;
+  --bark:      #7a5c45;
+  --bark-dark: #56402f;
+
   --wood:      #a07850;
   --wood-dark: #7d5a3a;
   --wood-lite: #bf9668;
@@ -62,6 +71,13 @@
   --rose:  #e3a9ad;
   --gold:  #f0c35e;
   --berry: #d0685f;
+
+  --lilac: #c4b3ec;
+  --fae:   #a4f2df;
+  --fae-glow: rgba(164, 242, 223, .5);
+  --moss-deep: #2c4229;
+  --bark:      #5d4636;
+  --bark-dark: #3d2e23;
 
   --wood:      #7d5f43;
   --wood-dark: #574231;
@@ -185,11 +201,23 @@ h1, h2, h3 {
 .door-intro__inner p { margin: 0; }
 
 .door-sign {
-  font: italic 500 clamp(30px, 6vw, 46px)/1 var(--display);
-  color: var(--paper);
-  text-shadow: 0 1px 0 rgba(0,0,0,.25);
+  position: relative;
+  z-index: 1;
+  padding: 8px 22px 10px;
+  font: italic 500 clamp(28px, 5.6vw, 44px)/1 var(--display);
+  color: var(--ink);
+  background: var(--paper);
+  border: 3px solid var(--bark-dark);
+  border-radius: 20px 14px 18px 12px / 14px 18px 12px 20px;
+  box-shadow: 0 10px 18px -10px rgba(0, 0, 0, .55);
 }
-:root:not([data-dark="true"]) .door-sign { color: var(--ink); text-shadow: none; }
+/* the tree door: fairy lights on the arch and in the canopy, glowing mushrooms */
+.arch-light { fill: var(--c); opacity: .8; }
+:root[data-dark="true"] .arch-light { opacity: 1; filter: drop-shadow(0 0 3px var(--c)); }
+.f-lilac { fill: var(--lilac); }
+.shroom-cap { fill: var(--fae); stroke: var(--moss-deep); stroke-width: 1.2; }
+:root:not([data-dark="true"]) .shroom-cap { fill: #9fc9bf; }
+.shroom-glow { fill: var(--fae-glow); opacity: .5; }
 
 .door-btn {
   border: 0;
@@ -906,6 +934,10 @@ h1, h2, h3 {
 
 .ambient { display: none; }
 
+/* --- fairies: a few tiny winged lights that wander over the room --- */
+
+.fairies { display: none; }
+
 /* ============================ section stubs ============================ */
 
 .page-head {
@@ -1103,6 +1135,7 @@ h1, h2, h3 {
   .door-btn.is-open .door-panel { transform: rotateY(-78deg); }
   .door-btn:hover .door-knocker { animation: knock .5s ease 2; transform-origin: center; transform-box: fill-box; }
   .lantern-glow { animation: breathe 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .shroom-glow { animation: breathe 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 
   /* the garland sways a little, the fairy lights twinkle */
   .garland { animation: sway-garland 9s ease-in-out infinite alternate; transform-origin: 50% 0; }
@@ -1222,6 +1255,53 @@ h1, h2, h3 {
   :root[data-dark="true"] .petal { display: none; }
   :root[data-dark="true"] .mote { display: block; }
 
+  /* fairies fly in front of the room (they never block clicks). Each is a
+     long, wandering flight (.fairy) carrying a bobbing body with two
+     fluttering wings (.fairy i). By day they're pale and lilac; at night
+     they glow. */
+  .fairies {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .fairy {
+    position: absolute;
+    width: 8px; height: 8px;
+    animation: var(--path) var(--t) ease-in-out infinite;
+  }
+  .fairy i {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fffbe8 0 30%, #b896e8 58%, transparent 74%);
+    box-shadow: 0 0 8px 3px rgba(160, 130, 214, .55);
+    animation: bob 1.1s ease-in-out infinite;
+  }
+  .fairy i::before, .fairy i::after { /* wings */
+    content: "";
+    position: absolute;
+    top: -6px;
+    width: 9px; height: 11px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .85);
+    box-shadow: 0 0 0 1px rgba(140, 110, 200, .6);
+    animation: flutter .15s ease-in-out infinite alternate;
+  }
+  .fairy i::before { right: 4px; transform-origin: 100% 100%; }
+  .fairy i::after  { left: 4px;  transform-origin: 0 100%; }
+  :root[data-dark="true"] .fairy i {
+    background: radial-gradient(circle, #fff 0 30%, var(--fae) 56%, transparent 74%);
+    box-shadow: 0 0 10px 3px var(--fae-glow);
+  }
+  .fairy--night { display: none; }
+  :root[data-dark="true"] .fairy--night { display: block; }
+  .fairy--1 { left: 8%;  top: 30%; --path: fly-a; --t: 38s; }
+  .fairy--2 { left: 72%; top: 58%; --path: fly-b; --t: 46s; animation-delay: -12s; }
+  .fairy--3 { left: 40%; top: 16%; --path: fly-c; --t: 34s; animation-delay: -6s; }
+
   @keyframes knock { 50% { transform: rotate(-12deg); } }
   @keyframes drift { to { transform: translate(14px, -18px); } }
   @keyframes blink { 50% { opacity: .25; } }
@@ -1250,4 +1330,8 @@ h1, h2, h3 {
     100% { transform: translate(10px, 106vh) rotate(380deg); }
   }
   @keyframes wander { to { transform: translate(60px, -40px); } }
+  @keyframes flutter { from { transform: scaleX(1); } to { transform: scaleX(.35); } }
+  @keyframes fly-a { 0% { transform: translate(0, 0); } 25% { transform: translate(28vw, -9vh); } 50% { transform: translate(52vw, 10vh); } 75% { transform: translate(22vw, 22vh); } 100% { transform: translate(0, 0); } }
+  @keyframes fly-b { 0% { transform: translate(0, 0); } 30% { transform: translate(-30vw, -20vh); } 60% { transform: translate(-50vw, 4vh); } 100% { transform: translate(0, 0); } }
+  @keyframes fly-c { 0% { transform: translate(0, 0); } 20% { transform: translate(-18vw, 16vh); } 50% { transform: translate(14vw, 34vh); } 80% { transform: translate(30vw, 8vh); } 100% { transform: translate(0, 0); } }
 }
