@@ -36,6 +36,8 @@ labelled "still decorating" stub.
   window view) and scrapped it as too much. He kept two things from it: the
   **tree door** on the intro and **small fairies** flying round the room. Add
   fantasy touches sparingly, one at a time, and ask before restyling the room.
+- **Sky and weather follow St. Petersburg, Florida** (Rex's call). See
+  `sky.js` and `weather.js` below.
 - **Rex previews big design changes before they go live.** Build on a branch,
   show him (local preview plus screenshots), and push only after he approves.
 - **Features:** borrowed as *ideas* from a site she liked
@@ -129,9 +131,24 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   guide text on the hub read from it.
 - `assets/currently-data.js`: the "currently" card. `sample: true` makes it
   label itself as a placeholder.
-- `assets/sky.js`: the sun/moon engine from Rex's site, adapted to estimate
-  the *visitor's* sky from their time zone. It must never encode Serena's
-  location. Sets `data-sky` and `data-dark` on `<html>`.
+- `assets/sky.js`: the sun/moon engine from Rex's site. **At Rex's request
+  (October 2026) it follows St. Petersburg, Florida** (27.7676 N, 82.6403 W,
+  America/New_York), the same as his site. That covers time of day, sun, moon
+  phase and the calendar date, for every visitor wherever they are. It's city
+  level only; never add anything more precise. Sets `data-sky` and
+  `data-dark` on `<html>`. The light switch / mushroom lamp pins the sky for
+  **this visit only** (sessionStorage), so every new visit opens on the real
+  sky. An older version kept the pin forever in localStorage and left
+  browsers stuck on "always day"; sky.js clears that old key.
+- `assets/weather.js`: **live weather for St. Petersburg** from Open-Meteo
+  (free, no key, browser-friendly). It's cached 15 minutes in sessionStorage
+  and refreshed every 15 minutes. It sets `data-weather` (clear, partly,
+  overcast, fog, rain, storm, snow) and `data-windy`. The CSS turns that into
+  grey skies, cloud decks and slate night clouds, rain, lightning, fog and
+  snow (`.weather-fx` layers) in the garden and the cottage window. It also
+  hides the sun and stars, dims the moon, and sends butterflies and lightning
+  bugs home in rain. The calendar shows the temperature and condition. If the
+  request fails, the site just shows fair weather. Loaded on `index.html` only.
 - `assets/garden.js`: hub behaviour (door, labels, guide, currently card,
   drawing the real moon phase in the window, sky toggle). The cottage is
   `inert` while the door is up, so keyboard users can't tab behind it.

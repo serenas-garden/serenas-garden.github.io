@@ -130,6 +130,18 @@
 :root[data-sky="afternoon"]   { --sky-top: #9cc4e2; --sky-bottom: #eaf1df; }
 :root[data-sky="midday"]      { --sky-top: #86bde3; --sky-bottom: #e4f0e6; }
 
+/* the weather over St. Pete (weather.js sets data-weather) greys the sky */
+:root[data-weather="overcast"],
+:root[data-weather="fog"]      { --sky-top: #a8b4bf; --sky-bottom: #d8dcd6; }
+:root[data-weather="rain"],
+:root[data-weather="storm"],
+:root[data-weather="snow"]     { --sky-top: #8794a0; --sky-bottom: #c0c7c6; }
+:root[data-dark="true"][data-weather="overcast"],
+:root[data-dark="true"][data-weather="fog"],
+:root[data-dark="true"][data-weather="rain"],
+:root[data-dark="true"][data-weather="storm"],
+:root[data-dark="true"][data-weather="snow"] { --sky-top: #141a24; --sky-bottom: #27303b; }
+
 /* ================================ base ================================ */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -278,6 +290,23 @@ h1, h2, h3 {
   border-radius: 999px;
 }
 
+/* ----- the weather layers: rain, lightning, fog, snow. Used in the garden
+   outside and inside the cottage window; shown by data-weather. ----- */
+.weather-fx { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+.window .weather-fx { z-index: 1; border-radius: inherit; }
+.weather-fx > span { position: absolute; inset: 0; display: none; }
+:root[data-weather="rain"] .fx-rain,
+:root[data-weather="storm"] .fx-rain { display: block; }
+:root[data-weather="storm"] .fx-flash { display: block; }
+:root[data-weather="fog"] .fx-fog { display: block; }
+:root[data-weather="snow"] .fx-snow { display: block; }
+.fx-rain { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='140'%3E%3Cg stroke='rgba(214,228,242,.6)' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M10 6 l-3 16'/%3E%3Cpath d='M44 40 l-3 16'/%3E%3Cpath d='M70 12 l-3 16'/%3E%3Cpath d='M24 78 l-3 16'/%3E%3Cpath d='M58 98 l-3 16'/%3E%3Cpath d='M6 118 l-3 16'/%3E%3Cpath d='M38 128 l-3 16'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 80px 140px; opacity: .85; }
+.fx-rain--near { background-size: 120px 210px; opacity: .55; }
+.fx-flash { background: #fff; opacity: 0; }
+.fx-fog { background: linear-gradient(transparent 32%, rgba(236, 239, 241, .6) 56%, rgba(236, 239, 241, .42) 76%, transparent); }
+:root[data-dark="true"] .fx-fog { background: linear-gradient(transparent 32%, rgba(150, 165, 190, .26) 56%, rgba(150, 165, 190, .18) 76%, transparent); }
+.fx-snow { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='120'%3E%3Cg fill='rgba(255,255,255,.85)'%3E%3Ccircle cx='12' cy='14' r='2'/%3E%3Ccircle cx='54' cy='40' r='1.6'/%3E%3Ccircle cx='78' cy='10' r='2.2'/%3E%3Ccircle cx='30' cy='70' r='1.8'/%3E%3Ccircle cx='66' cy='92' r='2'/%3E%3Ccircle cx='8' cy='104' r='1.5'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 90px 120px; }
+
 /* ----- the garden outside: everything in the door-scene svg ----- */
 .door-scene {
   position: absolute;
@@ -364,6 +393,73 @@ h1, h2, h3 {
 :root[data-dark="true"] .ds-night-veil { opacity: .32; }
 :root[data-dark="true"] .ds-reflect { opacity: .5; }
 :root[data-dark="true"] .ds-stone ellipse { fill: #4e4b46; }
+
+/* ----- weather in the garden and the window ----- */
+.ds-deck { display: none; }
+.ds-deck ellipse { fill: #c4cad0; opacity: .92; }
+:root[data-dark="true"] .ds-deck ellipse { fill: #222a36; }
+:root[data-weather="overcast"] .ds-deck,
+:root[data-weather="rain"] .ds-deck,
+:root[data-weather="storm"] .ds-deck,
+:root[data-weather="snow"] .ds-deck { display: inline; }
+/* a clear sky keeps just two little clouds; cloudy skies get all of them,
+   at night too, in slate */
+:root[data-weather="clear"] .ds-cloud--2,
+:root[data-weather="clear"] .ds-cloud--3,
+:root[data-weather="clear"] .ds-cloud--5 { display: none; }
+:root[data-dark="true"][data-weather="partly"] .ds-clouds,
+:root[data-dark="true"][data-weather="overcast"] .ds-clouds,
+:root[data-dark="true"][data-weather="rain"] .ds-clouds,
+:root[data-dark="true"][data-weather="storm"] .ds-clouds { display: inline; }
+:root[data-dark="true"] .ds-clouds ellipse { fill: #3a4252; }
+:root[data-weather="overcast"] .ds-clouds ellipse { fill: #eceff1; }
+:root[data-weather="rain"] .ds-clouds ellipse,
+:root[data-weather="storm"] .ds-clouds ellipse { fill: #b4bcc4; }
+:root[data-dark="true"][data-weather="overcast"] .ds-clouds ellipse,
+:root[data-dark="true"][data-weather="rain"] .ds-clouds ellipse,
+:root[data-dark="true"][data-weather="storm"] .ds-clouds ellipse { fill: #343c4a; }
+/* the sun hides behind grey skies; stars vanish; the moon glows through */
+:root[data-weather="overcast"] .ds-sun, :root[data-weather="overcast"] .sky-sun,
+:root[data-weather="rain"] .ds-sun, :root[data-weather="rain"] .sky-sun,
+:root[data-weather="storm"] .ds-sun, :root[data-weather="storm"] .sky-sun,
+:root[data-weather="snow"] .ds-sun, :root[data-weather="snow"] .sky-sun,
+:root[data-weather="fog"] .ds-sun, :root[data-weather="fog"] .sky-sun { display: none; }
+:root[data-weather="overcast"] .ds-stars, :root[data-weather="rain"] .ds-stars,
+:root[data-weather="storm"] .ds-stars, :root[data-weather="snow"] .ds-stars,
+:root[data-weather="fog"] .ds-stars { display: none; }
+:root[data-weather="overcast"] .door-intro::before, :root[data-weather="rain"] .door-intro::before,
+:root[data-weather="storm"] .door-intro::before, :root[data-weather="snow"] .door-intro::before,
+:root[data-weather="fog"] .door-intro::before { opacity: 0; }
+:root[data-weather="overcast"] .window .star, :root[data-weather="rain"] .window .star,
+:root[data-weather="storm"] .window .star, :root[data-weather="snow"] .window .star,
+:root[data-weather="fog"] .window .star { visibility: hidden; }
+:root[data-weather="overcast"] .ds-moon, :root[data-weather="overcast"] .sky-moon, :root[data-weather="overcast"] .window .moon-disc,
+:root[data-weather="rain"] .ds-moon, :root[data-weather="rain"] .sky-moon, :root[data-weather="rain"] .window .moon-disc,
+:root[data-weather="storm"] .ds-moon, :root[data-weather="storm"] .sky-moon, :root[data-weather="storm"] .window .moon-disc,
+:root[data-weather="fog"] .ds-moon, :root[data-weather="fog"] .sky-moon, :root[data-weather="fog"] .window .moon-disc { opacity: .4; }
+/* butterflies and lightning bugs stay home in rain, storms and snow */
+:root[data-weather="rain"] .ds-bflies, :root[data-weather="storm"] .ds-bflies, :root[data-weather="snow"] .ds-bflies,
+:root[data-weather="rain"] .ds-fireflies, :root[data-weather="storm"] .ds-fireflies, :root[data-weather="snow"] .ds-fireflies { display: none; }
+:root[data-weather="rain"] .window .firefly, :root[data-weather="storm"] .window .firefly,
+:root[data-weather="snow"] .window .firefly { visibility: hidden; }
+
+/* clouds in the cottage window */
+.win-clouds { display: none; }
+.win-clouds ellipse { fill: #fff; opacity: .9; }
+.win-clouds__heavy { display: none; }
+:root[data-weather="partly"] .win-clouds,
+:root[data-weather="overcast"] .win-clouds,
+:root[data-weather="rain"] .win-clouds,
+:root[data-weather="storm"] .win-clouds,
+:root[data-weather="snow"] .win-clouds { display: inline; }
+:root[data-weather="overcast"] .win-clouds__heavy,
+:root[data-weather="rain"] .win-clouds__heavy,
+:root[data-weather="storm"] .win-clouds__heavy,
+:root[data-weather="snow"] .win-clouds__heavy { display: inline; }
+:root[data-weather="overcast"] .win-clouds ellipse { fill: #e6e9ec; }
+:root[data-weather="rain"] .win-clouds ellipse,
+:root[data-weather="storm"] .win-clouds ellipse { fill: #b4bcc4; }
+:root[data-dark="true"] .win-clouds ellipse { fill: #343c4a; }
 
 /* =============================== the room ===============================
    index.html is one cottage room: garland and fairy lights across the top,
@@ -572,6 +668,8 @@ h1, h2, h3 {
 .calendar__moon .moon-dark { fill: var(--hairline); }
 .calendar__moon .moon-disc { fill: var(--gold); }
 .calendar__phase { font: 400 10px/1.2 var(--pixel); color: var(--ink-soft); padding: 0 4px; }
+.calendar__weather { font: 400 10px/1.2 var(--pixel); color: var(--ink-soft); margin-top: 5px; padding: 0 4px; }
+.calendar__weather:empty { display: none; }
 
 /* --- the room itself --- */
 
@@ -1263,6 +1361,12 @@ h1, h2, h3 {
 
   /* the garden outside: drifting clouds, twinkling stars, swaying grass,
      hopping bunnies, fluttering butterflies, blinking lightning bugs */
+  .fx-rain { animation: rain-fall .5s linear infinite; }
+  .fx-rain--near { animation: rain-fall-near .36s linear infinite; }
+  .fx-flash { animation: lightning 9s linear infinite; }
+  .fx-fog { animation: fog-drift 24s ease-in-out infinite alternate; }
+  .fx-snow { animation: snow-fall 9s linear infinite; }
+  :root[data-windy="true"] .ds-cloud { animation-duration: calc(var(--ct) / 2); }
   .ds-cloud { animation: cloud-drift var(--ct) linear infinite; animation-delay: var(--cd); }
   .sky-cloud--1 { animation: sky-cloud 60s ease-in-out infinite alternate; }
   .sky-cloud--2 { animation: sky-cloud 80s ease-in-out infinite alternate-reverse; }
@@ -1793,6 +1897,11 @@ h1, h2, h3 {
   }
   @keyframes wander { to { transform: translate(60px, -40px); } }
   @keyframes cloud-drift { from { transform: translateX(-900px); } to { transform: translateX(1800px); } }
+  @keyframes rain-fall { to { background-position: -26px 140px; } }
+  @keyframes rain-fall-near { to { background-position: -39px 210px; } }
+  @keyframes snow-fall { to { background-position: 30px 120px; } }
+  @keyframes fog-drift { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
+  @keyframes lightning { 0%, 61%, 100% { opacity: 0; } 62% { opacity: .55; } 63% { opacity: .06; } 64.5% { opacity: .42; } 66% { opacity: 0; } 87% { opacity: 0; } 87.8% { opacity: .3; } 89% { opacity: 0; } }
   @keyframes sky-cloud { from { translate: -30px 0; } to { translate: 40px 0; } }
   @keyframes sway { from { transform: skewX(-1.8deg); } to { transform: skewX(1.8deg); } }
   @keyframes ripple { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.05); opacity: .35; } }

@@ -192,8 +192,14 @@
     return (waxing ? "waxing " : "waning ") + (illum < 0.5 ? "crescent" : "gibbous");
   }
 
+  // dates are read in St. Petersburg's time zone (sky.js), not the visitor's
   function fmt(d, opts) {
-    try { return new Intl.DateTimeFormat("en-US", opts).format(d).toLowerCase(); }
+    try {
+      var o = {};
+      for (var k in opts) o[k] = opts[k];
+      if (window.Sky && window.Sky.TZ) o.timeZone = window.Sky.TZ;
+      return new Intl.DateTimeFormat("en-US", o).format(d).toLowerCase();
+    }
     catch (e) { return ""; }
   }
   function shortDate(d) { return fmt(d, { month: "long", day: "numeric" }); }
@@ -231,11 +237,15 @@
       var now = new Date();
       var phase = moon ? phaseName(moon.illum, moon.waxing) : "";
       cal.querySelector(".calendar__month").textContent = fmt(now, { month: "short" });
-      cal.querySelector(".calendar__day").textContent = now.getDate();
+      cal.querySelector(".calendar__day").textContent = fmt(now, { day: "numeric" });
       cal.querySelector(".calendar__weekday").textContent = fmt(now, { weekday: "long" });
       if (phase) cal.querySelector(".calendar__phase").textContent = phase;
+      var w = window.Weather;
+      var weatherLine = cal.querySelector(".calendar__weather");
+      if (weatherLine) weatherLine.textContent = w ? w.temp + "\u00b0 \u00b7 " + w.words : "";
       cal.setAttribute("aria-label", "Today is " + fmt(now, { weekday: "long", month: "long", day: "numeric" }) +
-        (phase ? ". Tonight's moon: " + phase + "." : ""));
+        (phase ? ". Tonight's moon: " + phase + "." : "") +
+        (w ? " It's " + w.temp + " degrees and " + w.words + "." : ""));
     }
 
     if (toggle && window.Sky) {
@@ -245,6 +255,8 @@
       toggle.setAttribute("aria-label", TOGGLE_LABELS[mode] + ". Flip the switch to change the sky.");
     }
   }
+
+  document.addEventListener("weather", render);
 
   if (window.Sky) {
     window.Sky.onchange = render;

@@ -1,17 +1,10 @@
-/* The sky, roughly where the visitor is.
+/* The sky over St. Petersburg, Florida.
  *
- * Adapted from the sky engine on Rex's site (assets/sky.js there),
- * which fixes the sky over one real city. This site must never reveal where
- * Serena lives, so instead of a fixed place it estimates the *visitor's* sky
- * from their own time zone, with no geolocation prompt and nothing sent anywhere:
- *
- *   longitude  from the zone's standard UTC offset (15 degrees per hour)
- *   latitude   a fixed 35 degrees, north or south, guessed from which half of
- *              the year the zone observes daylight saving
- *
- * That's coarse (sunrise can be off by half an hour), but the day/night mood is
- * right everywhere, and the moon's phase is exact for everyone because it
- * doesn't depend on location at all.
+ * Adapted from the sky engine on Rex's site (assets/sky.js there). Rex asked
+ * for Serena's sky to follow St. Petersburg too, so the time of day, the sun
+ * and the moon are worked out for 27.7676 N, 82.6403 W, and the date is read in
+ * America/New_York, whoever is visiting and wherever they are. (Live weather
+ * for the same place comes from weather.js.)
  *
  * Phases are cut on solar altitude, not clock time, so dawn and dusk track the
  * seasons for free:
@@ -31,14 +24,8 @@
 (function () {
   "use strict";
 
-  // The zone's standard offset is the larger of January's and July's (DST only
-  // ever subtracts). Southern zones take their DST in January.
-  var jan = new Date(2026, 0, 1).getTimezoneOffset();
-  var jul = new Date(2026, 6, 1).getTimezoneOffset();
-  var LON = -Math.max(jan, jul) / 4;
-  var LAT = jan < jul ? -35 : 35;
-  var TZ;
-  try { TZ = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
+  var LAT = 27.7676, LON = -82.6403;          // St. Petersburg, FL
+  var TZ = "America/New_York";
 
   var D2R = Math.PI / 180, R2D = 180 / Math.PI;
   function sin(d) { return Math.sin(d * D2R); }
@@ -203,14 +190,19 @@
   }
 
   /* ------------------------------- applying -------------------------------- */
-  /* A visitor can pin a fixed sky; "auto" hands it back to the clock. */
+  /* A visitor can pin a fixed sky with the light switch; "auto" hands it back
+     to the clock. The pin lasts for this visit only (sessionStorage): every
+     new visit opens on the real sky over St. Pete. Earlier versions kept the
+     pin forever in localStorage, which left some browsers stuck on "always
+     day", so that old key is cleared here. */
 
   var KEY = "sg-sky";
   var MODES = ["auto", "day", "night"];
+  try { localStorage.removeItem(KEY); } catch (e) {}
 
   function stored() {
     try {
-      var v = localStorage.getItem(KEY);
+      var v = sessionStorage.getItem(KEY);
       return MODES.indexOf(v) > -1 ? v : "auto";
     } catch (e) { return "auto"; }
   }
@@ -240,7 +232,7 @@
 
   function setMode(mode) {
     if (MODES.indexOf(mode) < 0) mode = "auto";
-    try { localStorage.setItem(KEY, mode); } catch (e) {}
+    try { sessionStorage.setItem(KEY, mode); } catch (e) {}
     return apply(mode);
   }
 
