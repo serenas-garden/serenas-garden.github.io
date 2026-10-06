@@ -172,6 +172,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - `tools/`: Python scripts (standard library only) that generate the travels
   map data and stamp drawings, plus the place checker. Not loaded by any page.
 - `CREDITS.md`: third-party material and its licence.
+- `AGENTS.md`: a short pointer to this file for other coding agents (Codex
+  reads that name). Keep it a pointer; never copy these notes into it, or the
+  two will drift apart.
 
 ## Travels
 
