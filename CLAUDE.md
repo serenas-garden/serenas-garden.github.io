@@ -58,7 +58,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 ## Files
 
 - `index.html`: the cottage, drawn as one illustrated room. A door intro
-  (once per browser session) shows a green fairy door set into a giant mossy
+  (shown on every arrival: a link, bookmark, typed address or refresh;
+  skipped only when coming back from a room or using Back/Forward after
+  coming through it; see `arrivingFromOutside` in garden.js) shows a green fairy door set into a giant mossy
   tree: a leafy canopy with wisteria and fairy lights, lights on the carved
   arch, a lantern, a fern, a rose bush and glowing mushrooms among the roots.
   **The tree stands in a full garden** (`.door-scene`, one 1600×1000 SVG,

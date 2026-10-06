@@ -14,17 +14,32 @@
   (window.SECTIONS || []).forEach(function (s) { bySlug[s.slug] = s; });
 
   /* ------------------------------- the door ------------------------------- */
-  /* Hidden in the HTML so the site still works with scripts off. Shown once per
-     browser session, then remembered. While it's up, the cottage behind it is
-     inert, so keyboard users can't tab into a room they can't see. */
+  /* Hidden in the HTML so the site still works with scripts off. It greets
+     every arrival: a link, a bookmark, a typed address, a refresh. It's
+     skipped only when moving around inside the site: coming back from a room
+     (the referrer is this site), or going Back/Forward to the cottage after
+     already coming through the door in this tab. While it's up, the cottage
+     behind it is inert, so keyboard users can't tab into a room they can't
+     see. */
 
   var DOOR_KEY = "sg-entered";
   var intro = document.querySelector(".door-intro");
   var cottage = document.getElementById("cottage");
 
+  function arrivingFromOutside() {
+    var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+    var type = nav ? nav.type : "navigate";
+    if (type === "reload") return true;
+    if (type === "back_forward") {
+      try { return sessionStorage.getItem(DOOR_KEY) !== "1"; } catch (e) { return true; }
+    }
+    try {
+      return !document.referrer || new URL(document.referrer).origin !== location.origin;
+    } catch (e) { return true; }
+  }
+
   if (intro) {
-    var entered = false;
-    try { entered = sessionStorage.getItem(DOOR_KEY) === "1"; } catch (e) {}
+    var entered = !arrivingFromOutside();
 
     if (!entered) {
       intro.hidden = false;
