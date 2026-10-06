@@ -24,8 +24,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&family=Caveat:wght@600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
+<script src="assets/weather.js"></script>
 </head>
-<body data-section="kitchen">
+<body data-section="kitchen" data-room>
 <main class="kroom">
   <div class="garland" aria-hidden="true">
     <svg viewBox="0 0 1000 72" preserveAspectRatio="none"><path d="M-10 4 Q500 76 1010 4"/></svg>
@@ -170,6 +171,11 @@
               <circle class="moon-dark" cx="244" cy="62" r="26"/>
               <path id="k-moon" class="moon-disc" d=""/>
             </g>
+            <g class="win-clouds">
+              <g transform="translate(36 58)"><ellipse cx="0" cy="0" rx="40" ry="14"/><ellipse cx="28" cy="-9" rx="28" ry="16"/><ellipse cx="58" cy="0" rx="32" ry="13"/></g>
+              <g transform="translate(176 110)"><ellipse cx="0" cy="0" rx="30" ry="11"/><ellipse cx="20" cy="-7" rx="22" ry="13"/><ellipse cx="44" cy="0" rx="25" ry="10"/></g>
+              <g class="win-clouds__heavy"><ellipse cx="160" cy="14" rx="230" ry="56"/><ellipse cx="40" cy="52" rx="110" ry="36"/><ellipse cx="290" cy="54" rx="110" ry="40"/></g>
+            </g>
             <path d="M0 168 q60 -26 130 -8 t130 -12 t60 4 V240 H0 Z" style="fill:var(--hill-far)"/>
             <path d="M0 184 l14 -36 l14 36 l10 -50 l16 50 l12 -32 l12 32 l14 -58 l18 58 l10 -28 l12 28 l16 -46 l16 46 l12 -36 l12 36 l16 -54 l18 54 l12 -30 l12 30 l14 -42 l14 42 l10 -26 l12 26 V240 H0 Z" style="fill:var(--treeline)"/>
             <!-- the fairy tree, far off, with its little green door -->
@@ -192,6 +198,7 @@
               <circle class="firefly" cx="70" cy="180" r="1.8"/><circle class="firefly" cx="160" cy="170" r="1.5"/><circle class="firefly" cx="280" cy="176" r="1.8"/>
             </g>
           </svg>
+          <div class="weather-fx" aria-hidden="true"><span class="fx-fog"></span><span class="fx-rain"></span><span class="fx-rain fx-rain--near"></span><span class="fx-snow"></span><span class="fx-flash"></span></div>
           <span class="k-window__valance" aria-hidden="true"></span>
           <span class="k-window__curtain k-window__curtain--l" aria-hidden="true"></span>
           <span class="k-window__curtain k-window__curtain--r" aria-hidden="true"></span>
@@ -717,9 +724,11 @@
         </g>
       </svg>
     </div></div>
-    <div class="k-floor__stage">
+    <!-- Gemma follows you in (gemma-follow.js): she walks along this strip,
+         has a snack at her bowl, then naps in the sunbeam (by the oven at night) -->
+    <div class="k-floor__stage" data-gemma-stage data-gemma-nap="0.5" data-gemma-nap-night="0.8">
       <!-- Gemma's bowls, by the fridge -->
-      <svg class="k-bowls" viewBox="0 0 150 50" aria-hidden="true">
+      <svg class="k-bowls" viewBox="0 0 150 50" aria-hidden="true" data-gemma-spot="bowl" data-gemma-at="0.24">
         <ellipse cx="75" cy="44" rx="72" ry="5" class="k-shadow"/>
         <path d="M6 22 H66 L60 42 Q59 46 54 46 H18 Q13 46 12 42 Z" class="ink f-rose"/>
         <ellipse cx="36" cy="22" rx="30" ry="6" class="ink f-paper"/>
@@ -750,5 +759,7 @@
 <script src="assets/rooms.js"></script>
 <script src="assets/kitchen-data.js"></script>
 <script src="assets/kitchen.js"></script>
+<script src="assets/gemma-kit.js"></script>
+<script src="assets/gemma-follow.js"></script>
 </body>
 </html>

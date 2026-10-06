@@ -146,6 +146,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   **this visit only** (sessionStorage), so every new visit opens on the real
   sky. An older version kept the pin forever in localStorage and left
   browsers stuck on "always day"; sky.js clears that old key.
+- `assets/gemma-kit.js`: Gemma's drawing and petting, shared by every page
+  she's on. `assets/gemma-follow.js`: her following you into rooms.
 - `assets/weather.js`: **live weather for St. Petersburg** from Open-Meteo
   (free, no key, browser-friendly). It's cached 15 minutes in sessionStorage
   and refreshed every 15 minutes. It sets `data-weather` (clear, partly,
@@ -154,7 +156,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   snow (`.weather-fx` layers) in the garden and the cottage window. It also
   hides the sun and stars, dims the moon, and sends butterflies and lightning
   bugs home in rain. The calendar shows the temperature and condition. If the
-  request fails, the site just shows fair weather. Loaded on `index.html` only.
+  request fails, the site just shows fair weather. Loaded on `index.html` and
+  `kitchen.html`.
 - `assets/garden.js`: hub behaviour (door, labels, guide, currently card,
   drawing the real moon phase in the window, sky toggle). The cottage is
   `inert` while the door is up, so keyboard users can't tab behind it.
@@ -274,6 +277,33 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
 - **Links:** `travels.html#kyoto` opens on a place (the id from the data).
 - Caveat is loaded on this page too, for the handwritten notes.
 
+## Rooms, and Gemma following you in
+
+Some pages are designed as **rooms** of the cottage (the Kitchen so far);
+others are just pages (Travels). **Rex's rule (October 2026): on every page
+designed as a room, Gemma follows you in. On pages that aren't rooms, she
+doesn't.** So every new room page needs:
+
+- `<body data-section="…" data-room>`: the `data-room` marker is what makes
+  her come. Leave it off pages that aren't rooms.
+- A floor strip for her: an element with `data-gemma-stage` (position
+  relative, sitting in front of the furniture), with CSS `--gemma-feet` (how
+  far below its top her feet touch the floor), `data-gemma-nap` (where she
+  naps, a fraction across) and optionally `data-gemma-nap-night`.
+- Optionally something for her: `data-gemma-spot="bowl"` (with
+  `data-gemma-at`, the fraction across it where her head goes) and she
+  snacks there first.
+- `assets/gemma-kit.js` then `assets/gemma-follow.js` at the end of the page.
+
+She walks in from the left edge of the screen (the way you came), visits her
+spot, sits and yawns, walks to her nap spot, turns round and curls up; then
+dozes, with the odd stretch and look around. Petting works everywhere. With
+reduced motion she's already asleep in her nap spot. **Her drawing and petting
+live once, in `gemma-kit.js`** (`GemmaKit.art`, `.button()`, `.petting()`),
+used by the cottage too, so she looks the same in every room; change her
+there. Her poses are `walk`, `jump`, `sit`, `sleep` and `eat` (the walk pose
+with her head, `.g-head`, dipped into a bowl).
+
 ## The Kitchen
 
 `kitchen.html`: another room of the cottage. Built to Rex's brief;
@@ -331,6 +361,13 @@ everything it says is in `assets/kitchen-data.js`, and the behaviour is
   only edit needed.
 - **The range clock** shows the real time in St. Petersburg (sky.js's time
   zone), like the rest of the garden.
+- **The window follows the weather** (weather.js loads on this page too):
+  it reuses the cottage window's cloud deck (`.win-clouds`) and rain, storm,
+  fog and snow layers (`.weather-fx`); grey skies hide the sun, the stars and
+  the sunbeam on the floor, and dim the moon.
+- **Gemma follows you in** (it's a room): she has a snack at her bowls by the
+  cabinets, then naps in the sunbeam in the middle of the floor, or by the
+  warm oven after dark.
 - Food, paper, the chalkboard and the starter keep fixed colours (dimmed a
   little at night); the room itself uses theme tokens (`--cab`, `--tile`,
   `--enamel`, `--chrome`, `--fridge`, `--copper`, `--k-wall`, `--k-floor-*`).
@@ -347,13 +384,15 @@ is the heart of the home page, so treat her with care.
   pink nose and inner ears. She wears a rose collar with a gold heart tag. Her
   fur colours are fixed hex values (she's the same cat at night, just dimmed a
   touch), unlike the room, which uses theme tokens.
+- **She follows you into rooms**: see "Rooms, and Gemma following you in".
 - **Where she lives:** `.floor__stage` in `index.html`: her bed (two SVG
   halves, `.cat-bed--back` and `.cat-bed--front`, so she sleeps *between*
   them; "gemma" is embroidered on the front), and her cat tree (`.cat-tree`:
   condo, middle shelf, top perch, pom-pom toy). She is a `<button class="gemma">`
-  containing one SVG with three poses: `g-walk` (side view, also used for
-  `jump`), `g-sit` (front view, with a yawn), and `g-sleep` (curled up, with
-  drifting z's). `data-pose` picks which is shown.
+  whose SVG is filled from `GemmaKit.art` (`assets/gemma-kit.js`), with poses
+  `g-walk` (side view, also used for `jump` and `eat`), `g-sit` (front view,
+  with a yawn), and `g-sleep` (curled up, with drifting z's). `data-pose`
+  picks which is shown.
 - **Her day** (`assets/gemma.js`): nap → wake, sit, yawn → hop out → stroll to
   the tree (sometimes stopping halfway to look around) → jump condo → shelf →
   top perch → sit there → down via the condo → walk home → step into bed →

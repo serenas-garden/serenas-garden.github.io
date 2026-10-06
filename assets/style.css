@@ -1110,7 +1110,11 @@ h1, h2, h3 {
 .gemma[data-pose="walk"] .g-walk,
 .gemma[data-pose="jump"] .g-walk,
 .gemma[data-pose="sit"] .g-sit,
-.gemma[data-pose="sleep"] .g-sleep { display: inline; }
+.gemma[data-pose="sleep"] .g-sleep,
+.gemma[data-pose="eat"] .g-walk { display: inline; }
+/* eating: the walking pose, standing still, head dipped into the bowl */
+.g-head { transform-box: view-box; transform-origin: 90px 40px; }
+.gemma[data-pose="eat"] .g-head { transform: translate(1px, 15px) rotate(32deg); }
 
 .g-shadow { fill: rgba(40, 28, 20, .16); }
 .gemma[data-pose="jump"] .g-walk-shadow { display: none; }
@@ -2348,7 +2352,6 @@ body[data-section="kitchen"]::before {
   position: relative;
   flex: 1 0 auto;            /* tall enough for what's on it, and fills the rest of the screen */
   min-height: 240px;
-  overflow: hidden;
   background: var(--k-floor-a);
 }
 /* the 3D floor lives in its own layer, so it's flattened there and anything
@@ -2397,6 +2400,20 @@ body[data-section="kitchen"]::before {
   transform: skewX(-24deg);
 }
 :root[data-dark="true"] .k-floor__sun { display: none; }
+/* the weather over St. Pete (weather.js) reaches the kitchen too: no sun and
+   no sunbeam under grey skies, stars hidden, the moon dimmed */
+:root[data-weather="overcast"] .k-sun, :root[data-weather="rain"] .k-sun, :root[data-weather="storm"] .k-sun,
+:root[data-weather="snow"] .k-sun, :root[data-weather="fog"] .k-sun,
+:root[data-weather="overcast"] .k-floor__sun, :root[data-weather="rain"] .k-floor__sun, :root[data-weather="storm"] .k-floor__sun,
+:root[data-weather="snow"] .k-floor__sun, :root[data-weather="fog"] .k-floor__sun { display: none; }
+:root[data-weather="overcast"] .k-window .star, :root[data-weather="rain"] .k-window .star, :root[data-weather="storm"] .k-window .star,
+:root[data-weather="snow"] .k-window .star, :root[data-weather="fog"] .k-window .star,
+:root[data-weather="rain"] .k-window .firefly, :root[data-weather="storm"] .k-window .firefly, :root[data-weather="snow"] .k-window .firefly { visibility: hidden; }
+:root[data-weather="overcast"] .k-window .moon-disc, :root[data-weather="rain"] .k-window .moon-disc, :root[data-weather="storm"] .k-window .moon-disc,
+:root[data-weather="snow"] .k-window .moon-disc, :root[data-weather="fog"] .k-window .moon-disc { opacity: .4; }
+:root[data-weather="overcast"] .k-cloud ellipse, :root[data-weather="rain"] .k-cloud ellipse, :root[data-weather="storm"] .k-cloud ellipse { fill: #d9dee2; }
+:root[data-weather="rain"] .k-window-wrap::before, :root[data-weather="storm"] .k-window-wrap::before,
+:root[data-weather="overcast"] .k-window-wrap::before, :root[data-weather="fog"] .k-window-wrap::before { opacity: .45; }
 .k-floor__ovenglow { /* warm light from the open oven, on the floor in front of it */
   position: absolute;
   left: calc(50% + 110px);
@@ -2408,14 +2425,22 @@ body[data-section="kitchen"]::before {
 }
 .kroom:has(.k-range.is-open) .k-floor__ovenglow { opacity: 1; }
 .k-floor__rug { position: absolute; left: calc(50% + 96px); top: 150px; width: 300px; height: 170px; }
-.k-floor__stage {
+.k-floor__stage {           /* in front of the counters: Gemma stands before the cabinets */
   position: relative;
-  z-index: 1;
+  z-index: 3;
   width: min(1040px, 100% - 32px);
   margin: 0 auto;
   padding: 0 0 28px;
 }
-.k-bowls { position: absolute; left: 22%; top: 12px; width: 120px; height: auto; overflow: visible; }
+.k-bowls { position: absolute; left: 22%; top: 12px; z-index: 2; width: 120px; height: auto; overflow: visible; }
+.k-floor__stage { --gemma-feet: 50px; }
+[data-gemma-stage] .gemma {
+  position: absolute;
+  left: 0;
+  top: calc(var(--gemma-feet) - var(--gw, 112px) * .655);
+  z-index: 1;
+  --gw: 112px;
+}
 .k-rooms { margin: 0; padding-top: 118px; text-align: center; }
 .k-rooms ul { justify-content: center; }
 .k-rooms .eyebrow { text-align: center; }
@@ -2507,7 +2532,9 @@ body[data-section="kitchen"]::before {
   .k-floor__sun { width: 220px; height: 200px; left: calc(50% - 110px); }
   .k-floor__rug { left: calc(50% + 10px); top: 70px; width: 150px; height: 84px; }
   .k-floor__ovenglow { left: calc(50% + 20px); width: 150px; height: 150px; }
-  .k-bowls { width: 96px; top: 10px; left: 8%; }
+  .k-bowls { width: 96px; top: 10px; left: 20%; }
+  .k-floor__stage { --gemma-feet: 41px; }
+  [data-gemma-stage] .gemma { --gw: 80px; }
   .k-rooms { padding-top: 96px; }
   .k-wall { gap: 30px 12px; }
   .k-window-wrap { margin: 6px 12px 0; }
@@ -3013,6 +3040,7 @@ body[data-section="kitchen"]::before {
   .gemma__bubble { transition: opacity .2s ease, transform .2s ease; }
   .gemma__bubble.is-on { transform: translateX(-50%) translateY(-3px); }
   .gemma__heart { animation: g-heart 1.4s ease-out forwards; }
+  .gemma[data-pose="eat"] .g-head { animation: g-nibble .7s ease-in-out infinite alternate; }
   .gemma:hover .g-eyes { animation-duration: 1.6s; }
   .t-toy { animation: toy-swing 3s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 0; }
 
@@ -3023,6 +3051,7 @@ body[data-section="kitchen"]::before {
   @keyframes g-blink { 0%, 93%, 100% { transform: scaleY(1); } 95%, 97% { transform: scaleY(.1); } }
   @keyframes g-breathe { 50% { transform: scaleY(1.045); } }
   @keyframes g-z { 0% { opacity: 0; transform: translate(0, 4px); } 30% { opacity: .85; } 100% { opacity: 0; transform: translate(6px, -12px); } }
+  @keyframes g-nibble { from { transform: translate(1px, 15px) rotate(29deg); } to { transform: translate(1px, 17px) rotate(36deg); } }
   @keyframes g-heart { 0% { opacity: 0; transform: translateY(0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--hd, 0px), -46px) scale(1.15); } }
   @keyframes toy-swing { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
 

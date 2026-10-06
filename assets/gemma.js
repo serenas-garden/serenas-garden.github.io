@@ -8,8 +8,8 @@
  *
  * Click or tap her to pet her: hearts and a "mrrp!" (asleep, she only stirs).
  *
- * Poses are drawn in index.html (<g class="g-walk|g-sit|g-sleep">) and picked
- * with data-pose on the button. Movement uses the Web Animations API on the
+ * Her drawing comes from GemmaKit (gemma-kit.js), shared with every room she
+ * follows you into; poses are picked with data-pose on the button. Movement uses the Web Animations API on the
  * button's transform. Positions are measured from the bed and tree elements
  * every time, so she follows the layout at any screen size.
  *
@@ -24,7 +24,7 @@
   if (!stage || !cat) return;
 
   var body = cat.querySelector(".gemma__body");
-  var bubble = cat.querySelector(".gemma__bubble");
+  if (body && !body.querySelector(".g-pose") && window.GemmaKit) body.innerHTML = window.GemmaKit.art;
   var live = document.getElementById("gemma-says");
   var bed = stage.querySelector(".cat-bed--back");
   var tree = stage.querySelector(".cat-tree");
@@ -190,40 +190,7 @@
 
   /* ------------------------------- petting ------------------------------- */
 
-  var SAYS = ["mrrp!", "prrrrr", "mew!", "♡ prrr ♡", "mrrrow?"];
-  var bubbleTimer;
-
-  function reply(text) {
-    bubble.textContent = text;
-    bubble.classList.add("is-on");
-    clearTimeout(bubbleTimer);
-    bubbleTimer = setTimeout(function () { bubble.classList.remove("is-on"); }, 1700);
-  }
-
-  function hearts() {
-    for (var i = 0; i < 3; i++) {
-      var h = document.createElement("span");
-      h.className = "gemma__heart";
-      h.textContent = "♥";
-      h.style.setProperty("--hx", (30 + i * 20 + between(-6, 6)).toFixed(0) + "%");
-      h.style.setProperty("--hd", between(-14, 14).toFixed(0) + "px");
-      h.style.animationDelay = (i * 0.12) + "s";
-      cat.appendChild(h);
-      setTimeout(h.remove.bind(h), 1800);
-    }
-  }
-
-  cat.addEventListener("click", function () {
-    var asleep = cat.getAttribute("data-pose") === "sleep";
-    if (asleep) {
-      reply("mrrp… zzz");
-      if (live) live.textContent = "Gemma stirs in her sleep.";
-    } else {
-      reply(SAYS[Math.floor(Math.random() * SAYS.length)]);
-      if (live) live.textContent = "Gemma purrs.";
-      if (!reduceMotion) hearts();
-    }
-  });
+  if (window.GemmaKit) window.GemmaKit.petting(cat, live);
 
   var GUIDE_LINE = "that's gemma! my seal bicolor ragdoll, and the real owner of this cottage. give her a pet";
   function introduce() { if (window.Guide) window.Guide.say(GUIDE_LINE); }
