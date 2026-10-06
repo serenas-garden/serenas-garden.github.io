@@ -19,7 +19,8 @@
  *   above +6, high    midday
  *
  * Sets data-sky (phase) and data-dark on <html>, and exposes window.Sky:
- * { state: { phase, dark, sun:{alt,az}, moon:{alt,az,illum,waxing}, localTime } }.
+ * { state: { phase, dark, sun:{alt,az}, moon:{alt,az,illum,waxing}, localTime },
+ *   overhead(date): where the sun and moon are straight overhead (the globe) }.
  */
 (function () {
   "use strict";
@@ -108,6 +109,8 @@
     var dec = Math.asin(sin(lat) * cos(obliq) + cos(lat) * sin(obliq) * sin(lon)) * R2D;
 
     var h = horizontal(ra, dec, jd, LAT, LON);
+    h.ra = ra;
+    h.dec = dec;
 
     /* Illuminated fraction, via the sun-moon elongation. cos() here takes
        degrees, so the right-ascension difference goes in as degrees too —
@@ -124,6 +127,22 @@
     // ecliptic; the sun's right ascension is a different frame and won't do.
     h.waxing = norm(lon - sun.eclLong) < 180;
     return h;
+  }
+
+  /* Where on Earth the sun and the moon are straight overhead right now. The
+     globe on the travels page draws day and night (and a little sun and moon)
+     from this. The sun's position ignores refraction, which only matters
+     within a degree of the horizon. */
+  function overhead(date) {
+    date = date || new Date();
+    var g = gmst(julian(date));
+    var sun = sunPosition(date);
+    var moon = moonPosition(date, sun);
+    function lon(ra) { var d = norm(ra - g); return d > 180 ? d - 360 : d; }
+    return {
+      sun:  { lat: sun.dec,  lon: lon(sun.ra) },
+      moon: { lat: moon.dec, lon: lon(moon.ra), illum: moon.illum, waxing: moon.waxing }
+    };
   }
 
   /* The day's maximum altitude, so "high" and "low" mean something in December
@@ -238,6 +257,7 @@
 
   window.Sky = {
     compute: compute,
+    overhead: overhead,
     apply: apply,
     setMode: setMode,
     cycle: function () {

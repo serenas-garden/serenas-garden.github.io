@@ -16,9 +16,9 @@ window.SECTIONS = [
     slug: "travels",
     title: "Travels",
     object: "globe",
-    guide: "the globe! every country i've been to, and my favorite spot in each one",
-    blurb: "Every country I've been to, and the one place in each I'd send you first.",
-    status: "soon"
+    guide: "the globe! spin it and see everywhere i've been",
+    blurb: "Everywhere I've been so far, on a little globe you can spin.",
+    status: "open"
   },
   {
     slug: "kitchen",

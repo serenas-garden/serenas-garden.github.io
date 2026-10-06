@@ -3,8 +3,8 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status: bare bones.** The cottage hub is built. The mailbox form is built
-but closed until its access key is pasted in. Every other section is a
+**Status:** the cottage hub and **Travels** are built. The mailbox form is
+built but closed until its access key is pasted in. Every other section is a
 labelled "still decorating" stub.
 
 ## Decisions (settled with Rex, October 2026)
@@ -40,6 +40,8 @@ labelled "still decorating" stub.
   `sky.js` and `weather.js` below.
 - **Rex previews big design changes before they go live.** Build on a branch,
   show him (local preview plus screenshots), and push only after he approves.
+  (One exception so far: he asked for Travels to be built to completion and
+  pushed without a preview. That doesn't change the rule.)
 - **Features:** borrowed as *ideas* from a site she liked
   (luvbugdiaries.blogspot.com): the door intro, objects as navigation, a guide
   character with hover tips, and a "currently" status card. **Ideas only.**
@@ -109,7 +111,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   keyboard focus**, at Rex's request. Don't make it always visible. Hovering
   it also tips the scope up, glints the lens, and makes the moon glow. `moon.html` only redirects there, so an old `moon.html` link
   still works. A separate sunrise/sunset page could come later.
-- `travels.html`, `kitchen.html`, `music.html`, `currently.html`, `moon.html`,
+- `travels.html`: built. See **Travels** below.
+- `kitchen.html`, `music.html`, `currently.html`, `moon.html`,
   `zoo.html`, `art.html`, `picks.html`: section stubs, all from one template.
   Each has a `.page-head` (back link, title, blurb, and that section's object
   drawn as `.page-art`), a `.stub-note`, and the rooms nav. When building one,
@@ -166,6 +169,84 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - `assets/style.css`: tokens, layout, and drawing classes.
 - `assets/favicon.svg`: toadstool.
 - `README.md`: a short public description, shown on the GitHub repo page.
+- `tools/`: Python scripts (standard library only) that generate the travels
+  map data and stamp drawings, plus the place checker. Not loaded by any page.
+- `CREDITS.md`: third-party material and its licence.
+
+## Travels
+
+`travels.html`: a desk globe you can spin, a postcard for each place, and a
+passport of country stamps. Rex asked for an interactive map that is less
+"technical" than the one on his site, so this is its own engine, not his.
+
+- **The places** are in `assets/travels-data.js`, exactly as Serena listed them
+  (30 places, 15 countries), in tour order, roughly west to east. Each has a
+  `blurb` (a factual one-liner, DRAFT for Serena to rewrite) and an empty
+  `note` for her own words; the postcard says "my note from here is coming
+  soon!" until it's filled. Each country has an empty `favorite` (her idea
+  board's "favorite place in each country"); the passport shows it once set.
+  `where` uses her own wording, so US places say "United States", not a state.
+- **Pins are city level** (or the middle of a region, for Scotland, Morocco,
+  Costa Rica, the Cotswolds and the Albanian Riviera). Never more precise.
+- **Ocean City is assumed to be Ocean City, Maryland.** She didn't say which.
+  If it's New Jersey, change its lat/lon to 39.2776, -74.5746. Nothing else
+  changes. Sun Valley is Idaho (the ski resort, also on Rex's ski list).
+- **Checking places:** `python3 tools/verify_places.py assets/globe-geo.js
+  assets/travels-data.js` confirms every pin lands in its own country (coastal
+  cities may sit up to ~4 km off the simplified coast) and lists the closest
+  pairs. Run it after adding a place.
+- **The globe** (`assets/globe.js`, no library): an orthographic globe on a
+  canvas, clipped properly at the horizon (rings are cut at the exact
+  great-circle crossing and rejoined along the rim), so it can be turned to
+  any angle, poles included. Drag to spin (with inertia), pinch, ctrl/cmd +
+  scroll or the +/- buttons to zoom, double-click to zoom in; arrow keys and
+  +/- when it has focus. Zooming magnifies inside the same circle, like a
+  lens. It spins slowly on its own (a turn a minute, 30 fps) unless a place is
+  picked, the visitor just touched it, it's off screen, or motion is reduced.
+  On phones one finger turns it sideways and vertical swipes still scroll the
+  page (`touch-action: pan-y`); two fingers pinch and tilt.
+- **Real day and night:** `Sky.overhead()` in `sky.js` gives the point where
+  the sun (and moon) is overhead right now; the globe shades every pixel by
+  the sun's altitude there, with a soft twilight and a warm dusk band, and
+  draws a little sun and moon at those points. The globe keeps its daytime
+  colours in the site's night theme (dimmed a little), so its own day and
+  night always read. Toadstools where it's night glow teal like the
+  mushrooms by the door. The intro postcard says how many places have the sun
+  up right now; each postcard gives the local time there (`tz`) and whether
+  it's day, golden hour, twilight or night.
+- **Toadstools are the pins.** Nearby ones cluster into one toadstool with a
+  count; tapping a cluster zooms in until they split. Picking a place flies
+  there at a zoom that separates it from its nearest neighbour (Corfu and the
+  Albanian Riviera, 55 km apart, need the deepest zoom). Labels are paper
+  tags that never cover a toadstool.
+- **Tints:** visited countries are rose. France's Natural Earth outline
+  includes its overseas regions, so `tintBox` limits the tint to mainland
+  France and Corsica. Monaco is too small to draw at this scale; its pin shows
+  it. **Western Sahara is drawn as its own territory** (the UN depiction):
+  Natural Earth draws Morocco deep into it, so the map build cuts Morocco at
+  the 27.66 N line and only Morocco proper is tinted. Somaliland, Northern
+  Cyprus and the Siachen Glacier get no border line of their own.
+- **The map data** (`assets/globe-geo.js`, ~200 KB, ~70 KB gzipped) is
+  Natural Earth 1:50m countries, public domain (see `CREDITS.md`), baked by
+  `tools/build_globe.py` (instructions at its top): arcs simplified with
+  shared borders kept in step, islands under 250 km² dropped (Mallorca,
+  Menorca and Corfu stay), rings oriented land-on-the-left, coastlines and
+  borders split out, and edges crossing the 180th meridian handled. Don't
+  hand-edit it; rebuild it.
+- **Postcards:** paper with airmail edges, a perforated stamp and a postmark
+  with today's date there. The stamp drawings (one little scene per place,
+  keyed by `stamp`) are generated by `tools/build_stamps.py` into
+  `assets/travels-stamps.js`; to change one, edit the script and rerun it.
+  Postcard and passport colours are fixed, like the corkboard notes, and
+  dimmed at night.
+- **The passport** lists every country as an ink stamp with its places (tap a
+  place to fly there, a country to frame all its places), then "the far
+  corners": farthest north, east and west, and closest to the equator,
+  worked out from the data.
+- **Tour:** "take the tour" flies through every place once, starting after
+  the open postcard. Any touch of the globe or its buttons stops it.
+- **Links:** `travels.html#kyoto` opens on a place (the id from the data).
+- Caveat is loaded on this page too, for the handwritten notes.
 
 ## Gemma
 
@@ -277,7 +358,6 @@ surname).
 | Section | Engine on Rex's site |
 |---|---|
 | Moon Paparazzi (sunrise/sunset times, moon detail) | `assets/sky.js` (already ported) |
-| Travels | `assets/map.js`, `assets/places.js`, `assets/geo.js`: world map with pins |
 | Serena's Zoo | `music.html`: drag-to-reorder ranked list with FLIP animation |
 | Top Picks | `kit.html`, `assets/kit.js`, `assets/kit-data.js` |
 
@@ -287,4 +367,7 @@ surname).
 - Serena reviews and rewrites the draft copy in `sections.js`, and names the
   toadstool.
 - Real "currently" entries. Then set `sample: false`.
-- Pick which section to build out first.
+- Travels: Serena's own `note` for each place and a `favorite` for each
+  country (both empty), her rewrite of the draft blurbs, and a yes/no on
+  Ocean City being Maryland.
+- Pick the next section to build.
