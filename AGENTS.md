@@ -1,6 +1,6 @@
 # Serena's Garden
 
-Personal site for Serena, built and maintained by her brother Rex with Claude.
+Personal site for Serena, built and maintained by her brother Rex with Codex.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
 **Status:** the cottage hub and **Travels** are built. The mailbox form is
@@ -18,12 +18,12 @@ labelled "still decorating" stub.
   is still public on GitHub, which free Pages requires.
 - **First name only.** No surname anywhere on the site, in the repo, or in this
   file.
-- **Who edits:** always Rex + Claude. Serena sends changes to Rex. There's no
+- **Who edits:** always Rex + Codex. Serena sends changes to Rex. There's no
   sign-in or backend, and none is planned, so don't add one.
 - **Messages:** the "Send a Letter" form (`mailbox.html`) posts to Web3Forms,
   which emails letters to Serena only. Her address lives in Web3Forms behind
   an access key and must never appear in this repo. **Getting the key needs a
-  Web3Forms sign-up with her email, so Serena (or Rex) does it, never Claude:**
+  Web3Forms sign-up with her email, so Serena (or Rex) does it, never Codex:**
   web3forms.com, then "Create your form" with her address. The key arrives in
   her inbox. To open the mailbox, paste the key into the `access_key` input in
   `mailbox.html` (marked `MAILBOX KEY`) and set `mailbox` to `status: "open"` in
@@ -54,7 +54,7 @@ labelled "still decorating" stub.
 ## Stack
 
 Static HTML/CSS/JS on GitHub Pages: no build step, no framework, no bundler,
-same as Rex's site (local path in `CLAUDE.local.md`). Every page links one shared
+same as Rex's site (local path in `Codex.local.md`). Every page links one shared
 `assets/style.css`.
 
 ## Files
@@ -180,8 +180,7 @@ passport of country stamps. Rex asked for an interactive map that is less
 "technical" than the one on his site, so this is its own engine, not his.
 
 - **The places** are in `assets/travels-data.js`, exactly as Serena listed them
-  (32 places, 15 countries; Martha's Vineyard and Mont-Saint-Michel were added
-  a day after the first 30), in tour order, roughly west to east. Each has a
+  (30 places, 15 countries), in tour order, roughly west to east. Each has a
   `blurb` (a factual one-liner, DRAFT for Serena to rewrite) and an empty
   `note` for her own words; the postcard says "my note from here is coming
   soon!" until it's filled. Each country has an empty `favorite` (her idea
@@ -189,8 +188,9 @@ passport of country stamps. Rex asked for an interactive map that is less
   `where` uses her own wording, so US places say "United States", not a state.
 - **Pins are city level** (or the middle of a region, for Scotland, Morocco,
   Costa Rica, the Cotswolds and the Albanian Riviera). Never more precise.
-- **Ocean City is Ocean City, New Jersey** (Rex confirmed; not Maryland). Sun
-  Valley is Idaho (the ski resort, also on Rex's ski list).
+- **Ocean City is assumed to be Ocean City, Maryland.** She didn't say which.
+  If it's New Jersey, change its lat/lon to 39.2776, -74.5746. Nothing else
+  changes. Sun Valley is Idaho (the ski resort, also on Rex's ski list).
 - **Checking places:** `python3 tools/verify_places.py assets/globe-geo.js
   assets/travels-data.js` confirms every pin lands in its own country (coastal
   cities may sit up to ~4 km off the simplified coast) and lists the closest
@@ -229,9 +229,8 @@ passport of country stamps. Rex asked for an interactive map that is less
 - **The map data** (`assets/globe-geo.js`, ~200 KB, ~70 KB gzipped) is
   Natural Earth 1:50m countries, public domain (see `CREDITS.md`), baked by
   `tools/build_globe.py` (instructions at its top): arcs simplified with
-  shared borders kept in step, islands under 250 km² dropped unless one of her
-  places is on them (so Martha's Vineyard stays; pass `travels-data.js` as the
-  last argument when rebuilding), rings oriented land-on-the-left, coastlines and
+  shared borders kept in step, islands under 250 km² dropped (Mallorca,
+  Menorca and Corfu stay), rings oriented land-on-the-left, coastlines and
   borders split out, and edges crossing the 180th meridian handled. Don't
   hand-edit it; rebuild it.
 - **Postcards:** paper with airmail edges, a perforated stamp and a postmark
@@ -353,7 +352,7 @@ signed in as Rex.
 ## Reusable pieces from Rex's site, for later sections
 
 Reuse the *engines*, never the look. Paths are relative to Rex's site, whose
-location is in `CLAUDE.local.md` (not committed: it would tie this repo to a
+location is in `Codex.local.md` (not committed: it would tie this repo to a
 surname).
 
 | Section | Engine on Rex's site |
@@ -369,5 +368,6 @@ surname).
   toadstool.
 - Real "currently" entries. Then set `sample: false`.
 - Travels: Serena's own `note` for each place and a `favorite` for each
-  country (both empty), and her rewrite of the draft blurbs.
+  country (both empty), her rewrite of the draft blurbs, and a yes/no on
+  Ocean City being Maryland.
 - Pick the next section to build.

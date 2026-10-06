@@ -180,6 +180,45 @@ S["skyline"] = (  # New York City
     R(0, 46, 60, 6, "b") + P("M0 46 H60", "k") + wave(49, 2, 58, .9, 5)
 )
 
+def gingerbread(x, w, base, wall, peak, body, roof):
+    # a narrow Oak Bluffs cottage: steep gable, fretwork trim, porch, door
+    mid = x + w / 2
+    top = base - wall
+    return (R(x, top, w, wall, "k " + body) +
+            P("M%s %s L%s %s L%s %s Z" % (f(x - 1.6), f(top + 1), f(mid), f(top - peak), f(x + w + 1.6), f(top + 1)), "k " + roof) +
+            P("M%s %s L%s %s L%s %s Z" % (f(x + 2.4), f(top), f(mid), f(top - peak + 4.2), f(x + w - 2.4), f(top)), "k w") +
+            thin(P("M%s %s q1 1.6 2 0 q1 1.6 2 0 q1 1.6 2 0" % (f(mid - 3), f(top + 1.4)), "k")) +
+            arch_win(mid - 1.5, top - peak + 6.2, 3, 4, "y") +
+            thin(P("M%s %s H%s M%s %s V%s M%s %s V%s" % (f(x), f(base - 9), f(x + w), f(x + 2), f(base - 9), f(base - 6), f(x + w - 2), f(base - 9), f(base - 6)), "k")) +
+            R(mid - 2, base - 7.5, 4, 7.5, "k r") +
+            R(x + 1.6, top + 3.6, 2.6, 3.4, "k c") + R(x + w - 4.2, top + 3.6, 2.6, 3.4, "k c"))
+
+S["gingerbread"] = (  # Martha's Vineyard: the gingerbread cottages of Oak Bluffs
+    R(0, 0, 60, 52, "a") +
+    gingerbread(4, 14, 45, 15, 13, "d", "s") +
+    gingerbread(23, 15, 45, 19, 15, "y", "h") +
+    gingerbread(42, 14, 45, 14, 12, "t", "l") +
+    ground(45, "e") + thin(P("M2 48 h3 M10 49 h3 M30 48 h3 M47 49 h3", "k"))
+)
+
+S["abbey"] = (  # Mont-Saint-Michel: the abbey on its rock in the bay
+    R(0, 0, 60, 52, "q") +
+    R(0, 41, 60, 11, "b") + P("M0 41 H60", "k") +
+    P("M0 47 Q14 44 26 47 T60 46 V52 H0Z", "i") + wave(44.4, 2, 14, .8, 5) + wave(44.4, 47, 59, .8, 5) +
+    P("M4 42 C10 39.5 13 35 17 32 C20 28.5 23 24 26 21.5 H34 C37 24 40 28.5 43 32 C47 35 50 39.5 56 42Z", "k j") +
+    P("M41 31.5 C44.5 33.5 47.5 36.5 50.5 39.5 C46.5 39 43.5 36.5 40.5 34.2Z M18.5 32.5 C16 35 13.5 37.5 10.5 39.5 C14 39.6 17 37.6 19.6 35Z", "f") +
+    R(9.5, 38.6, 41, 3.8, "k c") +
+    thin(P("M9.5 38.6 v-1.2 h2.6 v1.2 M15.5 38.6 v-1.2 h2.6 v1.2 M21.5 38.6 v-1.2 h2.6 v1.2 M27.5 38.6 v-1.2 h2.6 v1.2 M33.5 38.6 v-1.2 h2.6 v1.2 M39.5 38.6 v-1.2 h2.6 v1.2 M45.5 38.6 v-1.2 h2.6 v1.2", "k")) +
+    R(8, 36.2, 3.4, 6.2, "k c") + R(48.6, 36.2, 3.4, 6.2, "k c") + arch_win(28.6, 39.4, 2.8, 3, "n") +
+    R(15.6, 33.6, 3.6, 3.4, "k c") + P("M15.1 33.6 L17.4 31.6 L19.7 33.6Z", "k m") +
+    R(19.6, 30.2, 3.6, 3.4, "k c") + P("M19.1 30.2 L21.4 28.2 L23.7 30.2Z", "k m") +
+    R(23.4, 26.6, 3.4, 3.4, "k c") + P("M22.9 26.6 L25.1 24.7 L27.3 26.6Z", "k m") +
+    R(33.6, 21.6, 6.4, 9.8, "k c") + "".join(R(x, 23.6, 1.1, 4.6, "n") for x in (35, 37.4)) +
+    R(25.4, 14.4, 9.2, 7.4, "k c") + P("M24.6 14.8 L30 11 L35.4 14.8Z", "k j") +
+    "".join(arch_win(x, 16.2, 1.5, 3.4, "n") for x in (27, 29.25, 31.5)) +
+    P("M29.2 11.4 L30 3 L30.8 11.4Z", "k j") + C(30, 2.6, 1, "k g")
+)
+
 S["door"] = (  # Dublin: a Georgian door
     R(0, 0, 60, 52, "u") +
     thin(P("".join("M0 %s H60 " % y for y in range(4, 52, 6)) +

@@ -10,7 +10,7 @@ assets/globe-geo.js for Serena's globe.
 - quantises to 0.01 degree and delta-encodes
 
   curl -LO https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json
-  python3 tools/build_globe.py countries-50m.json assets/globe-geo.js
+  python3 tools/build_globe.py countries-50m.json assets/globe-geo.js 0.035 250 assets/travels-data.js
   python3 tools/verify_places.py assets/globe-geo.js assets/travels-data.js
 """
 import json, math, sys
@@ -19,6 +19,7 @@ SRC = sys.argv[1] if len(sys.argv) > 1 else "countries-50m.json"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "globe-geo.js"
 TOL = float(sys.argv[3]) if len(sys.argv) > 3 else 0.035      # degrees (cos-lat scaled)
 MIN_KM2 = float(sys.argv[4]) if len(sys.argv) > 4 else 250.0  # smallest island kept
+PLACES = sys.argv[5] if len(sys.argv) > 5 else None          # travels-data.js: islands she's been to stay
 MAX_STEP = 1.0                                                # densify edges longer than this (deg)
 
 topo = json.load(open(SRC))
@@ -161,6 +162,17 @@ def tangent_area(coords):
 def reverse(refs):
     return [~r for r in reversed(refs)]
 
+# ---- small islands she's been to are always kept --------------------------------
+import re
+keep_pts = []
+if PLACES:
+    for lat, lon in re.findall(r"lat: ([-\d.]+), lon: ([-\d.]+)", open(PLACES).read()):
+        keep_pts.append((float(lon), float(lat)))
+
+def has_place(coords, pad=0.1):
+    xs = [c[0] for c in coords]; ys = [c[1] for c in coords]
+    return any(min(xs) - pad <= x <= max(xs) + pad and min(ys) - pad <= y <= max(ys) + pad for x, y in keep_pts)
+
 # ---- countries --------------------------------------------------------------
 countries = []
 dropped = 0
@@ -177,7 +189,7 @@ for g in geoms:
         for ri, refs in enumerate(poly):
             coords = ring_coords(refs, simple)
             area = tangent_area(coords)
-            if ri == 0 and (abs(area) < MIN_KM2 or len(coords) < 4):
+            if ri == 0 and (len(coords) < 4 or (abs(area) < MIN_KM2 and not has_place(coords))):
                 rings = None
                 dropped += 1
                 break
