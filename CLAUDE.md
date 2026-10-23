@@ -296,7 +296,10 @@ of pieces and more to come. It's a **gallery wall** instead: a panel of
 warm painted wall with wooden picture rails, every piece hanging from a
 brass hook on a cord, in its own frame and mat, with a little museum label
 (title, year, medium) under it, a brass plaque at the top, and a bench and a
-plant on the floor. At night the wall goes dark and each piece sits in a
+plant on the floor. **The page starts straight with the wall**: no page
+header, eyebrow, blurb or count chips above it (Rex found them fussy). The
+plaque is the page's `<h1>`, a small "back inside" link sits in the wall's
+top corner, and the rooms nav is below. At night the wall goes dark and each piece sits in a
 pool of warm light (`--lamp`).
 
 - **Every piece is shown whole, straight away** (Rex's ask): nothing is
@@ -321,18 +324,21 @@ pool of warm light (`--lamp`).
   screen readers), `src` (about 1200px long side) and optional `full` (about
   2400px), `w`/`h` (pixel size, so the wall lays out before pictures load),
   optional `frame` (oak, walnut, gilt, cream, ink, sage, rose; otherwise one
-  is picked in turn) and optional `collection` (filter buttons appear once
-  there are two or more).
+  is picked in turn) and optional `collection` (filter buttons appear under
+  the plaque once there are two or more).
+- **Custom frames (Rex's ask):** when the pictures arrive, each piece gets
+  its own frame designed to complement it (moulding, colour, width, mat,
+  any ornament), rather than one of the stock frames above.
 - **Pictures** go in `assets/art/` (`<id>.jpg` and `<id>-full.jpg`). Strip
   their metadata before committing (rule 2). `exiftool` isn't installed on
   Rex's Mac yet. They're public files once pushed, full size included.
 - **Placeholders:** until the art arrives, `sample: true` and 18 entries with
   only a shape: each frame holds a blank canvas with a pencil doodle, the
-  labels say "Empty frame · art coming soon", the plaque says the frames are
-  waiting, and a yellow note on the wall says they're placeholders. Its
-  status in `sections.js` stays "soon" until the real art is up.
-- **Next (Rex's plan):** once the pictures are in, animations and display
-  touches for each piece.
+  labels say "Empty frame · art coming soon" and the plaque says the frames
+  are waiting for Serena's art. Its status in `sections.js` stays "soon"
+  until the real art is up.
+- **Next (Rex's plan):** once the pictures are in, a custom frame for each
+  piece, then animations and display touches for each.
 
 ## Rooms, and Gemma following you in
 
@@ -576,6 +582,6 @@ surname).
 - Kitchen: her top drinks (the fridge) and top fruits (the fruit bowl), and
   any recipe links or notes for the cookies, all in `kitchen-data.js`.
 - Gallery: Serena's 18 pieces (Rex is preparing them), with titles, years,
-  mediums and any notes; then per-piece animations. Set `sample: false` and
+  mediums and any notes; then a custom frame and animations for each. Set `sample: false` and
   the art section's status to "open".
 - Pick the next section to build.

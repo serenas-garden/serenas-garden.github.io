@@ -17,7 +17,8 @@
  *   w, h        the picture's size in pixels (so the wall can be laid out
  *               before the pictures load)
  *   frame       optional: oak, walnut, gilt, cream, ink, sage or rose;
- *               one is picked if it's left out
+ *               one is picked if it's left out. (Rex's plan: once the
+ *               pictures are in, each gets its own frame made to suit it.)
  *   collection  optional: a group, e.g. "sketchbook". Once two or more
  *               groups exist, the gallery gets buttons to show one group
  *

@@ -27,39 +27,17 @@
 </head>
 <body data-section="art">
 <main class="wrap">
-  <header class="page-head">
-    <a class="back" href="./">&larr; back inside</a>
-    <p class="eyebrow">serena's garden</p>
-    <h1>Art</h1>
-    <p>Things I&#x27;ve drawn, painted and made. Tap any piece to see it up close.</p>
-    <div class="page-art" aria-hidden="true">
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M30 96 L46 18 M70 96 L54 18 M50 72 V96" class="ink"/>
-      <rect x="22" y="24" width="56" height="44" rx="2" class="ink f-paper"/>
-      <path d="M23 60 q14 -14 26 -4 q12 -12 28 -2 V67 H23 Z" class="f-moss"/>
-      <circle cx="62" cy="38" r="6" class="f-gold"/>
-      <circle cx="36" cy="44" r="3.5" class="f-rose"/>
-      <path d="M36 48 v8" class="ink" style="stroke-width:1.5"/>
-      <path d="M16 72 H84" class="ink"/>
-      </svg>
-    </div>
-  </header>
-
   <!-- The gallery: a wall of framed pieces, hung on picture rails in rows
        that fit the screen (assets/art.js, from assets/art-data.js). Every
        piece is shown whole; tap one to see it full screen. -->
   <section class="gallery" aria-labelledby="gallery-title">
-    <div class="gallery__bar">
-      <ul class="gallery__tally" data-tally aria-label="On the wall"></ul>
-      <div class="view-switch gallery__filter" role="group" aria-label="Show" data-filters hidden></div>
-    </div>
-
     <div class="gallery__wall">
+      <a class="gallery__back" href="./">&larr; back inside</a>
       <header class="plaque">
-        <h2 id="gallery-title">The Gallery</h2>
+        <h1 id="gallery-title">The Gallery</h1>
         <p class="plaque__sub" data-plaque>works by Serena</p>
       </header>
-      <p class="gallery__sample" data-sample hidden>placeholder frames! serena&#x27;s art is on its way</p>
+      <div class="view-switch gallery__filter" role="group" aria-label="Show" data-filters hidden></div>
       <ol class="hang" data-hang aria-label="Artworks"></ol>
       <noscript><p class="gallery__noscript">The gallery needs JavaScript to hang the pictures. Turn it on to see my art.</p></noscript>
       <div class="gallery__floor" aria-hidden="true">

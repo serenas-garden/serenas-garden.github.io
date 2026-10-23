@@ -66,25 +66,8 @@
     return [p.year, p.medium].filter(Boolean).join(" · ");
   }
 
-  var tally = $("[data-tally]");
-  if (tally) {
-    var chips;
-    if (sample) {
-      chips = [pieces.length + " empty frames", "art arriving soon"];
-    } else {
-      var years = pieces.map(function (p) { return parseInt(p.year, 10); }).filter(function (y) { return y > 0; });
-      chips = [pieces.length + (pieces.length === 1 ? " piece" : " pieces")];
-      if (years.length) {
-        var lo = Math.min.apply(null, years), hi = Math.max.apply(null, years);
-        chips.push(lo === hi ? String(lo) : lo + "–" + hi);
-      }
-    }
-    tally.innerHTML = chips.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("");
-  }
   var plaque = $("[data-plaque]");
   if (plaque && sample) plaque.textContent = pieces.length + " frames, waiting for Serena's art";
-  var sampleNote = $("[data-sample]");
-  if (sampleNote) sampleNote.hidden = !sample;
 
   /* ------------------------------ the frames ------------------------------ */
 

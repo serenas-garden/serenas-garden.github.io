@@ -1397,7 +1397,7 @@ h1, h2, h3 {
   gap: 12px 16px;
   margin: 0 0 8px;
 }
-.voyage__tally, .gallery__tally {
+.voyage__tally {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -1405,7 +1405,7 @@ h1, h2, h3 {
   margin: 0;
   padding: 0;
 }
-.voyage__tally li, .gallery__tally li {
+.voyage__tally li {
   font: 400 13px/1 var(--pixel);
   padding: 8px 12px;
   background: var(--paper);
@@ -2620,15 +2620,17 @@ body[data-section="kitchen"]::before {
    pixel values, since art.js reads them. At night the wall goes dark and
    each piece has its own little pool of light. */
 
-.gallery { margin: 26px 0 56px; }
-.gallery__bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px 16px;
-  margin: 0 0 18px;
+.gallery { margin: 24px 0 56px; }
+.gallery__back {
+  position: absolute;
+  top: 20px; left: 22px;
+  font: 400 13px/1 var(--pixel);
+  color: var(--ink-soft);
+  text-decoration: none;
 }
+.gallery__back:hover { color: var(--berry); }
+.gallery__filter { display: flex; width: max-content; max-width: 100%; flex-wrap: wrap; margin: 16px auto 0; }
+.gallery__filter[hidden] { display: none; }
 .gallery__filter button { text-transform: lowercase; padding: 7px 13px; }
 
 .gallery__wall {
@@ -2666,23 +2668,9 @@ body[data-section="kitchen"]::before {
   border-radius: 6px;
   box-shadow: inset 0 0 0 3px rgba(255, 244, 210, .45), 0 8px 12px -8px rgba(0, 0, 0, .55);
 }
-.plaque h2 { font-size: clamp(24px, 3.4vw, 30px); color: #2f2414; }
+.plaque h1 { font-size: clamp(26px, 3.6vw, 32px); color: #2f2414; }
 .plaque__sub { margin: 3px 0 0; font: 400 12px/1.3 var(--pixel); color: #4a3a20; }
 :root[data-dark="true"] .plaque { filter: brightness(.86); }
-.gallery__sample {
-  position: absolute;
-  top: 18px; right: 18px;
-  max-width: 13em;
-  margin: 0;
-  padding: 5px 9px;
-  font: 400 10.5px/1.3 var(--pixel);
-  color: var(--note-ink);
-  background: var(--note-sun);
-  transform: rotate(2.5deg);
-  box-shadow: 0 6px 8px -6px rgba(0, 0, 0, .5);
-}
-.gallery__sample[hidden] { display: none; }
-:root[data-dark="true"] .gallery__sample { filter: brightness(.86); }
 .gallery__noscript { text-align: center; color: var(--ink-soft); margin: 30px 0; }
 
 /* the hanging: rails, cords, frames, labels */
@@ -2921,7 +2909,7 @@ body[data-section="kitchen"]::before {
 }
 @media (max-width: 640px) {
   .gallery__wall { --bleed: 14px; padding-top: 22px; }
-  .gallery__sample { position: static; margin: 12px auto 0; width: max-content; transform: rotate(-1.5deg); }
+  .gallery__back { position: static; display: block; margin: 0 0 14px; }
   .hang {
     --pad-mould: 6px; --pad-mat: 6px; --gap: 14px; --row-h: 130px;
     --rail: 9px; --cord: 22px; --label: 46px; --row-gap: 10px;
