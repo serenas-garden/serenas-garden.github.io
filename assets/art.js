@@ -61,7 +61,8 @@
     return {
       i: i,
       id: id,
-      title: p.title || (blank ? "Empty frame" : "Untitled"),
+      // no title yet: the labels just give the date and medium (Rex, Oct 2026)
+      title: p.title || (blank ? "Empty frame" : ""),
       year: p.year || "",
       medium: p.medium || "",
       size: p.size || "",
@@ -264,7 +265,8 @@
         '<button type="button" class="frame frame--' + p.frame + '" aria-label="' + esc(pieceLabel(p)) + '">' +
           '<span class="frame__mat">' + artHTML(p, true) + "</span></button>" +
       "</div>" +
-      '<p class="piece__label" aria-hidden="true"><span class="piece__title">' + esc(p.title) + "</span>" +
+      '<p class="piece__label" aria-hidden="true">' +
+        (p.title ? '<span class="piece__title">' + esc(p.title) + "</span>" : "") +
         '<span class="piece__meta">' + esc(metaLine(p)) + "</span></p>" +
     "</li>";
   }).join("");
@@ -431,15 +433,19 @@
     if (p.tone) viewer.style.setProperty("--tone", p.tone);
     else viewer.style.removeProperty("--tone");
     $("[data-count]", viewer).textContent = (at + 1) + " of " + list.length;
-    $("[data-title]", viewer).textContent = p.title;
+    var title = $("[data-title]", viewer);
+    title.textContent = p.title;
+    title.hidden = !p.title;
     var meta = p.blank ? "Serena's art is on its way" : [p.year, p.medium, p.size].filter(Boolean).join(" · ");
     $("[data-meta]", viewer).textContent = meta;
+    // the viewer is named by the title, or by the date and medium without one
+    viewer.setAttribute("aria-labelledby", p.title ? "viewer-title" : "viewer-meta");
     var note = $("[data-note]", viewer);
     note.textContent = p.note;
     note.hidden = !p.note;
     var hint = $("[data-hint]", viewer);
     if (hint) hint.hidden = p.blank;
-    live.textContent = (at + 1) + " of " + list.length + ": " + p.title + (p.alt ? ". " + p.alt : "");
+    live.textContent = (at + 1) + " of " + list.length + ": " + (p.title || meta) + (p.alt ? ". " + p.alt : "");
     fit(p);
     // have the neighbours ready
     [-1, 1].forEach(function (d) {

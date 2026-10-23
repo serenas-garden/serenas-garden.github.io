@@ -368,8 +368,9 @@ pool of warm light (`--lamp`).
   covers rule 2 for the gallery; `exiftool` isn't installed.) They're public
   files once pushed, full size included.
 - **The first 18 (October 2026)** came untitled, as photos of the paintings
-  (Rex formatted them; don't crop them). Serena will title them, so labels
-  say "Untitled" for now. The years (2025 or 2026) and mediums are Claude's
+  (Rex formatted them; don't crop them). Serena will title them; until a
+  piece has a title, its label (and its full-screen caption) shows just the
+  date and medium, with no "Untitled" (Rex's call). The years (2025 or 2026) and mediums are Claude's
   guesses from the pictures, for her to correct. The hanging order is
   Claude's too (Rex: the file numbers meant nothing), mixing colours,
   subjects and shapes so neighbours differ, with the two paper studies

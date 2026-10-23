@@ -6,7 +6,8 @@
  *   id          a short name for links (art.html#moonlit-sea): lowercase
  *               letters, numbers and dashes. It's only a name for the link,
  *               not a title, so it can stay when she titles the piece
- *   title       its title; left empty, the label says "Untitled"
+ *   title       its title; left empty, the label just gives the date and
+ *               medium
  *   year        when she made it
  *   medium      what it's made with, e.g. "watercolor"
  *   size        optional: its real size, e.g. "9 × 12 in"
