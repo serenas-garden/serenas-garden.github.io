@@ -307,8 +307,12 @@ crooked; both steady per piece). Below: a sage beadboard dado under a chair
 rail, a skirting board, and a plank floor with a braided rug, the bench, a
 painter's corner (an easel with a half-finished painting, a stool with her
 palette, a jar of brushes) and plants; the room links sit on the floor. The
-`gal-` prefix is the gallery's own; don't use `g-`, which is Gemma's. It's
-still a page, not a room (no `data-room`), so Gemma doesn't follow you in. At night the wall goes dark and each piece sits in a
+`gal-` prefix is the gallery's own; don't use `g-`, which is Gemma's.
+**It's a room, so Gemma follows you in** (Rex, October 2026; see "Rooms,
+and Gemma following you in"): she has a good long look at the easel's
+half-finished painting (sitting beside it, tipping her head one way, then
+the other), yawns, and curls up for a nap on the rug in front of the bench.
+The floor stage is `.gal-floor__stage`. At night the wall goes dark and each piece sits in a
 pool of warm light (`--lamp`).
 
 - **Every piece is shown whole, straight away** (Rex's ask): nothing is
@@ -391,8 +395,8 @@ pool of warm light (`--lamp`).
 
 ## Rooms, and Gemma following you in
 
-Some pages are designed as **rooms** of the cottage (the Kitchen so far);
-others are just pages (Travels). **Rex's rule (October 2026): on every page
+Some pages are designed as **rooms** of the cottage (the Kitchen and the
+Gallery so far); others are just pages (Travels). **Rex's rule (October 2026): on every page
 designed as a room, Gemma follows you in. On pages that aren't rooms, she
 doesn't.** So every new room page needs:
 
@@ -402,13 +406,15 @@ doesn't.** So every new room page needs:
   relative, sitting in front of the furniture), with CSS `--gemma-feet` (how
   far below its top her feet touch the floor), `data-gemma-nap` (where she
   naps, a fraction across) and optionally `data-gemma-nap-night`.
-- Optionally something for her: `data-gemma-spot="bowl"` (with
-  `data-gemma-at`, the fraction across it where her head goes) and she
-  snacks there first.
+- Optionally somewhere she goes first, on one element in the stage, with
+  `data-gemma-at` (the fraction across it; over 1 is past its right edge):
+  `data-gemma-spot="bowl"` and she snacks there (her head goes over that
+  point; the kitchen), or `data-gemma-spot="look"` and she sits there and
+  has a good long look, head tipped (the gallery's easel).
 - `assets/gemma-kit.js` then `assets/gemma-follow.js` at the end of the page.
 
 She walks in from the left edge of the screen (the way you came), visits her
-spot, sits and yawns, walks to her nap spot, turns round and curls up; then
+spot (eats, or looks), sits and yawns, walks to her nap spot, turns round and curls up; then
 dozes, with the odd stretch and look around. Petting works everywhere. With
 reduced motion she's already asleep in her nap spot. **Her drawing and petting
 live once, in `gemma-kit.js`** (`GemmaKit.art`, `.button()`, `.petting()`),

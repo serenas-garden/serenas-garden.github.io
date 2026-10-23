@@ -12,9 +12,14 @@
  *                              feet touch the floor.
  *   data-gemma-nap="0.5"       where she naps, as a fraction of the way
  *                              across; data-gemma-nap-night for after dark
- *   [data-gemma-spot="bowl"]   optional: something to eat first. She stops
- *                              with her head over the point data-gemma-at
- *                              (a fraction across that element).
+ *   [data-gemma-spot]          optional: somewhere she goes first, at the
+ *                              point data-gemma-at (a fraction across that
+ *                              element; more than 1 is past its right edge):
+ *                                "bowl"  a snack: she stops with her head
+ *                                        over that point and eats
+ *                                "look"  something to look at (the gallery's
+ *                                        easel): she sits there, tilts her
+ *                                        head at it, and has a good long look
  *
  * Her look and her petting come from GemmaKit (gemma-kit.js). With reduced
  * motion she's simply already there, asleep in her nap spot.
@@ -41,13 +46,16 @@
   /* ------------------------------ where things are ------------------------------ */
   // x is in stage pixels from its left edge, to the middle of her
 
-  function bowlX() {
-    var bowl = stage.querySelector('[data-gemma-spot="bowl"]');
-    if (!bowl) return null;
-    var s = stage.getBoundingClientRect(), r = bowl.getBoundingClientRect();
-    var at = parseFloat(bowl.getAttribute("data-gemma-at") || "0.5");
-    // her head is about a third of her width ahead of her middle
-    return r.left - s.left + r.width * at - cat.offsetWidth * 0.36;
+  var spot = stage.querySelector("[data-gemma-spot]");
+  var spotKind = spot ? spot.getAttribute("data-gemma-spot") : "";
+
+  function spotX() {
+    if (!spot) return null;
+    var s = stage.getBoundingClientRect(), r = spot.getBoundingClientRect();
+    var at = parseFloat(spot.getAttribute("data-gemma-at") || "0.5");
+    // eating, her head is over the point: about a third of her width ahead
+    // of her middle. Looking, she sits with her middle on it.
+    return r.left - s.left + r.width * at - (spotKind === "bowl" ? cat.offsetWidth * 0.36 : 0);
   }
   function napX() {
     var night = document.documentElement.getAttribute("data-dark") === "true";
@@ -100,17 +108,34 @@
     face(1);
     await wait(700);                       // a moment behind you through the door
 
-    var bx = bowlX();
-    if (bx !== null) {
-      await walkTo(bx);
+    var sx = spotX();
+    if (sx !== null && spotKind === "bowl") {
+      await walkTo(sx);
       face(1);
       pose("eat");                         // a snack first, obviously
-      parked = "bowl";
+      parked = "spot";
       await wait(between(4200, 5600));
       pose("sit");
       await wait(700);
       await yawn();
       await wait(between(900, 1500));
+    } else if (sx !== null && spotKind === "look") {
+      await walkTo(sx);
+      pose("sit");                         // a good long look at it
+      parked = "spot";
+      await wait(600);
+      cat.classList.add("is-curious");
+      await wait(between(2600, 3400));
+      cat.classList.remove("is-curious");
+      await wait(between(700, 1100));
+      face(-1);                            // and another, head tipped the other way
+      cat.classList.add("is-curious");
+      await wait(between(1600, 2200));
+      cat.classList.remove("is-curious");
+      face(1);
+      await wait(500);
+      await yawn();
+      await wait(between(800, 1300));
     } else {
       await walkTo(stage.clientWidth * 0.3);
       pose("sit");
@@ -135,7 +160,7 @@
   // keep her in her spot when the window changes size
   function keep() {
     if (parked === "nap") place(napX());
-    else if (parked === "bowl" && bowlX() !== null) place(bowlX());
+    else if (parked === "spot" && spotX() !== null) place(spotX());
   }
   if (window.ResizeObserver) new ResizeObserver(keep).observe(stage);
   else window.addEventListener("resize", keep);

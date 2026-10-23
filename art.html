@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
 </head>
-<body data-section="art">
+<body data-section="art" data-room>
 <main class="gal-room">
   <div class="garland" aria-hidden="true">
     <svg viewBox="0 0 1000 72" preserveAspectRatio="none"><path d="M-10 4 Q500 76 1010 4"/></svg>
@@ -103,7 +103,8 @@
   <!-- the bottom of the room: beadboard under a chair rail, then the floor -->
   <div class="gal-dado" aria-hidden="true"></div>
   <div class="gal-floor">
-    <div class="gal-floor__stage" aria-hidden="true">
+    <!-- Gemma follows you in (gemma-follow.js): a look at the easel, then a nap on the rug -->
+    <div class="gal-floor__stage" data-gemma-stage data-gemma-nap="0.5">
       <svg class="gal-rug" viewBox="0 0 600 110" aria-hidden="true" focusable="false">
         <ellipse cx="300" cy="55" rx="296" ry="52" class="f-moss"/>
         <ellipse cx="300" cy="55" rx="272" ry="46" class="f-paper"/>
@@ -138,7 +139,7 @@
         <rect x="26" y="112" width="68" height="12" rx="3" class="ink" style="fill:#cf8463"/>
       </svg>
       <!-- the easel, with her next painting half done -->
-      <svg class="gal-easel" viewBox="0 0 150 232" aria-hidden="true" focusable="false">
+      <svg class="gal-easel" viewBox="0 0 150 232" aria-hidden="true" focusable="false" data-gemma-spot="look" data-gemma-at="1.12">
         <ellipse cx="76" cy="228" rx="58" ry="3.4" class="gal-shadow"/>
         <path d="M76 34 L98 226" class="gal-leg gal-leg--back"/>
         <path d="M40 226 L71 26 M112 226 L81 26" class="gal-leg"/>
@@ -253,5 +254,7 @@
 <script src="assets/rooms.js"></script>
 <script src="assets/art-data.js"></script>
 <script src="assets/art.js"></script>
+<script src="assets/gemma-kit.js"></script>
+<script src="assets/gemma-follow.js"></script>
 </body>
 </html>

@@ -3042,6 +3042,7 @@ body[data-section="art"]::before {
   background: linear-gradient(var(--wood-lite) 0 3px, var(--wood) 3px 14px, var(--wood-dark) 14px);
 }
 .gal-floor__stage { position: relative; width: min(1100px, 100% - 32px); height: 150px; margin: 0 auto; }
+.gal-floor__stage { --gemma-feet: 112px; }   /* on the rug, in front of the bench */
 .gal-floor__stage > svg { position: absolute; height: auto; overflow: visible; }
 .gal-rug   { left: 50%; top: 30px; width: min(560px, 54%); transform: translateX(-50%); }
 .gal-fern  { left: -1%; bottom: 44px; width: 96px; }
@@ -3153,7 +3154,7 @@ body[data-section="art"]::before {
   .piece__label { padding: 3px 7px 4px; margin-top: calc(7px + var(--drop, 0px)); }
   .piece__hook { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
   .gal-dado { height: 84px; margin-top: 40px; }
-  .gal-floor__stage { width: calc(100% - 16px); height: 118px; }
+  .gal-floor__stage { width: calc(100% - 16px); height: 118px; --gemma-feet: 92px; }
   .gal-fern, .gal-stool, .gal-jar { display: none; }
   .gal-rug { width: 94%; top: 26px; }
   .gal-easel { left: 0; bottom: 34px; width: 88px; }
