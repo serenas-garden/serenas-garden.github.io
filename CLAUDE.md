@@ -40,8 +40,8 @@ labelled "still decorating" stub.
   `sky.js` and `weather.js` below.
 - **Rex previews big design changes before they go live.** Build on a branch,
   show him (local preview plus screenshots), and push only after he approves.
-  (One exception so far: he asked for Travels to be built to completion and
-  pushed without a preview. That doesn't change the rule.)
+  (Two exceptions so far: he asked for Travels, and for Gemma in the garden,
+  to be built and pushed without a preview. That doesn't change the rule.)
 - **Features:** borrowed as *ideas* from a site she liked
   (luvbugdiaries.blogspot.com): the door intro, objects as navigation, a guide
   character with hover tips, and a "currently" status card. **Ideas only.**
@@ -78,7 +78,15 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   bugs by night, clouds and the sun by day, and stars and the real moon by
   night (the moon is reflected in the pond). `.door-sky` gives tall phone
   screens their own sun, clouds and moon, since the scene doesn't reach the
-  top there. Flowers are reusable `<g id="fl-…">` shapes placed with `<use>`.
+  top there. **Gemma plays in the garden too** (see Gemma). **The garden is
+  two SVGs** with her between them: `.door-scene` (sky, hills, trees, fence,
+  pond, path, the farther wildflowers) and `.door-scene--front` (wildflowers
+  nearer than scene y 880, the bunnies, butterflies, grass, the night veil
+  and the lightning bugs), so bunnies and grass pass in front of her and the
+  night dims her like the meadow. Stacking in `.door-intro`: back scene,
+  Gemma (1), front scene (2), the door tree (3), her butterfly (4), weather
+  (5). Put new garden things in the layer that matches their depth.
+  Flowers are reusable `<g id="fl-…">` shapes placed with `<use>`.
   Keep them as groups, not `<symbol>`s with a viewBox: a `<use>` without a
   size stretches a symbol to fill the whole scene. Rex asked for this garden
   to be full and lively; keep it that way.
@@ -148,6 +156,7 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   browsers stuck on "always day"; sky.js clears that old key.
 - `assets/gemma-kit.js`: Gemma's drawing and petting, shared by every page
   she's on. `assets/gemma-follow.js`: her following you into rooms.
+  `assets/gemma-outside.js`: her playing in the garden on the door screen.
 - `assets/weather.js`: **live weather for St. Petersburg** from Open-Meteo
   (free, no key, browser-friendly). It's cached 15 minutes in sessionStorage
   and refreshed every 15 minutes. It sets `data-weather` (clear, partly,
@@ -385,14 +394,34 @@ is the heart of the home page, so treat her with care.
   fur colours are fixed hex values (she's the same cat at night, just dimmed a
   touch), unlike the room, which uses theme tokens.
 - **She follows you into rooms**: see "Rooms, and Gemma following you in".
+- **She's outside on the door screen too** (Rex asked for her to be out in
+  the garden doing something; `assets/gemma-outside.js`). She plays in the
+  meadow at the foot of the tree, between the rose bush and the pond. By day
+  an orange butterfly drifts in and lands on the nearest rose: she spots it
+  (nose up), crouches, wiggles and leaps; it gets away; she sits, tilts her
+  head to watch it go, washes a paw, and pads back to her spot. Sometimes she
+  naps in the grass. After dark it's a firefly. In rain or snow nothing comes
+  to play, so she washes and naps under the tree. **When you open the door she
+  dashes in ahead of you** (she's brought to the front for the run and fades
+  at the threshold). She's a `<button>` (petting works; she comes after the
+  door when tabbing). Places are in door units (x from the middle of the
+  door, y up from the ground line at scene y 882; one unit is `--ds` pixels),
+  so she stays the right size beside the door; `HOME`, `ROSE`, `POUNCE` and
+  `DOORWAY` at the top of the script. She lands just clear of the rose bush,
+  because the bush is part of the door tree, which is drawn in front of her.
+  Reduced motion: she just sits by the pond. She isn't created at all when the
+  door is skipped (coming back from a room).
 - **Where she lives:** `.floor__stage` in `index.html`: her bed (two SVG
   halves, `.cat-bed--back` and `.cat-bed--front`, so she sleeps *between*
   them; "gemma" is embroidered on the front), and her cat tree (`.cat-tree`:
   condo, middle shelf, top perch, pom-pom toy). She is a `<button class="gemma">`
   whose SVG is filled from `GemmaKit.art` (`assets/gemma-kit.js`), with poses
-  `g-walk` (side view, also used for `jump` and `eat`), `g-sit` (front view,
-  with a yawn), and `g-sleep` (curled up, with drifting z's). `data-pose`
-  picks which is shown.
+  `g-walk` (side view, also used for `stand`, `crouch`, `jump` and `eat`),
+  `g-sit` (front view, with a yawn), and `g-sleep` (curled up, with drifting
+  z's). `data-pose` picks which is shown. Classes add moods: `is-yawning`,
+  `is-curious` (nose up, or a head tilt sitting), `is-grooming` (a paw raised
+  to her chin; `.g-sit-head`, `.g-paw` and `.g-lick` in the art),
+  `is-wiggling` (crouched, about to pounce) and `is-running`.
 - **Her day** (`assets/gemma.js`): nap → wake, sit, yawn → hop out → stroll to
   the tree (sometimes stopping halfway to look around) → jump condo → shelf →
   top perch → sit there → down via the condo → walk home → step into bed →

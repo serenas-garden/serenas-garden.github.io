@@ -236,7 +236,7 @@ h1, h2, h3 {
   position: absolute;
   left: 50%;
   bottom: calc(var(--s) * 118);
-  z-index: 1;
+  z-index: 3;
   display: grid;
   justify-items: center;
   gap: 10px;
@@ -317,6 +317,12 @@ h1, h2, h3 {
   display: block;
   transform: translateX(-50%);
 }
+/* The garden is two layers with Gemma between them (z-index 1): the front
+   one has the nearest flowers, the bunnies, butterflies, grass, the night
+   veil and the lightning bugs. Then the door tree (3), her butterfly (4) and
+   the weather (5). */
+.door-scene--front { z-index: 2; pointer-events: none; }
+.door-intro > .weather-fx { z-index: 5; }
 /* stars over the whole sky at night, for screens taller than the scene */
 .door-intro::before {
   content: "";
@@ -1108,6 +1114,8 @@ h1, h2, h3 {
 
 .g-pose { display: none; }
 .gemma[data-pose="walk"] .g-walk,
+.gemma[data-pose="stand"] .g-walk,
+.gemma[data-pose="crouch"] .g-walk,
 .gemma[data-pose="jump"] .g-walk,
 .gemma[data-pose="sit"] .g-sit,
 .gemma[data-pose="sleep"] .g-sleep,
@@ -1128,6 +1136,23 @@ h1, h2, h3 {
 .g-leg { transform-box: fill-box; transform-origin: 50% 10%; }
 .gemma[data-pose="jump"] .g-front { transform: rotate(-42deg); }
 .gemma[data-pose="jump"] .g-back  { transform: rotate(42deg); }
+
+/* crouching to pounce: low to the ground, legs folded under, eyes up on
+   whatever she's after (the wiggle is in the motion block) */
+.g-walk-core { transform-box: view-box; transform-origin: 80px 78px; }
+.gemma[data-pose="crouch"] .g-walk-core { transform: translateY(6px); }
+.gemma[data-pose="crouch"] .g-leg { transform: scaleY(.74); }
+.gemma[data-pose="crouch"] .g-head { transform: translate(2px, -1px) rotate(-7deg); }
+/* curious: nose up (side view) or her head tilted (sitting) */
+.g-sit-head { transform-box: view-box; transform-origin: 60px 40px; }
+.gemma.is-curious .g-head { transform: rotate(-12deg); }
+.gemma.is-curious .g-sit-head { transform: rotate(-13deg); }
+/* washing: one paw up to her chin, head bent to it, eyes half shut */
+.g-lick, .g-tongue { display: none; }
+.gemma.is-grooming .g-lick { display: inline; }
+.gemma.is-grooming .g-paw { visibility: hidden; }
+.gemma.is-grooming .g-sit-head { transform: rotate(7deg); }
+.gemma.is-grooming .g-eyes { transform: scaleY(.3); }
 
 .gemma__bubble {
   position: absolute;
@@ -1154,6 +1179,39 @@ h1, h2, h3 {
   line-height: 1;
   color: var(--rose);
   pointer-events: none;
+}
+
+/* ----- Gemma out in the garden, on the door screen (gemma-outside.js).
+   .dg (her) and .dg-air (her butterfly) sit on the ground line the door tree
+   stands on (scene y 882), in the middle of the door; things are placed from
+   there in door units (--ds pixels each), so she stays the right size beside
+   the door. She's between the two garden layers, so bunnies and grass pass in
+   front of her and the night veil dims her like the rest of the meadow; she
+   comes to the front only to dash in through the door. ----- */
+.dg, .dg-air {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--s) * 118);
+  z-index: 1;
+  width: 0;
+  height: 0;
+}
+.dg-air { z-index: 4; pointer-events: none; }
+.dg.is-dashing { z-index: 4; }
+.dg .gemma { position: absolute; left: 0; bottom: calc(var(--ds) * -2); width: calc(var(--ds) * 120); }
+:root[data-dark="true"] .dg .gemma__body { filter: none; }
+:root[data-dark="true"] .dg.is-dashing .gemma__body { filter: brightness(.72); }
+.dg-toy { position: absolute; left: 0; bottom: 0; display: none; }
+.dg-toy.is-on { display: block; }
+.dg-bfly { width: calc(var(--ds) * 42); height: calc(var(--ds) * 31.5); }
+.dg-bfly svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.dg-bug { width: calc(var(--ds) * 22); height: calc(var(--ds) * 22); }
+.dg-bug i {   /* the glow is its own element: the outer one is moved by transform */
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fbffd8 0 16%, rgba(227, 245, 122, .95) 30%, rgba(214, 240, 106, 0) 70%);
 }
 
 /* --- drifting petals (day) and fireflies (night), behind everything --- */
@@ -3042,6 +3100,18 @@ body[data-section="kitchen"]::before {
   .gemma__heart { animation: g-heart 1.4s ease-out forwards; }
   .gemma[data-pose="eat"] .g-head { animation: g-nibble .7s ease-in-out infinite alternate; }
   .gemma:hover .g-eyes { animation-duration: 1.6s; }
+  /* out in the garden: the wiggle before a pounce, washing a paw, a dash for the door */
+  .g-head, .g-sit-head { transition: transform .3s ease; }
+  .gemma.is-wiggling[data-pose="crouch"] .g-walk-core { animation: g-wiggle .14s ease-in-out infinite alternate; }
+  .gemma.is-grooming .g-eyes { animation: none; }
+  .gemma.is-grooming .g-sit-head { animation: g-lick-head .52s ease-in-out infinite; }
+  .gemma.is-grooming .g-lick { animation: g-lick .52s ease-in-out infinite; }
+  .gemma.is-grooming .g-tongue { display: inline; animation: g-tongue .52s ease-in-out infinite; }
+  .gemma.is-running[data-pose="walk"] .g-leg-a,
+  .gemma.is-running[data-pose="walk"] .g-leg-b { animation-duration: .13s; }
+  .gemma.is-running[data-pose="walk"] .g-walk-core { animation-duration: .1s; }
+  .dg-bfly.is-resting .bfly-wing { animation-duration: 1.3s; }
+  .dg-bug i { animation: dg-glow 1.9s ease-in-out infinite; }
   .t-toy { animation: toy-swing 3s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 0; }
 
   @keyframes g-step { from { transform: rotate(22deg); } to { transform: rotate(-22deg); } }
@@ -3051,6 +3121,11 @@ body[data-section="kitchen"]::before {
   @keyframes g-blink { 0%, 93%, 100% { transform: scaleY(1); } 95%, 97% { transform: scaleY(.1); } }
   @keyframes g-breathe { 50% { transform: scaleY(1.045); } }
   @keyframes g-z { 0% { opacity: 0; transform: translate(0, 4px); } 30% { opacity: .85; } 100% { opacity: 0; transform: translate(6px, -12px); } }
+  @keyframes g-wiggle { from { transform: translate(-.9px, 6px) rotate(-1.4deg); } to { transform: translate(.9px, 6px) rotate(1.4deg); } }
+  @keyframes g-lick { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-.5px, -1.8px); } }
+  @keyframes g-lick-head { 0%, 100% { transform: rotate(6deg); } 50% { transform: rotate(9deg) translateY(1px); } }
+  @keyframes g-tongue { 0%, 30%, 75%, 100% { opacity: 0; } 45%, 60% { opacity: 1; } }
+  @keyframes dg-glow { 0%, 100% { opacity: .55; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.1); } }
   @keyframes g-nibble { from { transform: translate(1px, 15px) rotate(29deg); } to { transform: translate(1px, 17px) rotate(36deg); } }
   @keyframes g-heart { 0% { opacity: 0; transform: translateY(0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--hd, 0px), -46px) scale(1.15); } }
   @keyframes toy-swing { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }

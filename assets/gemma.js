@@ -20,7 +20,7 @@
   "use strict";
 
   var stage = document.querySelector(".floor__stage");
-  var cat = document.querySelector(".gemma");
+  var cat = stage && stage.querySelector(".gemma");
   if (!stage || !cat) return;
 
   var body = cat.querySelector(".gemma__body");

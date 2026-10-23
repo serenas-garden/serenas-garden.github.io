@@ -8,8 +8,11 @@
  * gold heart tag.
  *
  * Poses (picked with data-pose on the button): walk (side view, also used
- * for jump and, with her head dipped, eat), sit (front view, with a yawn)
- * and sleep (curled up, with drifting z's).
+ * for stand, crouch, jump and, with her head dipped, eat), sit (front view,
+ * with a yawn) and sleep (curled up, with drifting z's). Classes add the
+ * rest: is-yawning, is-curious (head tilted, or nose up in side view),
+ * is-grooming (sitting, washing a paw), is-wiggling (crouched, about to
+ * pounce) and is-running.
  */
 (function () {
   "use strict";
@@ -55,11 +58,15 @@
     "<path d=\"M41.6 76 C38 62 42 47 50 40 C47 52 47 65 49 76 Z\" fill=\"#5b4334\"/>",
     "<path d=\"M78.4 76 C82 62 78 47 70 40 C73 52 73 65 71 76 Z\" fill=\"#5b4334\"/>",
     "<rect x=\"50\" y=\"54\" width=\"8.6\" height=\"23\" rx=\"4.3\" fill=\"#fbf7f0\" stroke=\"#3d2f27\" stroke-width=\"1.2\"/>",
+    "<path d=\"M53.2 74.5 v2.4 M55.6 74.5 v2.4\" stroke=\"#c9bfb2\" stroke-width=\".8\" stroke-linecap=\"round\"/>",
+    "<g class=\"g-paw\">",
     "<rect x=\"61.4\" y=\"54\" width=\"8.6\" height=\"23\" rx=\"4.3\" fill=\"#fbf7f0\" stroke=\"#3d2f27\" stroke-width=\"1.2\"/>",
-    "<path d=\"M53.2 74.5 v2.4 M55.6 74.5 v2.4 M64.6 74.5 v2.4 M67 74.5 v2.4\" stroke=\"#c9bfb2\" stroke-width=\".8\" stroke-linecap=\"round\"/>",
+    "<path d=\"M64.6 74.5 v2.4 M67 74.5 v2.4\" stroke=\"#c9bfb2\" stroke-width=\".8\" stroke-linecap=\"round\"/>",
+    "</g>",
     "<path class=\"g-sit-tail\" d=\"M72 76.5 C90 77 99 67 93 58 C90 54 85 56 86.5 61 C88.5 68 82 72 68 72.5 Z\" fill=\"#5b4334\" stroke=\"#3d2f27\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/>",
     "<path d=\"M48.5 41 q2.6 4.4 5.4 1 q2.6 4.8 6.1 1.2 q3.5 4.6 6.1 -1.2 q2.8 3.4 5.4 -1 C72 47 68.5 54.5 60 55.5 C51.5 54.5 48 47 48.5 41 Z\" fill=\"#fbf7f0\"/>",
     "<path d=\"M55 47 q1.5 1.6 3 0 M62 47 q1.5 1.6 3 0 M58.5 51 q1.5 1.6 3 0\" fill=\"none\" stroke=\"#d8cdbf\" stroke-width=\".9\" stroke-linecap=\"round\"/>",
+    "<g class=\"g-sit-head\">",
     "<path d=\"M47 19 L44 3 L57 12 Z\" fill=\"#5b4334\" stroke=\"#3d2f27\" stroke-width=\"1.2\" stroke-linejoin=\"round\"/>",
     "<path d=\"M48.3 16 L46.6 8 L53.6 12.5 Z\" fill=\"#e8a3a6\"/>",
     "<path d=\"M73 19 L76 3 L63 12 Z\" fill=\"#5b4334\" stroke=\"#3d2f27\" stroke-width=\"1.2\" stroke-linejoin=\"round\"/>",
@@ -79,8 +86,13 @@
     "<path d=\"M60 32.6 q-1.8 2 -3.6 1 M60 32.6 q1.8 2 3.6 1\" fill=\"none\" stroke=\"#3d2f27\" stroke-width=\".9\" stroke-linecap=\"round\"/>",
     "<ellipse class=\"g-yawn\" cx=\"60\" cy=\"34.6\" rx=\"2.5\" ry=\"2.4\" fill=\"#e8a3a6\" stroke=\"#3d2f27\" stroke-width=\".8\"/>",
     "<path d=\"M54 32 L40 29.5 M54 33.6 L40 34.2 M66 32 L80 29.5 M66 33.6 L80 34.2\" stroke=\"#c9c1b6\" stroke-width=\".7\"/>",
+    "</g>",
     "<path d=\"M50 40.6 Q60 45.6 70 40.6\" fill=\"none\" stroke=\"#d99a9e\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>",
     "<circle cx=\"60\" cy=\"44.8\" r=\"2.3\" fill=\"#d9a441\" stroke=\"#9c7124\" stroke-width=\".6\"/>",
+    "<g class=\"g-lick\">",
+    "<ellipse class=\"g-tongue\" cx=\"60.4\" cy=\"36.2\" rx=\"1.5\" ry=\"1.3\" fill=\"#e88f96\"/>",
+    "<rect x=\"-4.3\" y=\"-21\" width=\"8.6\" height=\"23\" rx=\"4.3\" transform=\"translate(68.5 57) rotate(-17)\" fill=\"#fbf7f0\" stroke=\"#3d2f27\" stroke-width=\"1.2\"/>",
+    "</g>",
     "</g>",
     "<!-- sleeping: curled up, tail round the front, nose on her paws -->",
     "<g class=\"g-pose g-sleep\">",
