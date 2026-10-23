@@ -264,7 +264,8 @@
         '<button type="button" class="frame frame--' + p.frame + '" aria-label="' + esc(pieceLabel(p)) + '">' +
           '<span class="frame__mat">' + artHTML(p, true) + "</span></button>" +
       "</div>" +
-      '<p class="piece__label" aria-hidden="true">' +
+      '<p class="piece__label tape-' + (seed(p.id + "t") % 5) + '" aria-hidden="true" style="--lt:' +
+        ((seed(p.id + "l") % 9 - 4) * .5) + "deg;--tt:" + (seed(p.id + "w") % 11 - 5) + 'deg">' +
         (p.title ? '<span class="piece__title">' + esc(p.title) + "</span>" : "") +
         '<span class="piece__meta">' + esc(metaLine(p)) + "</span></p>" +
     "</li>";

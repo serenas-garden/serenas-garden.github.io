@@ -292,14 +292,23 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
 
 `art.html`: Serena's art. Rex wanted it more like Travels than the Kitchen:
 a page, not a room (so Gemma doesn't follow you in), because there are a lot
-of pieces and more to come. It's a **gallery wall** instead: a panel of
-warm painted wall with wooden picture rails, every piece hanging from a
-brass hook on a cord, in its own frame and mat, with a little museum label
-(title, year, medium) under it, a brass plaque at the top, and a bench and a
-plant on the floor. **The page starts straight with the wall**: no page
-header, eyebrow, blurb or count chips above it (Rex found them fussy). The
-plaque is the page's `<h1>`, a small "back inside" link sits in the wall's
-top corner, and the rooms nav is below. At night the wall goes dark and each piece sits in a
+of pieces and more to come. But **it looks and feels like a room of the
+cottage** (Rex found the first version, a plain panel on the page, "off" and
+not fun enough; October 2026): like the kitchen it fills the screen
+(`.gal-room`, sharing the kitchen's room rules), with the bunting-and-
+fairy-light garland, the hanging wooden sign ("paintings by serena / The
+Gallery", the page's `<h1>`) and a "back inside" pill beside it, and a taped
+paper note saying how to wake the paintings up. The wall is the page's own
+wallpaper (soft sage-cream paint with a fine double pinstripe and a scatter
+of paint dabs; `--g-wall`), picture rails run wall to wall, and every piece
+hangs from a brass hook on a cord, in its own frame and mat, with a little
+paper label under it held on with washi tape (five tapes, each label a touch
+crooked; both steady per piece). Below: a sage beadboard dado under a chair
+rail, a skirting board, and a plank floor with a braided rug, the bench, a
+painter's corner (an easel with a half-finished painting, a stool with her
+palette, a jar of brushes) and plants; the room links sit on the floor. The
+`gal-` prefix is the gallery's own; don't use `g-`, which is Gemma's. It's
+still a page, not a room (no `data-room`), so Gemma doesn't follow you in. At night the wall goes dark and each piece sits in a
 pool of warm light (`--lamp`).
 
 - **Every piece is shown whole, straight away** (Rex's ask): nothing is
