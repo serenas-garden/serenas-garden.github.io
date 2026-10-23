@@ -105,13 +105,13 @@ window.ART = {
       fx: [{ type: "birds", area: [0, .06, 1, .44], n: 4 }]
     },
     {
-      id: "brown-bear", title: "", year: 2025, medium: "shimmer watercolor",
-      alt: "A sleepy brown bear lying on its side, made of two fluffy, sparkly shapes: a round head with dark dot eyes and a nose, and a round body with a curled-up leg.",
-      src: "assets/art/brown-bear.jpg", full: "assets/art/brown-bear-full.jpg", w: 1110, h: 830,
-      frame: "brown-bear", tone: "#2a2319",
-      fx: [{ type: "glints", area: [.13, .2, .42, .66], n: 9, color: "#fff3c6", shape: "star" },
-           { type: "glints", area: [.46, .17, .9, .6], n: 12, color: "#fff3c6", shape: "star" },
-           { type: "blink", color: "#564e3b", eyes: [[.234, .35, .058, .068], [.234, .473, .056, .074]] }]
+      id: "brown-puppy", title: "", year: 2025, medium: "shimmer watercolor",
+      alt: "A little brown puppy sitting up, painted in sparkly brown: a fluffy round head with dot eyes, a black nose and a smile, a white collar, and a round body with a curly tail.",
+      src: "assets/art/brown-puppy.jpg", full: "assets/art/brown-puppy-full.jpg", w: 830, h: 1110,
+      frame: "brown-puppy", tone: "#2a2319",
+      fx: [{ type: "glints", area: [.34, .12, .8, .4], n: 9, color: "#fff3c6", shape: "star" },
+           { type: "glints", area: [.4, .47, .82, .88], n: 12, color: "#fff3c6", shape: "star" },
+           { type: "blink", color: "#564e3b", eyes: [[.649, .234, .068, .058], [.525, .234, .074, .056]] }]
     },
     {
       id: "forest-lake", title: "", year: 2026, medium: "watercolor and ink",

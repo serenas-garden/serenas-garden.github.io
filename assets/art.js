@@ -218,8 +218,7 @@
           out += "</span>";
           break;
         case "blink":
-          // eyelids, the colour of the fur round the eyes; this bear lies on
-          // her side, so they close sideways (from her forehead)
+          // eyelids, the colour of the fur round the eyes, closing from the top
           (fx.eyes || []).forEach(function (e) {
             out += '<i class="fx-lid" style="left:' + pct(e[0] - e[2] / 2) + ";top:" + pct(e[1] - e[3] / 2) +
               ";width:" + pct(e[2]) + ";height:" + pct(e[3]) + ";" + vars({ c: fx.color || "#5f5642" }) + '"></i>';

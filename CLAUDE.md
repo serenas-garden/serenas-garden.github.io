@@ -337,7 +337,7 @@ pool of warm light (`--lamp`).
   snowflakes; the cherry blossom in pale pink with blossoms and a wide mat;
   undersea in sea-glass aqua with starfish; the child on the moon in beaded
   gilt on a night-blue mat with gold stars; the meadow in leaf green; the
-  cliffs in sandstone; the bear in honey wood with paw prints; the dusk sky
+  cliffs in sandstone; the puppy in honey wood with paw prints; the dusk sky
   in plum; the snowy forest in frosted silver with snowflakes; the colour
   blocks with four sides in four of its colours; the sea creature in teal
   with a lilac slip; the ocean in whitewashed blue; the winter valley in
@@ -350,10 +350,9 @@ pool of warm light (`--lamp`).
   canoe, snow falling (skiers, snowy forest, winter valley), cherry petals
   drifting, bubbles rising (undersea, the sea creature), the child's stars
   twinkling and the one she holds glowing, butterflies over the meadow and
-  the colour-block flowers, birds crossing the cliffs' sky, the bear's
-  shimmer sparkling and her eyes blinking (she lies on her side, so they
-  close sideways), fireflies under the dusk trees, mist through the blue
-  study. Positions are fractions of the picture, sizes in container-query
+  the colour-block flowers, birds crossing the cliffs' sky, the puppy's
+  shimmer sparkling and her eyes blinking, fireflies under the dusk trees,
+  mist through the blue study. Positions are fractions of the picture, sizes in container-query
   units, so the same animation fits a small frame and full screen. On the
   wall it fades in and plays only while you point at the piece (nothing
   runs otherwise); full screen it always plays. None of it with reduced
@@ -370,7 +369,9 @@ pool of warm light (`--lamp`).
 - **The first 18 (October 2026)** came untitled, as photos of the paintings
   (Rex formatted them; don't crop them). Serena will title them; until a
   piece has a title, its label (and its full-screen caption) shows just the
-  date and medium, with no "Untitled" (Rex's call). The years (2025 or 2026) and mediums are Claude's
+  date and medium, with no "Untitled" (Rex's call). The puppy (Rex's file
+  said "bear") was photographed on her side; Rex had her turned upright, so
+  `brown-puppy` is the original rotated 90° clockwise. The years (2025 or 2026) and mediums are Claude's
   guesses from the pictures, for her to correct. The hanging order is
   Claude's too (Rex: the file numbers meant nothing), mixing colours,
   subjects and shapes so neighbours differ, with the two paper studies
