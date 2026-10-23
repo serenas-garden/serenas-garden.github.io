@@ -2675,8 +2675,7 @@ body[data-section="kitchen"]::before {
 
 /* the hanging: rails, cords, frames, labels */
 .hang {
-  --pad-mould: 10px;         /* frame moulding, each side */
-  --pad-mat: 12px;           /* the mat inside it */
+  --fs: 1;                   /* frames' widths are multiplied by this (smaller on phones) */
   --gap: 34px;               /* between frames */
   --row-h: 196px;            /* the height a row aims for (the pictures) */
   --rail: 12px;
@@ -2700,9 +2699,11 @@ body[data-section="kitchen"]::before {
 :root[data-dark="true"] .rail { border-color: #0e130f; }
 .piece { position: absolute; margin: 0; }
 .piece[hidden] { display: none; }
+/* --drop: a slimmer frame hangs a little lower, so a row's pictures line up
+   through their middles */
 .piece__hang {
   position: relative;
-  padding-top: calc(var(--rail) + var(--cord));
+  padding-top: calc(var(--rail) + var(--cord) + var(--drop, 0px));
   transform: rotate(var(--tilt, 0deg));
   transform-origin: 50% calc(var(--rail) / 2);
 }
@@ -2712,7 +2713,7 @@ body[data-section="kitchen"]::before {
   position: absolute;
   z-index: -1;
   left: -30%; right: -30%;
-  top: calc(var(--rail) + var(--cord) - 34px);
+  top: calc(var(--rail) + var(--cord) + var(--drop, 0px) - 34px);
   height: calc(var(--fh, 200px) + 80px);
   background: radial-gradient(ellipse 52% 50% at 50% 34%, rgba(255, 220, 150, .27), rgba(255, 220, 150, .08) 60%, transparent 76%);
   opacity: var(--lamp);
@@ -2723,7 +2724,7 @@ body[data-section="kitchen"]::before {
   left: 0;
   top: calc(var(--rail) / 2);
   width: 100%;
-  height: calc(var(--rail) / 2 + var(--cord) + 10px);
+  height: calc(var(--rail) / 2 + var(--cord) + var(--drop, 0px) + 10px);
   overflow: visible;
 }
 .piece__cord path { fill: none; stroke: #8a7457; stroke-width: 1.3; vector-effect: non-scaling-stroke; }
@@ -2739,21 +2740,50 @@ body[data-section="kitchen"]::before {
   border: 1.5px solid #2f3a2c;
 }
 
+/* A frame is a moulding (--mould, --mw wide), a thin coloured slip inside it
+   (--lip, --lw) and a mat (--mat, --matw), then the picture. Widths are
+   plain numbers (art.js reads them to lay the wall out), in pixels times
+   --fs. Optional: --inline, a fine line or beading along the moulding, and
+   --orn, a little ornament in each corner. */
 .frame {
+  --mw: 10; --lw: 1; --matw: 12;
   --mould: linear-gradient(135deg, var(--wood-lite), var(--wood) 55%, var(--wood-lite));
+  --lip: rgba(47, 58, 44, .5);
+  --mat: #fbf8f0;
+  --orn: none;
   position: relative;
   display: block;
   width: 100%;
   height: var(--fh, 200px);
-  padding: var(--pad-mould);
+  padding: calc(var(--mw) * var(--fs) * 1px);
   background: var(--mould);
   border: 1.5px solid #2f3a2c;
   border-radius: 3px;
   box-shadow:
-    inset 1.5px 1.5px 0 rgba(255, 255, 255, .28),
-    inset -1.5px -1.5px 0 rgba(0, 0, 0, .18),
+    inset 1.5px 1.5px 0 rgba(255, 255, 255, .3),
+    inset -1.5px -1.5px 0 rgba(0, 0, 0, .2),
     0 14px 18px -12px rgba(30, 20, 10, .55);
   cursor: zoom-in;
+}
+.frame::before {          /* the fine line or beading along the moulding */
+  content: "";
+  position: absolute;
+  inset: calc(var(--mw) * var(--fs) * var(--inline-at, .5) * 1px - 1px);
+  border: var(--inline, 0 solid transparent);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.frame::after {           /* the corner ornaments */
+  --os: calc(var(--mw) * var(--fs) * 1.3px);
+  content: "";
+  position: absolute;
+  inset: calc(var(--mw) * var(--fs) * -.15px);
+  background:
+    var(--orn) left top / var(--os) var(--os) no-repeat,
+    var(--orn) right top / var(--os) var(--os) no-repeat,
+    var(--orn) left bottom / var(--os) var(--os) no-repeat,
+    var(--orn) right bottom / var(--os) var(--os) no-repeat;
+  pointer-events: none;
 }
 .frame--walnut { --mould: linear-gradient(135deg, #8a6444, #5e4330 55%, #7c5a3d); }
 .frame--gilt   { --mould: linear-gradient(135deg, #f6dc98, #d9a441 42%, #b88531 68%, #f0cf80); }
@@ -2765,17 +2795,145 @@ body[data-section="kitchen"]::before {
   display: block;
   width: 100%;
   height: 100%;
-  padding: var(--pad-mat);
-  background: #fbf8f0;
-  border: 1px solid rgba(47, 58, 44, .55);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .6);
+  padding: calc(var(--matw) * var(--fs) * 1px);
+  background: var(--mat);
+  border: calc(var(--lw) * var(--fs) * 1px) solid var(--lip);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .16);
 }
-.frame__mat > img, .frame__mat > .blank {
+/* the picture (and its fx overlay) */
+.art {
+  position: relative;
+  display: block;
   width: 100%;
   height: 100%;
-  box-shadow: 0 0 0 1px rgba(47, 58, 44, .14), inset 0 1px 3px rgba(0, 0, 0, .12);
+  overflow: hidden;
 }
-.frame__mat > img { display: block; background: #efe9dc; }
+.frame .art { box-shadow: 0 0 0 1px rgba(47, 58, 44, .16); }
+.art > img { display: block; width: 100%; height: 100%; background: #efe9dc; }
+.art > .blank { width: 100%; height: 100%; }
+.fx { display: none; }
+
+/* ----- a frame made for each piece, picking up its colours ----- */
+/* the moonlit sea: midnight blue with a gold slip and a gold line, for the moon */
+.frame--moonlit-sea {
+  --mw: 14; --lw: 3; --matw: 16;
+  --mould: linear-gradient(135deg, #3c4c6e, #1d2a44 45%, #2b3b5d 72%, #17223a);
+  --lip: #d4a64e; --mat: #f4f0e6;
+  --inline: 1px solid rgba(214, 166, 78, .75);
+}
+/* the beach: weathered driftwood, a red slip for the umbrella, a sandy mat */
+.frame--beach-umbrella {
+  --mw: 15; --lw: 2.5; --matw: 14;
+  --mould: radial-gradient(ellipse 30% 60% at 18% 30%, rgba(255, 255, 255, .16), transparent 70%), radial-gradient(ellipse 40% 50% at 72% 78%, rgba(60, 45, 30, .09), transparent 70%), radial-gradient(ellipse 25% 40% at 88% 18%, rgba(255, 255, 255, .1), transparent 70%), linear-gradient(135deg, #ddd5c6, #b8ad99 50%, #d0c7b5);
+  --lip: #c4443a; --mat: #f2eadb;
+}
+/* the rabbits: warm walnut, like the canoe, with a reed-green slip */
+.frame--rabbits-in-canoe {
+  --mw: 13; --lw: 2.5; --matw: 15;
+  --mould: radial-gradient(ellipse 30% 60% at 18% 30%, rgba(255, 255, 255, .16), transparent 70%), radial-gradient(ellipse 40% 50% at 72% 78%, rgba(60, 45, 30, .09), transparent 70%), radial-gradient(ellipse 25% 40% at 88% 18%, rgba(255, 255, 255, .1), transparent 70%), linear-gradient(135deg, #7d573b, #4f3424 55%, #6b4731);
+  --lip: #8fa678; --mat: #f6f2e7;
+}
+/* the skiers: alpine blue lacquer, a snow-white slip, snowflakes */
+.frame--mountain-skiers {
+  --mw: 13; --lw: 2; --matw: 15;
+  --mould: linear-gradient(135deg, #2386ad, #0b5272 55%, #13698d);
+  --lip: #ffffff; --mat: #fbfbf8;
+  --orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg stroke='%23ffffff' stroke-width='1.7' stroke-linecap='round' fill='none'%3E%3Cpath d='M10 2.5v15M3.5 6.25l13 7.5M3.5 13.75l13-7.5'/%3E%3Cpath d='M8 4l2 2 2-2M8 16l2-2 2 2M3.6 9l2.6.7-.7 2.6M16.4 11l-2.6-.7.7-2.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* the cherry blossom: pale pink lacquer, a bark-brown slip, a wide mat, blossoms */
+.frame--cherry-blossoms {
+  --mw: 11; --lw: 1.5; --matw: 22;
+  --mould: linear-gradient(135deg, #f8e6e8, #e5bfc5 55%, #f1d5d9);
+  --lip: #7a5546; --mat: #fdfbf7;
+  --orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg fill='%23f9d3da' stroke='%23d58a99' stroke-width='.8'%3E%3Cellipse cx='10' cy='5.2' rx='2.9' ry='3.4'/%3E%3Cellipse cx='10' cy='5.2' rx='2.9' ry='3.4' transform='rotate(72 10 10)'/%3E%3Cellipse cx='10' cy='5.2' rx='2.9' ry='3.4' transform='rotate(144 10 10)'/%3E%3Cellipse cx='10' cy='5.2' rx='2.9' ry='3.4' transform='rotate(216 10 10)'/%3E%3Cellipse cx='10' cy='5.2' rx='2.9' ry='3.4' transform='rotate(288 10 10)'/%3E%3C/g%3E%3Ccircle cx='10' cy='10' r='2' fill='%23c9566c'/%3E%3C/svg%3E");
+}
+/* undersea: sea-glass aqua, a coral slip, starfish */
+.frame--undersea-life {
+  --mw: 13; --lw: 2; --matw: 10;
+  --mould: linear-gradient(135deg, #acdcd7, #5fa9a8 55%, #8ac6c2);
+  --lip: #e07a4f; --mat: #fbfaf6;
+  --orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 2c1 3 1.6 5 3 5.6 1.6.6 3.8.1 5.2.6-2.2 1.6-3.8 2.6-3.9 4.3-.1 1.6 1.5 3.6 1.8 5.3-2.6-1.4-4.4-2.3-6.1-2.3s-3.5.9-6.1 2.3c.3-1.7 1.9-3.7 1.8-5.3C5.6 10.8 4 9.8 1.8 8.2c1.4-.5 3.6 0 5.2-.6C8.4 7 9 5 10 2z' fill='%23ec8a5e' stroke='%23b4532e' stroke-width='.9' stroke-linejoin='round'/%3E%3Cg fill='%23fbd2bd'%3E%3Ccircle cx='10' cy='6.4' r='.7'/%3E%3Ccircle cx='10' cy='10.6' r='.8'/%3E%3Ccircle cx='13.6' cy='9' r='.6'/%3E%3Ccircle cx='6.4' cy='9' r='.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* the child on the moon: beaded celestial gilt, a night-blue mat, gold stars */
+.frame--child-on-moon {
+  --mw: 18; --lw: 2; --matw: 18;
+  --mould: linear-gradient(135deg, #f8e3a0, #d9a441 35%, #b07f2c 60%, #f0cf80 85%, #c9952f);
+  --lip: #f0cf80; --mat: #1f3550;
+  --inline: 2.5px dotted #fff4c8;
+  --orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 1.8l2.3 5.3 5.7.5-4.3 3.8 1.3 5.6L10 14.1 5 17l1.3-5.6L2 7.6l5.7-.5z' fill='%23f7d98a' stroke='%239c6f1e' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+/* the meadow: leaf green with a rose slip, for its flowers */
+.frame--green-meadow {
+  --mw: 12; --lw: 2.5; --matw: 15;
+  --mould: linear-gradient(135deg, #97c172, #5d8a43 55%, #7aa857);
+  --lip: #d58c99; --mat: #fbf8f0;
+}
+/* the cliffs: sandstone, with a slate-blue slip for the sea */
+.frame--coastal-cliffs {
+  --mw: 13; --lw: 2; --matw: 15;
+  --mould: radial-gradient(ellipse 30% 60% at 18% 30%, rgba(255, 255, 255, .16), transparent 70%), radial-gradient(ellipse 40% 50% at 72% 78%, rgba(60, 45, 30, .09), transparent 70%), radial-gradient(ellipse 25% 40% at 88% 18%, rgba(255, 255, 255, .1), transparent 70%), linear-gradient(135deg, #e3c894, #bf9a5f 55%, #d6b67e);
+  --lip: #6f8291; --mat: #fbfaf5;
+}
+/* the bear: honey wood with a soft round profile, and paw prints */
+.frame--brown-bear {
+  --mw: 16; --lw: 2; --matw: 18;
+  --mould: linear-gradient(135deg, #e6b06f, #b97a3c 40%, #8f5a28 68%, #cf9352);
+  --lip: #6a5232; --mat: #f7f1e1;
+  --orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg fill='%236a4a2a'%3E%3Cellipse cx='10' cy='12.6' rx='4.3' ry='3.6'/%3E%3Cellipse cx='4.6' cy='8.2' rx='1.7' ry='2.2' transform='rotate(-20 4.6 8.2)'/%3E%3Cellipse cx='8.2' cy='5.2' rx='1.8' ry='2.3'/%3E%3Cellipse cx='11.8' cy='5.2' rx='1.8' ry='2.3'/%3E%3Cellipse cx='15.4' cy='8.2' rx='1.7' ry='2.2' transform='rotate(20 15.4 8.2)'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* the dusk sky: deep plum, a blush slip and a blush line */
+.frame--forest-lake {
+  --mw: 14; --lw: 2.5; --matw: 17;
+  --mould: linear-gradient(135deg, #715b7a, #3e2f45 55%, #5a4762);
+  --lip: #e3aab8; --mat: #f7f2ec;
+  --inline: 1px solid rgba(227, 170, 184, .5);
+}
+/* the snowy forest: frosted silver, a spruce slip, snowflakes */
+.frame--snowy-forest {
+  --mw: 13; --lw: 2; --matw: 17;
+  --mould: linear-gradient(135deg, #ffffff, #d7dee0 40%, #b8c3c6 62%, #eef2f2);
+  --lip: #4f6d6c; --mat: #fdfdfb;
+  --orn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg stroke='%234f6d6c' stroke-width='1.7' stroke-linecap='round' fill='none'%3E%3Cpath d='M10 2.5v15M3.5 6.25l13 7.5M3.5 13.75l13-7.5'/%3E%3Cpath d='M8 4l2 2 2-2M8 16l2-2 2 2M3.6 9l2.6.7-.7 2.6M16.4 11l-2.6-.7.7-2.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* the colour blocks: four sides in four of its colours, mitred at the corners */
+.frame--color-block-garden {
+  --mw: 12; --lw: 1.5; --matw: 14;
+  --lip: #2f3a2c; --mat: #fbfaf6;
+  padding: 0;
+  background: none;
+  border-width: calc(var(--mw) * var(--fs) * 1px + 1.5px);
+  border-color: #7b8594 #ec936c #8f8d34 #ecc94e;
+  box-shadow: 0 0 0 1.5px #2f3a2c, inset 0 0 0 1px rgba(47, 58, 44, .35), 0 14px 18px -12px rgba(30, 20, 10, .55);
+}
+/* the sea creature: teal lacquer with a lilac slip, for her shell */
+.frame--underwater-manatee {
+  --mw: 14; --lw: 2.5; --matw: 14;
+  --mould: linear-gradient(135deg, #2bb79e, #0b7f6a 55%, #189a82);
+  --lip: #b993cf; --mat: #f8f6f0;
+}
+/* the ocean: whitewashed blue driftwood, a teal slip */
+.frame--ocean-study {
+  --mw: 13; --lw: 2; --matw: 15;
+  --mould: radial-gradient(ellipse 30% 60% at 18% 30%, rgba(255, 255, 255, .16), transparent 70%), radial-gradient(ellipse 40% 50% at 72% 78%, rgba(60, 45, 30, .09), transparent 70%), radial-gradient(ellipse 25% 40% at 88% 18%, rgba(255, 255, 255, .1), transparent 70%), linear-gradient(135deg, #e9f0f2, #bccdd4 55%, #d8e3e7);
+  --lip: #3f6e73; --mat: #fbfcfa;
+}
+/* the winter valley: brushed pewter, a violet slip for the trees */
+.frame--winter-mountains {
+  --mw: 12; --lw: 2.5; --matw: 15;
+  --mould: repeating-linear-gradient(45deg, rgba(255, 255, 255, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #dcdfe3, #9aa1aa 50%, #c3c7cd 75%, #8a919a);
+  --lip: #7c5a7a; --mat: #fbfbf9;
+}
+/* the two studies: slim and plain, as the paper is already their mat */
+.frame--blue-mountain-study {
+  --mw: 9; --lw: 1; --matw: 5;
+  --mould: linear-gradient(135deg, #7a8898, #4a5562 55%, #66727f);
+  --lip: #3a434d; --mat: #f3f1ea;
+}
+.frame--blue-horizon {
+  --mw: 8; --lw: 1.5; --matw: 5;
+  --mould: linear-gradient(135deg, #ffffff, #e9e8e2 60%, #f7f6f2);
+  --lip: #5c88a3; --mat: #f6f3ea;
+}
 
 /* the museum label under each piece (paper, so it stays cream at night) */
 .piece__label {
@@ -2783,7 +2941,7 @@ body[data-section="kitchen"]::before {
   left: 50%;
   width: max-content;
   max-width: calc(100% + var(--gap) - 10px);
-  margin: 9px 0 0;
+  margin: calc(9px + var(--drop, 0px)) 0 0;
   padding: 4px 9px 5px;
   text-align: center;
   color: #2f3a2c;
@@ -2850,10 +3008,12 @@ body[data-section="kitchen"]::before {
   background: transparent;
 }
 .viewer::backdrop { background: transparent; }
+/* the dark behind a piece takes its colour (art-data.js `tone`) */
 .viewer__veil {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 42%, #283024, #11150f 72%);
+  background-color: var(--tone, #1b2219);
+  background-image: radial-gradient(ellipse at 50% 42%, rgba(255, 255, 255, .07), rgba(0, 0, 0, .62) 74%);
 }
 .viewer__figure {
   position: absolute;
@@ -2873,10 +3033,17 @@ body[data-section="kitchen"]::before {
   pointer-events: auto;
   touch-action: pinch-zoom;
 }
-.viewer__art { position: relative; background: #f5f0e4; box-shadow: 0 30px 60px -18px rgba(0, 0, 0, .75); }
-.viewer__art > img, .viewer__art > .blank { width: 100%; height: 100%; }
-.viewer__art > img { display: block; }
+.viewer__art { position: relative; overflow: hidden; background: #f5f0e4; box-shadow: 0 30px 60px -18px rgba(0, 0, 0, .75); }
 .viewer__art .blank svg { stroke-width: 1.6; }
+/* looking closer: click to zoom in where you clicked; it follows the mouse */
+.viewer__art.is-picture { cursor: zoom-in; }
+.viewer__art.is-zoomed { cursor: zoom-out; }
+.viewer__art.is-zoomed > .art { transform: scale(2.4); }
+.viewer__hint { display: none; margin: 10px 0 0; font: 400 11px/1 var(--pixel); color: rgba(241, 235, 220, .5); }
+@media (hover: hover) and (pointer: fine) {
+  .viewer__hint { display: block; }
+  .viewer__hint[hidden] { display: none; }
+}
 .viewer__caption { max-width: 42em; margin: 0 auto; text-align: center; pointer-events: auto; }
 .viewer__count { margin: 0 0 6px; font: 400 12px/1 var(--pixel); letter-spacing: .06em; color: rgba(241, 235, 220, .62); }
 .viewer__caption h2 { font: italic 500 clamp(24px, 3vw, 32px)/1.1 var(--display); color: #f7f1e2; }
@@ -2911,13 +3078,13 @@ body[data-section="kitchen"]::before {
   .gallery__wall { --bleed: 14px; padding-top: 22px; }
   .gallery__back { position: static; display: block; margin: 0 0 14px; }
   .hang {
-    --pad-mould: 6px; --pad-mat: 6px; --gap: 14px; --row-h: 130px;
+    --fs: .55; --gap: 14px; --row-h: 130px;
     --rail: 9px; --cord: 22px; --label: 46px; --row-gap: 10px;
     margin-top: 16px;
   }
   .piece__title { font-size: 14px; }
   .piece__meta { font-size: 9.5px; }
-  .piece__label { padding: 3px 7px 4px; margin-top: 7px; }
+  .piece__label { padding: 3px 7px 4px; margin-top: calc(7px + var(--drop, 0px)); }
   .piece__hook { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
   .gallery__floor { height: 70px; margin-top: 18px; }
   .gallery__bench { width: 130px; bottom: 16px; left: 6%; }
@@ -3636,4 +3803,193 @@ body[data-section="kitchen"]::before {
       0 22px 26px -14px rgba(30, 20, 10, .55);
   }
   .viewer__btn { transition: background-color .2s, border-color .2s; }
+
+  /* ----- the gallery's animations (art.js builds them from art-data.js `fx`).
+     They're paused and hidden on the wall until you point at a piece, and
+     always on full screen. Sizes are in cqw: hundredths of the picture's
+     width (or of an fx-area's, which art.js allows for). ----- */
+  .viewer__veil { transition: background-color .6s ease; }
+  .viewer__art > .art { transition: transform .45s cubic-bezier(.2, .7, .2, 1); }
+  .fx { position: absolute; inset: 0; display: block; overflow: hidden; pointer-events: none; container-type: size; opacity: 0; transition: opacity .6s ease; --play: paused; }
+  .piece:hover .fx, .frame:focus-visible .fx, .viewer .fx { opacity: 1; --play: running; }
+  .fx i, .fx i * { animation-play-state: var(--play); }
+  .fx-area { position: absolute; display: block; overflow: hidden; container-type: size; }
+  .fx i { position: absolute; display: block; }
+
+  .fx-flake {
+    top: 0; left: var(--x);
+    width: calc(var(--s) * 1cqw); aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0 42%, rgba(255, 255, 255, 0) 72%);
+    animation: fx-fall var(--t) linear var(--d) infinite;
+  }
+  @keyframes fx-fall {
+    from { transform: translate(0, -4cqh); }
+    to   { transform: translate(calc(var(--dx) * 1cqw), 104cqh); }
+  }
+  .fx-petal {
+    top: 0; left: var(--x);
+    width: calc(var(--s) * 1cqw); height: calc(var(--s) * .62cqw);
+    border-radius: 80% 0 80% 0;
+    background: linear-gradient(135deg, #fff3f5, #f2b3c0);
+    box-shadow: inset 0 0 0 .5px rgba(200, 110, 130, .35);
+    animation: fx-petal var(--t) linear var(--d) infinite;
+  }
+  @keyframes fx-petal {
+    0%   { transform: translate(0, -6cqh) rotate(0deg); opacity: 0; }
+    8%   { opacity: 1; }
+    35%  { transform: translate(calc(var(--dx) * .3cqw + 4cqw), 30cqh) rotate(calc(var(--rot) * .35)); }
+    70%  { transform: translate(calc(var(--dx) * .7cqw - 3cqw), 70cqh) rotate(calc(var(--rot) * .7)); }
+    92%  { opacity: 1; }
+    100% { transform: translate(calc(var(--dx) * 1cqw), 106cqh) rotate(var(--rot)); opacity: 0; }
+  }
+  .fx-bubble {
+    top: 100%;
+    width: calc(var(--s) * 1cqw); aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .8);
+    background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, .9) 0 14%, rgba(255, 255, 255, .14) 24%, rgba(255, 255, 255, 0) 62%);
+    animation: fx-rise var(--t) ease-in var(--d) infinite;
+  }
+  @keyframes fx-rise {
+    0%   { transform: translate(0, 0); opacity: 0; }
+    10%  { opacity: .95; }
+    33%  { transform: translate(calc(var(--w) * 1cqw), -36cqh); }
+    66%  { transform: translate(calc(var(--w) * -1cqw), -72cqh); }
+    88%  { opacity: .85; }
+    100% { transform: translate(0, -108cqh); opacity: 0; }
+  }
+  .fx-glint {
+    width: calc(var(--s) * 1cqw); height: calc(var(--s) * .2cqw);
+    margin: calc(var(--s) * -.1cqw) 0 0 calc(var(--s) * -.5cqw);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, #fff 0 18%, var(--c) 45%, transparent);
+    mix-blend-mode: screen;
+    opacity: 0;
+    animation: fx-glint var(--t) ease-in-out var(--d) infinite;
+  }
+  @keyframes fx-glint {
+    0%, 100% { opacity: 0; transform: scaleX(.3); }
+    50%      { opacity: .95; transform: scaleX(1); }
+  }
+  .fx-glint--star {
+    height: calc(var(--s) * 1cqw);
+    margin-top: calc(var(--s) * -.5cqw);
+    border-radius: 0;
+    background: radial-gradient(closest-side, var(--c), transparent 60%);
+    clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%);
+    animation-name: fx-sparkle;
+  }
+  @keyframes fx-sparkle {
+    0%, 100% { opacity: 0; transform: scale(.2) rotate(0deg); }
+    50%      { opacity: 1; transform: scale(1) rotate(45deg); }
+  }
+  .fx-star {
+    width: calc(var(--s) * 1cqw); aspect-ratio: 1;
+    margin: calc(var(--s) * -.5cqw) 0 0 calc(var(--s) * -.5cqw);
+    animation: fx-twinkle var(--t) ease-in-out var(--d) infinite;
+  }
+  .fx-star::before, .fx-star::after { content: ""; position: absolute; }
+  .fx-star::before {
+    inset: 0;
+    background: radial-gradient(closest-side, #fff 0 10%, var(--c) 28%, transparent 72%);
+    clip-path: polygon(50% 0, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0 50%, 44% 44%);
+  }
+  .fx-star::after {
+    inset: 28%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--c), transparent);
+    opacity: .75;
+  }
+  @keyframes fx-twinkle {
+    0%, 100% { transform: scale(.35) rotate(0deg); opacity: .2; }
+    50%      { transform: scale(1) rotate(30deg); opacity: 1; }
+  }
+  .fx-glow {
+    width: calc(var(--s) * 1cqw); aspect-ratio: 1;
+    margin: calc(var(--s) * -.5cqw) 0 0 calc(var(--s) * -.5cqw);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--c), transparent);
+    mix-blend-mode: screen;
+    animation: fx-glow 4.6s ease-in-out infinite;
+  }
+  @keyframes fx-glow {
+    0%, 100% { opacity: .28; transform: scale(.9); }
+    50%      { opacity: .8; transform: scale(1.08); }
+  }
+  .fx-bird { left: 0; width: calc(var(--s) * 1cqw); animation: fx-fly var(--t) linear var(--d) infinite; }
+  .fx-bird svg { display: block; width: 100%; height: auto; overflow: visible; transform-origin: 50% 75%; animation: fx-flap var(--f) ease-in-out infinite alternate; }
+  .fx-bird path { fill: none; stroke: #3b3f45; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  @keyframes fx-fly {
+    0%   { transform: translate(-14cqw, 0); }
+    25%  { transform: translate(18cqw, calc(var(--bob) * -.5cqh)); }
+    50%  { transform: translate(48cqw, calc(var(--bob) * .3cqh)); }
+    75%  { transform: translate(78cqw, calc(var(--bob) * -.4cqh)); }
+    100% { transform: translate(112cqw, 0); }
+  }
+  @keyframes fx-flap { from { transform: scaleY(1); } to { transform: scaleY(-.5); } }
+  .fx-ff {
+    width: calc(var(--s) * 1cqw); aspect-ratio: 1;
+    margin: calc(var(--s) * -.5cqw) 0 0 calc(var(--s) * -.5cqw);
+    border-radius: 50%;
+    background: radial-gradient(closest-side, #fbffd8, rgba(227, 245, 122, .9) 35%, rgba(214, 240, 106, 0));
+    animation: fx-ff var(--t) ease-in-out var(--d) infinite alternate, fx-ffb var(--b) ease-in-out var(--d) infinite;
+  }
+  @keyframes fx-ff { to { transform: translate(calc(var(--dx) * 1cqw), calc(var(--dy) * 1cqh)); } }
+  @keyframes fx-ffb { 0%, 100% { opacity: .12; } 50% { opacity: 1; } }
+  .fx-bfly { left: 0; top: 0; width: calc(var(--s) * 1cqw); animation: fx-flutter var(--t) ease-in-out var(--d) infinite; }
+  .fx-bfly svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .fx-bfly path { fill: var(--c); stroke: #3d2f27; stroke-width: 1; }
+  .fx-bfly__body { fill: #3d2f27; }
+  .fx-bfly .bfly-wing { animation-duration: .17s; }
+  @keyframes fx-flutter {
+    0%, 100% { transform: translate(calc(var(--x0) * 1cqw), calc(var(--y0) * 1cqh)); }
+    20%      { transform: translate(calc(var(--x1) * 1cqw), calc(var(--y1) * 1cqh)); }
+    40%      { transform: translate(calc(var(--x2) * 1cqw), calc(var(--y2) * 1cqh)); }
+    60%      { transform: translate(calc(var(--x3) * 1cqw), calc(var(--y3) * 1cqh)); }
+    80%      { transform: translate(calc(var(--x4) * 1cqw), calc(var(--y4) * 1cqh)); }
+  }
+  .fx-ripple {
+    width: calc(var(--s) * 1cqw); aspect-ratio: 4 / 1;
+    margin: calc(var(--s) * -.125cqw) 0 0 calc(var(--s) * -.5cqw);
+    border-radius: 50%;
+    border: 1.5px solid rgba(240, 250, 246, .8);
+    opacity: 0;
+    animation: fx-ripple 3.6s ease-out var(--d) infinite;
+  }
+  @keyframes fx-ripple {
+    0%   { transform: scale(.15); opacity: 0; }
+    15%  { opacity: .85; }
+    100% { transform: scale(1); opacity: 0; }
+  }
+  .fx-mist {
+    left: 0; width: 70cqw; height: 28cqh; margin-top: -14cqh;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0));
+    animation: fx-mist var(--t) linear var(--d) infinite;
+  }
+  @keyframes fx-mist { from { transform: translateX(-75cqw); } to { transform: translateX(105cqw); } }
+  .fx-lid {
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(255, 240, 200, .18) 0 3%, transparent 4%),
+      radial-gradient(circle at 70% 70%, rgba(0, 0, 0, .25) 0 4%, transparent 5%),
+      radial-gradient(closest-side, var(--c) 76%, transparent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    animation: fx-blink 6s ease-in-out infinite;
+  }
+  /* the closed eye: a little dark curve on the lid */
+  .fx-lid::after {
+    content: "";
+    position: absolute;
+    left: 30%; top: 18%;
+    width: 34%; height: 64%;
+    border-right: .35cqw solid #241d13;
+    border-radius: 50%;
+  }
+  @keyframes fx-blink {
+    0%, 86%, 91%, 93%, 98%, 100% { transform: scaleX(0); }
+    88.5%, 95.5%                 { transform: scaleX(1); }
+  }
 }

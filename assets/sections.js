@@ -67,7 +67,7 @@ window.SECTIONS = [
     object: "easel",
     guide: "the easel: things i've made",
     blurb: "Things I've drawn, painted and made.",
-    status: "soon"
+    status: "open"
   },
   {
     slug: "picks",

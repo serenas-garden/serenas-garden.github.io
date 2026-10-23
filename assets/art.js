@@ -1,17 +1,24 @@
 /* The gallery (art.html). Everything it shows comes from art-data.js.
  *
- *  - the wall: every piece hangs whole, in its frame, on a picture rail.
+ *  - the wall: every piece hangs whole, in its own frame, on a picture rail.
  *    Rows are laid out to fit the screen (each row is one height, and the
  *    pieces in it fill the width, like a hung wall), so any number of
  *    pieces, of any shape, hang neatly. Each has a little label underneath.
+ *    Frames differ in width, so each piece's frame is measured as it's hung.
+ *  - its little animation (fx): each piece can have one, drawn over the
+ *    picture (moonlight glinting, snow falling, bubbles, a blink...). It
+ *    plays when you point at the piece on the wall, and all the time full
+ *    screen. None of it runs with reduced motion.
  *  - full screen: tap a piece and it lifts off the wall to fill the screen,
- *    with its title, date, medium and Serena's note. Arrows, arrow keys or
- *    a swipe go to the next one; Esc, the close button, a tap on the dark or
- *    a swipe down puts it back. Where the browser allows it, a button fills
- *    the whole screen. art.html#<id> opens straight onto a piece, and Back
+ *    on a dark that takes its colour from the piece (`tone`), with its
+ *    title, date, medium and Serena's note. Arrows, arrow keys or a swipe go
+ *    to the next one; Esc, the close button, a tap on the dark or a swipe
+ *    down puts it back. Click the picture to look closer (it follows the
+ *    mouse); phones pinch. Where the browser allows it, a button fills the
+ *    whole screen. art.html#<id> opens straight onto a piece, and Back
  *    closes it on phones.
- *  - empty frames: until the pictures arrive (`sample: true`), each frame
- *    holds a blank canvas with a pencil doodle, and it all says so.
+ *  - empty frames: with `sample: true`, frames without a picture hold a
+ *    blank canvas with a pencil doodle, and it all says so.
  */
 (function () {
   "use strict";
@@ -29,19 +36,31 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
-  // a small steady number from a piece's id, so its tilt never changes
+  // a small steady number from a piece's id (its tilt never changes)
   function seed(str) {
     var h = 7;
     for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 9973;
     return h;
   }
+  // a seeded random number generator, so a piece's animation is laid out
+  // the same way on the wall and full screen
+  function rng(n) {
+    var a = n * 2654435761 >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
 
   var sample = !!DATA.sample;
   var pieces = (DATA.pieces || []).map(function (p, i) {
     var blank = !p.src;
+    var id = String(p.id || "piece-" + (i + 1));
     return {
       i: i,
-      id: String(p.id || "piece-" + (i + 1)),
+      id: id,
       title: p.title || (blank ? "Empty frame" : "Untitled"),
       year: p.year || "",
       medium: p.medium || "",
@@ -52,10 +71,12 @@
       full: p.full || p.src || "",
       ratio: (p.w > 0 && p.h > 0) ? p.w / p.h : 1,
       px: p.w > 0 ? p.w : 0,
-      frame: FRAMES.indexOf(p.frame) > -1 ? p.frame : FRAMES[i % FRAMES.length],
+      frame: /^[a-z0-9-]+$/.test(p.frame || "") ? p.frame : FRAMES[i % FRAMES.length],
+      tone: /^#[0-9a-f]{3,8}$/i.test(p.tone || "") ? p.tone : "",
+      fx: Array.isArray(p.fx) ? p.fx : [],
       collection: p.collection || "",
       blank: blank,
-      tilt: ((seed(String(p.id || i)) % 15) - 7) / 10
+      tilt: ((seed(id) % 15) - 7) / 10
     };
   });
 
@@ -68,6 +89,145 @@
 
   var plaque = $("[data-plaque]");
   if (plaque && sample) plaque.textContent = pieces.length + " frames, waiting for Serena's art";
+
+  /* ------------------------------ the animations ------------------------------ */
+  /* Each kind is a handful of little elements with their own timings in CSS
+     custom properties; style.css (.fx-*) moves them. Sizes are in cqw, a
+     hundredth of the picture's width, so they look the same in a small frame
+     and full screen. Areas are [left, top, right, bottom], 0..1. */
+
+  function pct(v) { return (v * 100).toFixed(2) + "%"; }
+  function areaOpen(a) {
+    return '<span class="fx-area" style="left:' + pct(a[0]) + ";top:" + pct(a[1]) +
+      ";width:" + pct(a[2] - a[0]) + ";height:" + pct(a[3] - a[1]) + '">';
+  }
+  function vars(o) {
+    return Object.keys(o).map(function (k) { return "--" + k + ":" + o[k]; }).join(";");
+  }
+  var BUTTERFLY = ["#c4b3ec", "#f2c94c", "#fbf7ee", "#f0a6b4"];
+
+  function fxHTML(p) {
+    if (!p.fx.length) return "";
+    var r = rng(seed(p.id) + 1), out = "";
+    function rand(a, b) { return a + r() * (b - a); }
+    function f(v) { return v.toFixed(2); }
+
+    p.fx.forEach(function (fx) {
+      var a = fx.area || [0, 0, 1, 1], aw = a[2] - a[0], k, n = fx.n || 10;
+      var c = fx.color || "#ffffff";
+      switch (fx.type) {
+        case "snow":
+        case "petals":
+          for (k = 0; k < n; k++) {
+            var petal = fx.type === "petals";
+            out += '<i class="fx-' + (petal ? "petal" : "flake") + '" style="' + vars({
+              x: f(rand(petal ? 5 : -5, petal ? 125 : 105)) + "%",
+              s: f(petal ? rand(1.5, 2.6) : rand(.45, 1.3)),
+              t: f(petal ? rand(9, 15) : rand(7, 13)) + "s",
+              d: "-" + f(rand(0, 14)) + "s",
+              dx: f(petal ? rand(-34, -14) : rand(-5, 5)),
+              rot: f(rand(160, 560)) + "deg"
+            }) + '"></i>';
+          }
+          break;
+        case "bubbles":
+          out += areaOpen(a);
+          for (k = 0; k < n; k++) {
+            out += '<i class="fx-bubble" style="left:' + f(rand(4, 96)) + "%;" + vars({
+              s: f(rand(.8, 2.2) / aw), t: f(rand(6, 11)) + "s", d: "-" + f(rand(0, 11)) + "s", w: f(rand(1, 3.5) / aw)
+            }) + '"></i>';
+          }
+          out += "</span>";
+          break;
+        case "glints":
+          out += areaOpen(a);
+          for (k = 0; k < n; k++) {
+            out += '<i class="fx-glint' + (fx.shape === "star" ? " fx-glint--star" : "") + '" style="left:' +
+              f(rand(2, 98)) + "%;top:" + f(rand(4, 96)) + "%;" + vars({
+                s: f((fx.shape === "star" ? rand(1.6, 3) : rand(2.4, 5.2)) / aw), t: f(rand(2.2, 4.6)) + "s",
+                d: "-" + f(rand(0, 4.6)) + "s", c: c
+              }) + '"></i>';
+          }
+          out += "</span>";
+          break;
+        case "twinkle":
+          (fx.points || []).forEach(function (pt, j) {
+            out += '<i class="fx-star" style="left:' + pct(pt[0]) + ";top:" + pct(pt[1]) + ";" + vars({
+              s: f(pt[2] * 100), t: f(rand(2.4, 3.8)) + "s", d: "-" + f(j * .7 + rand(0, .6)) + "s", c: c
+            }) + '"></i>';
+          });
+          break;
+        case "glow":
+          out += '<i class="fx-glow" style="left:' + pct(fx.x) + ";top:" + pct(fx.y) + ";" + vars({
+            s: f(fx.r * 200), c: c
+          }) + '"></i>';
+          break;
+        case "birds":
+          out += areaOpen(a);
+          for (k = 0; k < n; k++) {
+            out += '<i class="fx-bird" style="top:' + f(rand(8, 80)) + "%;" + vars({
+              s: f(rand(2.2, 3.4) / aw), t: f(rand(16, 26)) + "s", d: "-" + f(k * 6 + rand(0, 4)) + "s",
+              f: f(rand(.32, .5)) + "s", bob: f(rand(4, 12))
+            }) + '"><svg viewBox="0 0 20 8" focusable="false"><path d="M1 6.5 Q5.5 0 10 5.2 Q14.5 0 19 6.5"/></svg></i>';
+          }
+          out += "</span>";
+          break;
+        case "fireflies":
+          out += areaOpen(a);
+          for (k = 0; k < n; k++) {
+            out += '<i class="fx-ff" style="left:' + f(rand(3, 97)) + "%;top:" + f(rand(8, 92)) + "%;" + vars({
+              s: f(rand(1.2, 2.2) / aw), t: f(rand(6, 11)) + "s", d: "-" + f(rand(0, 10)) + "s",
+              b: f(rand(1.8, 3.6)) + "s", dx: f(rand(-6, 6) / aw), dy: f(rand(-12, 8))
+            }) + '"></i>';
+          }
+          out += "</span>";
+          break;
+        case "butterflies":
+          out += areaOpen(a);
+          for (k = 0; k < n; k++) {
+            var pts = {};
+            for (var q = 0; q < 5; q++) { pts["x" + q] = f(rand(5, 90)); pts["y" + q] = f(rand(5, 85)); }
+            pts.s = f(rand(3.6, 4.8) / aw);
+            pts.t = f(rand(14, 20)) + "s";
+            pts.d = "-" + f(k * 5 + rand(0, 3)) + "s";
+            pts.c = BUTTERFLY[(k + seed(p.id)) % BUTTERFLY.length];
+            out += '<i class="fx-bfly" style="' + vars(pts) + '"><svg viewBox="-20 -17 40 30" focusable="false">' +
+              '<g class="bfly-wing bfly-wing--l"><path d="M0 -1 C-6 -14 -18 -14 -16 -3 C-17 4 -8 8 0 1 Z"/></g>' +
+              '<g class="bfly-wing bfly-wing--r"><path d="M0 -1 C6 -14 18 -14 16 -3 C17 4 8 8 0 1 Z"/></g>' +
+              '<ellipse cx="0" cy="0" rx="1.6" ry="6" class="fx-bfly__body"/></svg></i>';
+          }
+          out += "</span>";
+          break;
+        case "ripples":
+          (fx.points || []).forEach(function (pt, j) {
+            for (var m = 0; m < 2; m++) {
+              out += '<i class="fx-ripple" style="left:' + pct(pt[0]) + ";top:" + pct(pt[1]) + ";" + vars({
+                s: f(pt[2] * 100), d: "-" + f(j * 1.1 + m * 1.8) + "s"
+              }) + '"></i>';
+            }
+          });
+          break;
+        case "mist":
+          out += areaOpen(a);
+          for (k = 0; k < n; k++) {
+            out += '<i class="fx-mist" style="top:' + f(rand(10, 75)) + "%;" + vars({
+              t: f(rand(22, 34)) + "s", d: "-" + f(k * 9 + rand(0, 6)) + "s"
+            }) + '"></i>';
+          }
+          out += "</span>";
+          break;
+        case "blink":
+          // eyelids, the colour of the fur round the eyes; this bear lies on
+          // her side, so they close sideways (from her forehead)
+          (fx.eyes || []).forEach(function (e) {
+            out += '<i class="fx-lid" style="left:' + pct(e[0] - e[2] / 2) + ";top:" + pct(e[1] - e[3] / 2) +
+              ";width:" + pct(e[2]) + ";height:" + pct(e[3]) + ";" + vars({ c: fx.color || "#5f5642" }) + '"></i>';
+          });
+          break;
+      }
+    });
+    return out ? '<span class="fx" aria-hidden="true">' + out + "</span>" : "";
+  }
 
   /* ------------------------------ the frames ------------------------------ */
 
@@ -84,9 +244,15 @@
     return '<span class="blank"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
       DOODLES[p.i % DOODLES.length] + "</svg></span>";
   }
+  // the picture and its animation, in one box (on the wall and full screen)
+  function artHTML(p, onWall) {
+    if (p.blank) return '<span class="art">' + blankHTML(p) + "</span>";
+    return '<span class="art"><img src="' + esc(p.src) + '" alt="' + esc(p.alt) + '"' +
+      (onWall ? ' loading="lazy"' : "") + ' decoding="async">' + (reduce ? "" : fxHTML(p)) + "</span>";
+  }
   function pieceLabel(p) {
     if (p.blank) return "An empty frame, waiting for one of Serena's pieces. See it full screen.";
-    return p.title + (p.year ? ", " + p.year : "") + ". See it full screen.";
+    return [p.title, p.year, p.medium].filter(Boolean).join(", ") + ". " + p.alt + " See it full screen.";
   }
 
   hang.innerHTML = pieces.map(function (p) {
@@ -96,10 +262,7 @@
           '<path d="M50 0 L14 100 M50 0 L86 100"/></svg>' +
         '<span class="piece__hook" aria-hidden="true"></span>' +
         '<button type="button" class="frame frame--' + p.frame + '" aria-label="' + esc(pieceLabel(p)) + '">' +
-          '<span class="frame__mat">' +
-            (p.blank ? blankHTML(p)
-              : '<img src="' + esc(p.src) + '" alt="' + esc(p.alt) + '" loading="lazy" decoding="async">') +
-          "</span></button>" +
+          '<span class="frame__mat">' + artHTML(p, true) + "</span></button>" +
       "</div>" +
       '<p class="piece__label" aria-hidden="true"><span class="piece__title">' + esc(p.title) + "</span>" +
         '<span class="piece__meta">' + esc(metaLine(p)) + "</span></p>" +
@@ -126,41 +289,50 @@
     lastW = W;
     var cs = getComputedStyle(hang);
     var v = {
-      // a frame adds its moulding, its mat and their two outlines (1.5px + 1px) on each side
-      pad: num(cs, "--pad-mould") + num(cs, "--pad-mat") + 2.5, gap: num(cs, "--gap"), target: num(cs, "--row-h"),
+      gap: num(cs, "--gap"), target: num(cs, "--row-h"), fs: num(cs, "--fs") || 1,
       rail: num(cs, "--rail"), cord: num(cs, "--cord"), label: num(cs, "--label"), rowGap: num(cs, "--row-gap")
     };
+    // each frame's own width on each side: moulding, lip and mat (plain
+    // numbers in style.css, scaled by --fs), plus its 1.5px outline
+    pieces.forEach(function (p) {
+      var fcs = getComputedStyle(els[p.i].querySelector(".frame"));
+      p.pad = 1.5 + (num(fcs, "--mw") + num(fcs, "--lw") + num(fcs, "--matw")) * v.fs;
+    });
     var maxH = v.target * 1.6;
-    function hFor(n, sum) { return (W - (n - 1) * v.gap - n * 2 * v.pad) / sum; }
+    function hFor(row) {
+      var sum = 0, pads = 0;
+      row.forEach(function (p) { sum += p.ratio; pads += 2 * p.pad; });
+      return (W - (row.length - 1) * v.gap - pads) / sum;
+    }
 
-    var list = pieces.filter(shown), rows = [], row = [], sum = 0;
+    var list = pieces.filter(shown), rows = [], row = [];
     list.forEach(function (p) {
-      row.push(p); sum += p.ratio;
-      var h = hFor(row.length, sum);
+      row.push(p);
+      var h = hFor(row);
       if (h > v.target) return;                         // still room in this row
       if (row.length > 1) {
-        var hWithout = hFor(row.length - 1, sum - p.ratio);
+        var without = row.slice(0, -1), hWithout = hFor(without);
         if (hWithout <= maxH && Math.abs(hWithout - v.target) < Math.abs(h - v.target)) {
-          rows.push({ items: row.slice(0, -1), h: hWithout });
-          row = [p]; sum = p.ratio;
-          h = hFor(1, sum);
+          rows.push({ items: without, h: hWithout });
+          row = [p];
+          h = hFor(row);
           if (h > v.target) return;
         }
       }
       rows.push({ items: row, h: h });
-      row = []; sum = 0;
+      row = [];
     });
-    if (row.length) rows.push({ items: row, h: Math.min(v.target, hFor(row.length, sum)), last: true });
+    if (row.length) rows.push({ items: row, h: Math.min(v.target, hFor(row)), last: true });
 
-    // place them
+    // place them; a row's height is the tallest frame in it
     var rails = [], y = 0;
     rows.forEach(function (r) {
-      var fh = r.h + 2 * v.pad;
-      var widths = r.items.map(function (p) { return p.ratio * r.h + 2 * v.pad; });
+      var widths = r.items.map(function (p) { return p.ratio * r.h + 2 * p.pad; });
       var total = widths.reduce(function (a, b) { return a + b; }, 0) + (r.items.length - 1) * v.gap;
-      var x = Math.max(0, (W - total) / 2);
+      var x = Math.max(0, (W - total) / 2), tallest = 0;
       r.items.forEach(function (p, k) {
-        var el = els[p.i];
+        var el = els[p.i], fh = r.h + 2 * p.pad;
+        tallest = Math.max(tallest, fh);
         el.hidden = false;
         el.style.left = x.toFixed(1) + "px";
         el.style.top = y.toFixed(1) + "px";
@@ -168,8 +340,13 @@
         el.style.setProperty("--fh", fh.toFixed(1) + "px");
         x += widths[k] + v.gap;
       });
+      // frames of different widths hang from one rail, so the slimmer ones
+      // hang a little lower, centred on the row
+      r.items.forEach(function (p) {
+        els[p.i].style.setProperty("--drop", ((tallest - (r.h + 2 * p.pad)) / 2).toFixed(1) + "px");
+      });
       rails.push(y);
-      y += v.rail + v.cord + fh + v.label + v.rowGap;
+      y += v.rail + v.cord + tallest + v.label + v.rowGap;
     });
     pieces.forEach(function (p) { if (!shown(p)) els[p.i].hidden = true; });
     hang.style.height = Math.max(0, y - v.rowGap).toFixed(1) + "px";
@@ -220,13 +397,13 @@
 
   var viewer = $("[data-viewer]");
   if (!viewer || !viewer.showModal) return;
-  var veil = $("[data-veil]", viewer), stage = $("[data-stage]", viewer), art = $("[data-art]", viewer);
+  var veil = $("[data-veil]", viewer), stage = $("[data-stage]", viewer), box = $("[data-art]", viewer);
   var caption = $("[data-caption]", viewer), live = $("[data-live]", viewer);
   var fsBtn = $("[data-fullscreen]", viewer);
   var list = [], at = -1, busy = false;
 
   function current() { return list[at]; }
-  function frameOf(p) { return els[p.i] && els[p.i].querySelector(".frame__mat"); }
+  function wallArt(p) { return els[p.i] && els[p.i].querySelector(".art"); }
 
   // the biggest box of the piece's shape that fits the stage
   function fit(p) {
@@ -235,24 +412,24 @@
     if (h > sh) { h = sh; w = sh * p.ratio; }
     // a small picture isn't blown up past a little over its real size
     if (p.px >= 200 && w > p.px * 1.25) { w = p.px * 1.25; h = w / p.ratio; }
-    art.style.width = Math.round(w) + "px";
-    art.style.height = Math.round(h) + "px";
+    box.style.width = Math.round(w) + "px";
+    box.style.height = Math.round(h) + "px";
   }
 
   function fill(p) {
-    if (p.blank) {
-      art.innerHTML = blankHTML(p);
-    } else {
-      art.innerHTML = '<img src="' + esc(p.src) + '" alt="' + esc(p.alt) + '" decoding="async">';
-      if (p.full && p.full !== p.src) {               // the sharp one, once it's here
-        var big = new Image();
-        big.onload = function () {
-          var img = art.querySelector("img");
-          if (img && current() === p) img.src = p.full;
-        };
-        big.src = p.full;
-      }
+    unzoom();
+    box.innerHTML = artHTML(p, false);
+    box.classList.toggle("is-picture", !p.blank);
+    if (!p.blank && p.full && p.full !== p.src) {     // the sharp one, once it's here
+      var big = new Image();
+      big.onload = function () {
+        var img = box.querySelector("img");
+        if (img && current() === p) img.src = p.full;
+      };
+      big.src = p.full;
     }
+    if (p.tone) viewer.style.setProperty("--tone", p.tone);
+    else viewer.style.removeProperty("--tone");
     $("[data-count]", viewer).textContent = (at + 1) + " of " + list.length;
     $("[data-title]", viewer).textContent = p.title;
     var meta = p.blank ? "Serena's art is on its way" : [p.year, p.medium, p.size].filter(Boolean).join(" · ");
@@ -260,7 +437,9 @@
     var note = $("[data-note]", viewer);
     note.textContent = p.note;
     note.hidden = !p.note;
-    live.textContent = (at + 1) + " of " + list.length + ": " + p.title;
+    var hint = $("[data-hint]", viewer);
+    if (hint) hint.hidden = p.blank;
+    live.textContent = (at + 1) + " of " + list.length + ": " + p.title + (p.alt ? ". " + p.alt : "");
     fit(p);
     // have the neighbours ready
     [-1, 1].forEach(function (d) {
@@ -275,11 +454,11 @@
     return a.finished.then(function () { a.cancel(); }, function () {});
   }
 
-  // from a frame on the wall to the full-screen box (or back again)
+  // from a picture on the wall to the full-screen box (or back again)
   function flipFrom(p) {
-    var mat = frameOf(p);
-    if (!mat) return null;
-    var a = mat.getBoundingClientRect(), b = art.getBoundingClientRect();
+    var from = wallArt(p);
+    if (!from) return null;
+    var a = from.getBoundingClientRect(), b = box.getBoundingClientRect();
     if (!a.width || !b.width || a.bottom < 0 || a.top > innerHeight) return null;
     return "translate(" + (a.left - b.left).toFixed(1) + "px," + (a.top - b.top).toFixed(1) + "px) scale(" +
       (a.width / b.width).toFixed(4) + ")";
@@ -303,10 +482,10 @@
     anim(caption, [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }],
       { duration: 360, delay: 140, easing: "ease-out", fill: "backwards" });
     if (from) {
-      art.style.transformOrigin = "0 0";
-      anim(art, [{ transform: from }, { transform: "none" }], { duration: 460, easing: ease });
+      box.style.transformOrigin = "0 0";
+      anim(box, [{ transform: from }, { transform: "none" }], { duration: 460, easing: ease });
     } else {
-      anim(art, [{ opacity: 0, transform: "scale(.96)" }, { opacity: 1, transform: "none" }], { duration: 300, easing: ease });
+      anim(box, [{ opacity: 0, transform: "scale(.96)" }, { opacity: 1, transform: "none" }], { duration: 300, easing: ease });
     }
     var close = $("[data-close]", viewer);
     if (close) close.focus();
@@ -321,6 +500,7 @@
   function finishClose() {
     if (!viewer.open || busy) return;
     busy = true;
+    unzoom();
     var p = current();
     if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function () {});
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
@@ -331,10 +511,10 @@
       anim(caption, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" })
     ];
     if (to) {
-      art.style.transformOrigin = "0 0";
-      outs.push(anim(art, [{ transform: "none" }, { transform: to }], { duration: 380, easing: ease, fill: "forwards" }));
+      box.style.transformOrigin = "0 0";
+      outs.push(anim(box, [{ transform: "none" }, { transform: to }], { duration: 380, easing: ease, fill: "forwards" }));
     } else {
-      outs.push(anim(art, [{ opacity: 1 }, { opacity: 0, transform: "scale(.96)" }], { duration: 240, fill: "forwards" }));
+      outs.push(anim(box, [{ opacity: 1 }, { opacity: 0, transform: "scale(.96)" }], { duration: 240, fill: "forwards" }));
     }
     Promise.all(outs).then(function () {
       viewer.close();
@@ -351,10 +531,34 @@
     var p = current();
     if (history.replaceState) history.replaceState(history.state, "", "#" + p.id);
     fill(p);
-    anim(art, [{ opacity: 0, transform: "translateX(" + (d * 28) + "px)" }, { opacity: 1, transform: "none" }],
+    anim(box, [{ opacity: 0, transform: "translateX(" + (d * 28) + "px)" }, { opacity: 1, transform: "none" }],
       { duration: 260, easing: "ease-out" });
     anim(caption, [{ opacity: 0 }, { opacity: 1 }], { duration: 260 });
   }
+
+  // looking closer: a click zooms into the picture where you clicked, and
+  // the view follows the mouse; another click (or the next piece) zooms out
+  var zoomed = false, lastPointer = "mouse";
+  function zoomAt(e) {
+    var r = box.getBoundingClientRect();
+    var x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    var y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    var inner = box.querySelector(".art");
+    if (inner) inner.style.transformOrigin = (x * 100).toFixed(1) + "% " + (y * 100).toFixed(1) + "%";
+  }
+  function unzoom() {
+    zoomed = false;
+    box.classList.remove("is-zoomed");
+  }
+  box.addEventListener("pointerdown", function (e) { lastPointer = e.pointerType; });
+  box.addEventListener("click", function (e) {
+    if (lastPointer !== "mouse" || !box.classList.contains("is-picture") || busy) return;
+    e.stopPropagation();
+    zoomed = !zoomed;
+    if (zoomed) zoomAt(e);
+    box.classList.toggle("is-zoomed", zoomed);
+  });
+  box.addEventListener("mousemove", function (e) { if (zoomed) zoomAt(e); });
 
   hang.addEventListener("click", function (e) {
     var f = e.target.closest(".frame");
@@ -370,7 +574,11 @@
     else if (b && b.hasAttribute("data-fullscreen")) toggleFullscreen();
     else if (!b && (e.target === veil || e.target === stage || e.target === viewer)) requestClose();
   });
-  viewer.addEventListener("cancel", function (e) { e.preventDefault(); requestClose(); });
+  viewer.addEventListener("cancel", function (e) {
+    e.preventDefault();
+    if (zoomed) unzoom();
+    else requestClose();
+  });
   // if the browser closes it on its own (a second quick Esc can), tidy up
   viewer.addEventListener("close", function () {
     document.documentElement.style.overflow = "";
@@ -391,13 +599,13 @@
   // swipe: sideways for the next one, down to put it back
   var touch = null;
   stage.addEventListener("pointerdown", function (e) {
-    if (e.pointerType === "mouse" || busy) return;
+    if (e.pointerType === "mouse" || busy || !e.isPrimary) { touch = null; return; }
     touch = { x: e.clientX, y: e.clientY, id: e.pointerId };
   });
   stage.addEventListener("pointermove", function (e) {
     if (!touch || e.pointerId !== touch.id || reduce) return;
     var dx = e.clientX - touch.x, dy = e.clientY - touch.y;
-    art.style.transform = Math.abs(dx) > Math.abs(dy)
+    box.style.transform = Math.abs(dx) > Math.abs(dy)
       ? "translateX(" + dx * 0.6 + "px)"
       : "translateY(" + Math.max(0, dy) * 0.6 + "px)";
   });
@@ -405,13 +613,13 @@
     if (!touch || e.pointerId !== touch.id) return;
     var dx = e.clientX - touch.x, dy = e.clientY - touch.y;
     touch = null;
-    art.style.transform = "";
+    box.style.transform = "";
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? 1 : -1);
     else if (dy > 90 && dy > Math.abs(dx)) requestClose();
   }
   stage.addEventListener("pointerup", endTouch);
   stage.addEventListener("pointercancel", function (e) {
-    if (touch && e.pointerId === touch.id) { touch = null; art.style.transform = ""; }
+    if (touch && e.pointerId === touch.id) { touch = null; box.style.transform = ""; }
   });
 
   // filling the whole screen, where the browser allows it (not on iPhone)

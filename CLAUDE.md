@@ -3,7 +3,7 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status:** the cottage hub, **Travels** and **the Kitchen** are built. The mailbox form is
+**Status:** the cottage hub, **Travels**, **the Kitchen** and **the Gallery** (Art) are built. The mailbox form is
 built but closed until its access key is pasted in. Every other section is a
 labelled "still decorating" stub.
 
@@ -121,8 +121,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   still works. A separate sunrise/sunset page could come later.
 - `travels.html`: built. See **Travels** below.
 - `kitchen.html`: built. See **The Kitchen** below.
-- `art.html`: the gallery, built and waiting for the pictures (empty
-  placeholder frames for now). See **The Gallery** below.
+- `art.html`: the gallery, with Serena's first 18 pieces. See **The
+  Gallery** below.
 - `music.html`, `currently.html`, `moon.html`,
   `zoo.html`, `picks.html`: section stubs, all from one template.
   Each has a `.page-head` (back link, title, blurb, and that section's object
@@ -326,19 +326,57 @@ pool of warm light (`--lamp`).
   optional `frame` (oak, walnut, gilt, cream, ink, sage, rose; otherwise one
   is picked in turn) and optional `collection` (filter buttons appear under
   the plaque once there are two or more).
-- **Custom frames (Rex's ask):** when the pictures arrive, each piece gets
-  its own frame designed to complement it (moulding, colour, width, mat,
-  any ornament), rather than one of the stock frames above.
-- **Pictures** go in `assets/art/` (`<id>.jpg` and `<id>-full.jpg`). Strip
-  their metadata before committing (rule 2). `exiftool` isn't installed on
-  Rex's Mac yet. They're public files once pushed, full size included.
-- **Placeholders:** until the art arrives, `sample: true` and 18 entries with
-  only a shape: each frame holds a blank canvas with a pencil doodle, the
-  labels say "Empty frame · art coming soon" and the plaque says the frames
-  are waiting for Serena's art. Its status in `sections.js` stays "soon"
-  until the real art is up.
-- **Next (Rex's plan):** once the pictures are in, a custom frame for each
-  piece, then animations and display touches for each.
+- **Every piece has a frame made for it (Rex's ask)**, picking up its
+  colours: `.frame--<id>` in style.css. A frame is a moulding (`--mould`,
+  `--mw` wide), a thin coloured slip (`--lip`, `--lw`) and a mat (`--mat`,
+  `--matw`), widths as plain numbers times `--fs` (.55 on phones), which
+  art.js reads to lay the wall out; optional `--inline` (a fine line or
+  beading) and `--orn` (an ornament in each corner). So: the moonlit sea in
+  midnight blue with a gold slip; the beach in driftwood with a red slip for
+  the umbrella; the rabbits in walnut; the skiers in alpine blue with
+  snowflakes; the cherry blossom in pale pink with blossoms and a wide mat;
+  undersea in sea-glass aqua with starfish; the child on the moon in beaded
+  gilt on a night-blue mat with gold stars; the meadow in leaf green; the
+  cliffs in sandstone; the bear in honey wood with paw prints; the dusk sky
+  in plum; the snowy forest in frosted silver with snowflakes; the colour
+  blocks with four sides in four of its colours; the sea creature in teal
+  with a lilac slip; the ocean in whitewashed blue; the winter valley in
+  pewter; the two studies in slim plain frames (their paper is their mat).
+  Frames of different widths hang from one rail, so slimmer ones drop a
+  little (`--drop`) to line a row up through its middles.
+- **Each piece has its own little animation** (`fx` in the data, built by
+  art.js, styled as `.fx-*`): moonlight glinting on the moonlit sea and its
+  moon glowing, the sea sparkling (beach, ocean, horizon), ripples round the
+  canoe, snow falling (skiers, snowy forest, winter valley), cherry petals
+  drifting, bubbles rising (undersea, the sea creature), the child's stars
+  twinkling and the one she holds glowing, butterflies over the meadow and
+  the colour-block flowers, birds crossing the cliffs' sky, the bear's
+  shimmer sparkling and her eyes blinking (she lies on her side, so they
+  close sideways), fireflies under the dusk trees, mist through the blue
+  study. Positions are fractions of the picture, sizes in container-query
+  units, so the same animation fits a small frame and full screen. On the
+  wall it fades in and plays only while you point at the piece (nothing
+  runs otherwise); full screen it always plays. None of it with reduced
+  motion.
+- **Full screen** also takes its dark from the piece (`tone`), and a click
+  zooms 2.4x into the picture where you clicked, following the mouse (Esc
+  or a click zooms out); phones pinch.
+- **Pictures** go in `assets/art/` (`<id>.jpg`, 1000px, and `<id>-full.jpg`,
+  up to 2000px) by `python3 tools/prepare_art.py <image> <id>`: it makes
+  both JPEGs with macOS `sips` and strips all their metadata (it checks),
+  keeping only the colour profile, then prints the sizes for the data. (That
+  covers rule 2 for the gallery; `exiftool` isn't installed.) They're public
+  files once pushed, full size included.
+- **The first 18 (October 2026)** came untitled, as photos of the paintings
+  (Rex formatted them; don't crop them). Serena will title them, so labels
+  say "Untitled" for now. The years (2025 or 2026) and mediums are Claude's
+  guesses from the pictures, for her to correct. The hanging order is
+  Claude's too (Rex: the file numbers meant nothing), mixing colours,
+  subjects and shapes so neighbours differ, with the two paper studies
+  ending the wall together. The ids are Rex's file names.
+- **Placeholders:** with `sample: true`, entries without a picture show a
+  blank canvas with a pencil doodle, labelled "Empty frame · art coming
+  soon", and the plaque says the frames are waiting.
 
 ## Rooms, and Gemma following you in
 
@@ -532,7 +570,7 @@ is the heart of the home page, so treat her with care.
    public URL. Never commit anything private: no surname, home address,
    school, workplace, phone number, email address or birthday. Write this file
    assuming strangers will read it.
-2. **Strip location data from photos before committing.** Phone photos carry
+2. **Strip location data from photos before committing.** (Gallery art: `tools/prepare_art.py` does it.) Phone photos carry
    GPS coordinates in their EXIF data. That matters most for the moon,
    travel and art photos. Run `exiftool -all= -overwrite_original <file>` on
    every image.
@@ -581,7 +619,6 @@ surname).
   country (both empty), and her rewrite of the draft blurbs.
 - Kitchen: her top drinks (the fridge) and top fruits (the fruit bowl), and
   any recipe links or notes for the cookies, all in `kitchen-data.js`.
-- Gallery: Serena's 18 pieces (Rex is preparing them), with titles, years,
-  mediums and any notes; then a custom frame and animations for each. Set `sample: false` and
-  the art section's status to "open".
+- Gallery: Serena titles the 18 pieces and corrects the guessed years and
+  mediums (all in `art-data.js`); any notes she'd like shown full screen.
 - Pick the next section to build.
