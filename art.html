@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Art · Serena&#x27;s Garden</title>
-<meta name="description" content="Things I&#x27;ve drawn, painted and made.">
+<meta name="description" content="Things I&#x27;ve drawn, painted and made, hung in a little gallery.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#f4efe2">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Serena's Garden">
 <meta property="og:title" content="Art · Serena&#x27;s Garden">
-<meta property="og:description" content="Things I&#x27;ve drawn, painted and made.">
+<meta property="og:description" content="Things I&#x27;ve drawn, painted and made, hung in a little gallery.">
 <meta property="og:url" content="https://serenas-garden.github.io/art.html">
 <meta property="og:image" content="https://serenas-garden.github.io/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -26,15 +26,12 @@
 <script src="assets/sky.js"></script>
 </head>
 <body data-section="art">
-<!-- STUB: when this section is built, replace .stub-note with the real content
-     (keep the header and the rooms nav), then set status: "open" for "art"
-     in assets/sections.js -->
 <main class="wrap">
   <header class="page-head">
     <a class="back" href="./">&larr; back inside</a>
     <p class="eyebrow">serena's garden</p>
     <h1>Art</h1>
-    <p>Things I&#x27;ve drawn, painted and made.</p>
+    <p>Things I&#x27;ve drawn, painted and made. Tap any piece to see it up close.</p>
     <div class="page-art" aria-hidden="true">
       <svg viewBox="0 0 100 100" aria-hidden="true">
       <path d="M30 96 L46 18 M70 96 L54 18 M50 72 V96" class="ink"/>
@@ -48,14 +45,85 @@
     </div>
   </header>
 
-  <div class="stub-note">
-    <h2>Still decorating</h2>
-    <p>This room isn't finished yet. Check back soon!</p>
-  </div>
+  <!-- The gallery: a wall of framed pieces, hung on picture rails in rows
+       that fit the screen (assets/art.js, from assets/art-data.js). Every
+       piece is shown whole; tap one to see it full screen. -->
+  <section class="gallery" aria-labelledby="gallery-title">
+    <div class="gallery__bar">
+      <ul class="gallery__tally" data-tally aria-label="On the wall"></ul>
+      <div class="view-switch gallery__filter" role="group" aria-label="Show" data-filters hidden></div>
+    </div>
+
+    <div class="gallery__wall">
+      <header class="plaque">
+        <h2 id="gallery-title">The Gallery</h2>
+        <p class="plaque__sub" data-plaque>works by Serena</p>
+      </header>
+      <p class="gallery__sample" data-sample hidden>placeholder frames! serena&#x27;s art is on its way</p>
+      <ol class="hang" data-hang aria-label="Artworks"></ol>
+      <noscript><p class="gallery__noscript">The gallery needs JavaScript to hang the pictures. Turn it on to see my art.</p></noscript>
+      <div class="gallery__floor" aria-hidden="true">
+        <svg class="gallery__bench" viewBox="0 0 220 70" aria-hidden="true" focusable="false">
+          <ellipse cx="110" cy="66" rx="98" ry="3.4" class="gallery__shadow"/>
+          <path d="M22 66 V38 M198 66 V38 M34 66 V44 M186 66 V44" class="ink" style="stroke-width:5;stroke-linecap:round"/>
+          <path d="M22 66 V38 M198 66 V38 M34 66 V44 M186 66 V44" style="stroke:var(--wood-dark);stroke-width:3;stroke-linecap:round;fill:none"/>
+          <rect x="10" y="28" width="200" height="14" rx="5" class="ink f-wood"/>
+          <path d="M16 31.5 H204" style="stroke:var(--wood-lite);stroke-width:2;stroke-linecap:round;fill:none"/>
+          <rect x="30" y="14" width="160" height="16" rx="8" class="ink f-rose"/>
+          <path d="M70 18 v8 M110 18 v8 M150 18 v8" class="ink" style="stroke-width:1.2;opacity:.5"/>
+        </svg>
+        <svg class="gallery__plant" viewBox="0 0 70 110" aria-hidden="true" focusable="false">
+          <ellipse cx="35" cy="106" rx="26" ry="3" class="gallery__shadow"/>
+          <path d="M35 66 C30 46 14 38 4 40 M35 66 C36 42 30 22 22 10 M35 66 C40 44 52 30 64 30 M35 66 C38 50 46 38 48 22 M35 66 C28 54 20 52 10 58" class="ink" style="stroke:var(--moss-deep);stroke-width:2.2"/>
+          <g class="f-moss">
+            <ellipse cx="14" cy="40" rx="9" ry="4" transform="rotate(10 14 40)"/><ellipse cx="24" cy="14" rx="9" ry="4" transform="rotate(60 24 14)"/>
+            <ellipse cx="56" cy="31" rx="9" ry="4" transform="rotate(-10 56 31)"/><ellipse cx="47" cy="26" rx="8" ry="3.6" transform="rotate(-70 47 26)"/>
+            <ellipse cx="16" cy="56" rx="8" ry="3.6" transform="rotate(-20 16 56)"/><ellipse cx="28" cy="30" rx="8" ry="3.6" transform="rotate(70 28 30)"/>
+          </g>
+          <path d="M20 66 H50 L46 104 H24 Z" class="ink f-berry"/>
+          <path d="M18 66 H52 V73 H18 Z" class="ink f-berry"/>
+        </svg>
+      </div>
+    </div>
+  </section>
 
   <nav class="rooms" aria-label="Other rooms" data-rooms hidden></nav>
 </main>
+
+<!-- full screen: one piece at a time -->
+<dialog class="viewer" aria-labelledby="viewer-title" data-viewer>
+  <div class="viewer__veil" data-veil></div>
+  <figure class="viewer__figure">
+    <div class="viewer__stage" data-stage>
+      <div class="viewer__art" data-art></div>
+    </div>
+    <figcaption class="viewer__caption" data-caption>
+      <p class="viewer__count" data-count></p>
+      <h2 id="viewer-title" data-title></h2>
+      <p class="viewer__meta" data-meta></p>
+      <p class="viewer__note" data-note></p>
+    </figcaption>
+  </figure>
+  <button type="button" class="viewer__btn viewer__go viewer__go--prev" data-go="-1" aria-label="Previous piece">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 L8 12 L15 19"/></svg>
+  </button>
+  <button type="button" class="viewer__btn viewer__go viewer__go--next" data-go="1" aria-label="Next piece">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5 L16 12 L9 19"/></svg>
+  </button>
+  <div class="viewer__tools">
+    <button type="button" class="viewer__btn" data-fullscreen aria-label="Fill the whole screen" aria-pressed="false" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9 V4 H9 M15 4 H20 V9 M20 15 V20 H15 M9 20 H4 V15"/></svg>
+    </button>
+    <button type="button" class="viewer__btn" data-close aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
+    </button>
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-live></p>
+</dialog>
+
 <script src="assets/sections.js"></script>
 <script src="assets/rooms.js"></script>
+<script src="assets/art-data.js"></script>
+<script src="assets/art.js"></script>
 </body>
 </html>

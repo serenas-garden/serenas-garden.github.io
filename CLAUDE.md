@@ -121,8 +121,10 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   still works. A separate sunrise/sunset page could come later.
 - `travels.html`: built. See **Travels** below.
 - `kitchen.html`: built. See **The Kitchen** below.
+- `art.html`: the gallery, built and waiting for the pictures (empty
+  placeholder frames for now). See **The Gallery** below.
 - `music.html`, `currently.html`, `moon.html`,
-  `zoo.html`, `art.html`, `picks.html`: section stubs, all from one template.
+  `zoo.html`, `picks.html`: section stubs, all from one template.
   Each has a `.page-head` (back link, title, blurb, and that section's object
   drawn as `.page-art`), a `.stub-note`, and the rooms nav. When building one,
   replace the `.stub-note` with real content (keep the header and the rooms
@@ -285,6 +287,52 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
   the open postcard. Any touch of the globe or its buttons stops it.
 - **Links:** `travels.html#kyoto` opens on a place (the id from the data).
 - Caveat is loaded on this page too, for the handwritten notes.
+
+## The Gallery
+
+`art.html`: Serena's art. Rex wanted it more like Travels than the Kitchen:
+a page, not a room (so Gemma doesn't follow you in), because there are a lot
+of pieces and more to come. It's a **gallery wall** instead: a panel of
+warm painted wall with wooden picture rails, every piece hanging from a
+brass hook on a cord, in its own frame and mat, with a little museum label
+(title, year, medium) under it, a brass plaque at the top, and a bench and a
+plant on the floor. At night the wall goes dark and each piece sits in a
+pool of warm light (`--lamp`).
+
+- **Every piece is shown whole, straight away** (Rex's ask): nothing is
+  cropped. `assets/art.js` lays the wall out in rows of one height that fill
+  the width, like a hung wall, so any number of pieces of any shape hang
+  neatly; the last row is centred, not stretched. The sizes it works from are
+  plain pixel custom properties on `.hang` (`--pad-mould`, `--pad-mat`,
+  `--gap`, `--row-h`, `--rail`, `--cord`, `--label`, `--row-gap`), smaller on
+  phones. Each frame hangs a hair crooked (a steady tilt from its id) and
+  lifts a little when you point at it.
+- **Full screen:** tap a piece and it lifts off the wall into a dark viewer
+  (the image flies from its frame), with its title, date, medium, size and
+  Serena's `note`. Arrows, arrow keys or a swipe go to the next one (it wraps
+  round); Esc, the close button, a tap on the dark or a swipe down put it
+  back (into its frame). Where the browser allows it (not iPhones), a button
+  fills the whole screen. `art.html#<id>` opens straight onto a piece, the
+  address follows the piece you're looking at, and Back closes the viewer.
+  The wall's picture shows at once and the sharper `full` one swaps in when
+  it's loaded; the next and previous ones are fetched ahead.
+- **The data** is `assets/art-data.js` (format at its top): `id`, `title`,
+  `year`, `medium`, optional `size` and `note`, `alt` (what's in it, for
+  screen readers), `src` (about 1200px long side) and optional `full` (about
+  2400px), `w`/`h` (pixel size, so the wall lays out before pictures load),
+  optional `frame` (oak, walnut, gilt, cream, ink, sage, rose; otherwise one
+  is picked in turn) and optional `collection` (filter buttons appear once
+  there are two or more).
+- **Pictures** go in `assets/art/` (`<id>.jpg` and `<id>-full.jpg`). Strip
+  their metadata before committing (rule 2). `exiftool` isn't installed on
+  Rex's Mac yet. They're public files once pushed, full size included.
+- **Placeholders:** until the art arrives, `sample: true` and 18 entries with
+  only a shape: each frame holds a blank canvas with a pencil doodle, the
+  labels say "Empty frame · art coming soon", the plaque says the frames are
+  waiting, and a yellow note on the wall says they're placeholders. Its
+  status in `sections.js` stays "soon" until the real art is up.
+- **Next (Rex's plan):** once the pictures are in, animations and display
+  touches for each piece.
 
 ## Rooms, and Gemma following you in
 
@@ -527,4 +575,7 @@ surname).
   country (both empty), and her rewrite of the draft blurbs.
 - Kitchen: her top drinks (the fridge) and top fruits (the fruit bowl), and
   any recipe links or notes for the cookies, all in `kitchen-data.js`.
+- Gallery: Serena's 18 pieces (Rex is preparing them), with titles, years,
+  mediums and any notes; then per-piece animations. Set `sample: false` and
+  the art section's status to "open".
 - Pick the next section to build.
