@@ -1280,74 +1280,211 @@ h1, h2, h3 {
 .rooms a[aria-current="page"] { background: var(--moss); border-color: var(--moss); color: var(--paper); }
 
 /* ============================== the mailbox ==============================
-   A letter on lined paper. Posts to Web3Forms, which emails it to Serena. */
+   mailbox.html: a writing desk. The garland and hanging sign up top (like
+   the kitchen and the gallery), then a wooden desk running edge to edge
+   with the letter on lined paper, a sheet of stamps, an inkwell and quill
+   and a few pressed flowers. A letter that's sent folds into an envelope
+   wearing the stamp they picked and flies off (mailbox.js). The letter is
+   emailed by tools/mailbox-apps-script.js. */
 
-.letter {
+.mail-head { grid-template-columns: 1fr auto 1fr; padding-bottom: 6px; }
+.mail-head .sign { grid-column: 2; }
+
+.mail-desk {
   position: relative;
-  max-width: 580px;
-  margin: 32px 0 40px;
-  padding: 26px 26px 22px;
-  background: var(--paper);
-  border: 1px solid var(--hairline);
-  border-radius: 6px;
-  box-shadow: 0 14px 30px -20px rgba(0, 0, 0, .45);
+  flex: 1 0 auto;
+  margin-top: 26px;
+  padding: 44px 0 0;
+  background-color: var(--wood);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 30% 20%, rgba(255, 255, 255, .1), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .07) 0 2px, transparent 2px 70px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .05) 0 1px, transparent 1px 9px),
+    linear-gradient(var(--wood-lite), var(--wood) 30%, var(--wood-dark));
+  border-top: 1.5px solid var(--ink);
+  box-shadow: inset 0 10px 0 rgba(255, 255, 255, .12), inset 0 14px 18px -10px rgba(0, 0, 0, .3);
 }
-.letter fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
-.letter fieldset:disabled { opacity: .55; }
-.letter__greeting { font: italic 500 28px/1.2 var(--display); margin: 0 0 6px; }
-.letter textarea {
+:root[data-dark="true"] .mail-desk { border-color: #0e130f; }
+.mail-desk__inner { position: relative; width: min(980px, 100% - 32px); margin: 0 auto; }
+.mail-shadow { fill: rgba(0, 0, 0, .22); }
+.mail-ink { position: absolute; left: -10px; top: -78px; width: 104px; height: auto; z-index: 2; pointer-events: none; }
+.mail-flowers { position: absolute; right: 4%; top: -34px; width: 120px; height: auto; transform: rotate(-8deg); pointer-events: none; }
+
+.mail-form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 236px;
+  gap: 28px 40px;
+  align-items: start;
+  padding: 0 0 18px 70px;
+}
+.mail-form[hidden] { display: none; }
+.mail-form fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.hp { display: none !important; }
+
+/* the letter: cream writing paper, lined, with a margin rule (paper stays
+   paper at night, so its colours are fixed) */
+.mail-paper {
+  position: relative;
+  padding: 30px 34px 28px 54px;
+  color: #2f3a2c;
+  background:
+    linear-gradient(90deg, transparent 38px, rgba(217, 120, 128, .45) 38px 40px, transparent 40px),
+    #fdf9ef;
+  border-radius: 3px;
+  box-shadow: 0 2px 0 #efe6d2, 0 4px 0 #e6dcc4, 0 22px 30px -16px rgba(30, 18, 8, .6);
+  transform: rotate(-.6deg);
+  transform-origin: 50% 0;
+}
+:root[data-dark="true"] .mail-paper { filter: brightness(.9); }
+.mail-paper__fields:disabled { opacity: .5; }
+.mail-paper__dear { margin: 0 0 6px; font: italic 500 32px/1.2 var(--display); }
+.mail-paper textarea {
   display: block;
   width: 100%;
-  min-height: 224px;
+  min-height: 256px;
   resize: vertical;
   border: 0;
   padding: 0 2px;
-  color: var(--ink);
+  color: #2f3a2c;
   font: 400 17px/32px var(--body);
-  background: transparent repeating-linear-gradient(transparent 0 31px, var(--hairline) 31px 32px);
+  background: transparent repeating-linear-gradient(transparent 0 31px, #d9e3ea 31px 32px);
 }
-.letter .field { display: grid; gap: 2px; margin-top: 18px; }
-.letter label, .letter .hint { font: 400 12px/1.4 var(--pixel); color: var(--ink-soft); }
-.letter input[type="text"], .letter input[type="email"] {
+.mail-paper textarea::placeholder { color: #a39c8c; }
+.mail-paper__love { margin: 14px 0 0; font: italic 500 22px/1.2 var(--display); color: #5d6a55; }
+.mail-paper__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.mail-field { display: grid; gap: 2px; margin-top: 14px; }
+.mail-field label { font: 400 12px/1.4 var(--pixel); color: #5d6a55; }
+.mail-field input {
   width: 100%;
   border: 0;
-  border-bottom: 1.5px solid var(--ink-faint);
+  border-bottom: 1.5px solid #b8b09c;
   border-radius: 0;
   padding: 6px 2px;
-  color: var(--ink);
+  color: #2f3a2c;
   background: transparent;
   font: 400 17px/1.4 var(--body);
 }
-.letter textarea:focus-visible, .letter input:focus-visible {
-  outline: 2px dashed var(--berry);
-  outline-offset: 4px;
+.mail-field input[name="name"] { font: 600 26px/1.2 "Caveat", var(--display); color: #a8463f; padding: 0 2px; }
+.mail-paper textarea:focus-visible, .mail-field input:focus-visible { outline: 2px dashed var(--berry); outline-offset: 4px; }
+.mail-closed {
+  margin: -6px 0 16px;
+  padding: 8px 12px;
+  font: 400 13px/1.4 var(--pixel);
+  background: var(--note-sun);
+  transform: rotate(-1deg);
+  width: max-content;
+  max-width: 100%;
 }
-.letter .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
-.hp { display: none !important; }
+.mail-closed[hidden] { display: none; }
 
-.btn-send {
-  margin-top: 22px;
+/* the sheet of stamps */
+.mail-stamps {
+  position: relative;
+  padding: 18px 16px 16px !important;
+  background: #f4ede0;
+  border-radius: 4px;
+  box-shadow: 0 16px 22px -14px rgba(30, 18, 8, .55);
+  transform: rotate(1.4deg);
+}
+:root[data-dark="true"] .mail-stamps { filter: brightness(.9); }
+.mail-stamps legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 10px;
+  font: 400 12px/1 var(--pixel);
+  letter-spacing: .06em;
+  color: #5d6a55;
+  text-align: center;
+}
+.mail-stamps__sheet { clear: both; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stamp-pick { position: relative; display: block; cursor: pointer; }
+.stamp-pick input { position: absolute; opacity: 0; pointer-events: none; }
+/* a perforated stamp: a dotted border the colour of the sheet, over the
+   stamp's own paper */
+.stamp-pick__stamp {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 6px 6px;
+  background: var(--sp);
+  border: 5px dotted #f4ede0;
+  outline: 1px solid rgba(47, 58, 44, .14);
+  outline-offset: -5px;
+  box-shadow: 0 3px 5px -3px rgba(0, 0, 0, .3);
+}
+.stamp-art { width: 52px; height: 52px; display: block; }
+.stamp-pick__name { font: 400 10px/1.2 var(--pixel); letter-spacing: .06em; color: #5d6a55; }
+.stamp-pick input:checked + .stamp-pick__stamp {
+  outline: 2px solid #a8463f;
+  outline-offset: 2px;
+  transform: rotate(-3deg) scale(1.05);
+  box-shadow: 0 8px 10px -6px rgba(0, 0, 0, .4);
+}
+.stamp-pick input:focus-visible + .stamp-pick__stamp { outline: 2px dashed var(--berry); outline-offset: 4px; }
+.mail-stamps:disabled .stamp-pick { cursor: default; opacity: .6; }
+
+.mail-send {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
   font: 500 15px/1 var(--pixel);
   color: #fff8ef;
   background: var(--berry);
   border: 0;
   border-radius: 999px;
-  padding: 12px 20px;
+  padding: 13px 18px;
   cursor: pointer;
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 3px 3px 0 #2f3a2c;
 }
-.btn-send:disabled { cursor: not-allowed; }
-.letter__status { min-height: 1.4em; margin: 12px 0 0; font: 400 13px/1.4 var(--pixel); color: var(--ink-soft); }
-.letter__privacy { margin: 14px 0 0; font-size: 14px; color: var(--ink-faint); }
+.mail-send:disabled { cursor: not-allowed; opacity: .7; }
+.mail-status { min-height: 1.4em; margin: 10px 0 0; font: 400 12.5px/1.4 var(--pixel); color: #5d6a55; text-align: center; }
+.mail-privacy { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: #7c8873; text-align: center; }
 
-.letter__thanks { display: none; text-align: center; padding: 18px 0 8px; }
-.letter__thanks svg { width: 120px; height: auto; }
-.letter__thanks h2 { font-size: 30px; margin: 8px 0 6px; }
-.letter__thanks p { margin: 0; color: var(--ink-soft); }
-.letter.is-sent form { display: none; }
-.letter.is-sent .letter__thanks, #sent:target { display: block; }
+/* sent: the sealed envelope and a thank-you */
+.mail-sent { position: relative; z-index: 1; max-width: 460px; margin: 0 auto; padding: 10px 0 30px; text-align: center; color: #fbf1de; }
+.mail-sent[hidden] { display: none; }
+.mail-sent:focus { outline: none; }
+.mail-sent .envelope { width: min(300px, 80%); height: auto; filter: drop-shadow(0 16px 14px rgba(30, 18, 8, .45)); }
+.mail-sent h2 { margin: 14px 0 6px; font-size: clamp(30px, 5vw, 40px); text-shadow: 0 2px 0 rgba(0, 0, 0, .25); }
+.mail-sent p { margin: 0; color: #f5e2bd; }
+.mail-again {
+  margin-top: 18px;
+  font: 400 13px/1 var(--pixel);
+  color: #2f3a2c;
+  background: #fbf8ef;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #2f3a2c;
+}
+.mail-flight { position: absolute; z-index: 5; pointer-events: none; }
+.mail-flight[hidden] { display: none; }
+.mail-flight .envelope { display: block; width: 100%; height: auto; filter: drop-shadow(0 16px 14px rgba(30, 18, 8, .45)); }
 
-.mailbox-closed { margin-bottom: 0; }
+/* the envelope (paper, fixed colours) */
+.env__back { fill: #f6efe0; stroke: #2f3a2c; stroke-width: 2; }
+.env__fold { fill: #ece2cd; stroke: #2f3a2c; stroke-width: 1.6; stroke-linejoin: round; }
+.env__flap { fill: #f1e8d6; stroke: #2f3a2c; stroke-width: 1.6; stroke-linejoin: round; }
+.env__seal { fill: #a8463f; stroke: #2f3a2c; stroke-width: 1.4; }
+.env__heart { fill: #f3c6c9; }
+.env__postmark { fill: none; stroke: rgba(63, 95, 134, .55); stroke-width: 1.6; }
+.env__stamp { display: none; }
+.envelope[data-stamp="tulip"] .env__stamp--tulip,
+.envelope[data-stamp="toadstool"] .env__stamp--toadstool,
+.envelope[data-stamp="moon"] .env__stamp--moon,
+.envelope[data-stamp="gemma"] .env__stamp--gemma { display: inline; }
+
+.mail-rooms { position: relative; z-index: 1; width: min(980px, 100% - 32px); margin: 0 auto; padding: 20px 0 40px; text-align: center; }
+.mail-rooms ul { justify-content: center; }
+.mail-rooms .eyebrow { text-align: center; color: #fbf1de; text-shadow: 0 1px 0 rgba(0, 0, 0, .3); }
+@media (max-width: 860px) {
+  .mail-form { grid-template-columns: 1fr; padding-left: 40px; }
+  .mail-stamps { transform: rotate(.6deg); }
+  .mail-stamps__sheet { grid-template-columns: repeat(4, 1fr); }
+}
 
 /* ============================== travels ==============================
    A desk globe (globe.js draws the sphere on a canvas inside .globe), a
@@ -2020,7 +2157,7 @@ body[data-section="kitchen"]::before {
 }
 :root[data-dark="true"] body[data-section="kitchen"]::before { opacity: .15; }
 
-.kroom, .gal-room {
+.kroom, .gal-room, .mail-room {
   position: relative;
   z-index: 1;
   display: flex;
@@ -2045,7 +2182,7 @@ body[data-section="kitchen"]::before {
   box-shadow: 0 6px 12px -8px rgba(0, 0, 0, .45);
 }
 .k-back:hover { color: var(--berry); border-color: var(--berry); }
-.kroom::before, .gal-room::before { /* the room's corners fall into a little shade */
+.kroom::before, .gal-room::before, .mail-room::before { /* the room's corners fall into a little shade */
   content: "";
   position: absolute;
   inset: 0;
@@ -2053,8 +2190,8 @@ body[data-section="kitchen"]::before {
   pointer-events: none;
   background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(90, 60, 25, 0) 55%, rgba(90, 60, 25, .13));
 }
-:root[data-dark="true"] .kroom::before, :root[data-dark="true"] .gal-room::before { background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .35)); }
-.kroom > .wrap, .gal-room > .wrap { position: relative; z-index: 2; }
+:root[data-dark="true"] .kroom::before, :root[data-dark="true"] .gal-room::before, :root[data-dark="true"] .mail-room::before { background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .35)); }
+.kroom > .wrap, .gal-room > .wrap, .mail-room > .wrap { position: relative; z-index: 2; }
 .kitchen { position: relative; margin: 12px 0 0; }
 .k-baseboard {
   position: relative;
@@ -2582,8 +2719,8 @@ body[data-section="kitchen"]::before {
   .k-floor__rug { left: calc(50% - 60px); }
 }
 @media (max-width: 640px) {
-  .k-head.room-head, .gal-head.room-head { grid-template-columns: 1fr; }
-  .k-head .sign, .gal-head .sign { grid-column: 1 / -1; grid-row: 1; }
+  .k-head.room-head, .gal-head.room-head, .mail-head.room-head { grid-template-columns: 1fr; }
+  .k-head .sign, .gal-head .sign, .mail-head .sign { grid-column: 1 / -1; grid-row: 1; }
   .k-back { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
   .k-floor { min-height: 200px; }
   .k-floor__view { perspective: 520px; perspective-origin: 50% -200px; }
@@ -3221,8 +3358,15 @@ body[data-section="art"]::before {
   .page-head { grid-template-columns: 1fr; }
   .page-head .back { order: -2; margin-bottom: 14px; }
   .page-art { grid-column: 1; grid-row: auto; width: 96px; order: -1; }
-  .letter { padding: 20px 16px 18px; }
-  .letter .row { grid-template-columns: 1fr; }
+  .mail-form { padding-left: 0; }
+  .mail-ink { width: 70px; left: -6px; top: -64px; }
+  .mail-flowers { width: 84px; top: -30px; }
+  .mail-paper { padding: 22px 16px 20px 34px; background: linear-gradient(90deg, transparent 22px, rgba(217, 120, 128, .45) 22px 24px, transparent 24px), #fdf9ef; }
+  .mail-paper__dear { font-size: 28px; }
+  .mail-paper__row { grid-template-columns: 1fr; }
+  .mail-stamps__sheet { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .stamp-art { width: 40px; height: 40px; }
+  .stamp-pick__stamp { border-width: 4px; padding: 6px 2px 4px; }
 }
 
 /* =============================== motion ===============================

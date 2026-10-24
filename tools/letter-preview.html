@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Letter preview · Serena's Garden</title>
+<!-- A tool, not a page of the site: shows what a letter from the mailbox
+     looks like in someone's inbox, using the same renderLetter() as the
+     Apps Script (tools/mailbox-apps-script.js). Open it from a local server:
+       python3 -m http.server 8777, then http://localhost:8777/tools/letter-preview.html
+     Edit the letter below and the previews redraw. -->
+<style>
+  body { margin: 0; padding: 24px; font: 15px/1.5 system-ui, sans-serif; background: #e9e6df; color: #2f3a2c; }
+  h1 { margin: 0 0 4px; font-size: 20px; }
+  p { margin: 0 0 16px; color: #5d6a55; }
+  form { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 12px; max-width: 980px; margin-bottom: 20px; }
+  label { display: grid; gap: 3px; font-size: 13px; }
+  textarea { grid-column: 1 / -1; min-height: 90px; font: inherit; padding: 8px; }
+  input, select { font: inherit; padding: 6px 8px; }
+  .shots { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .shot b { display: block; margin-bottom: 6px; font-size: 13px; }
+  .shot i { display: block; margin: 0 0 8px; font-style: normal; font-size: 13px; color: #5d6a55; }
+  iframe { display: block; border: 1px solid #c9c3b6; background: #fff; }
+</style>
+</head>
+<body>
+<h1>Letter preview</h1>
+<p>What a letter from the mailbox looks like when it arrives. Subject: <b data-subject></b></p>
+<form data-form>
+  <label>from <input name="name" value="Rex"></label>
+  <label>their email (blank: no reply) <input name="email" value="someone@example.com"></label>
+  <label>stamp
+    <select name="stamp"><option>tulip</option><option>toadstool</option><option>moon</option><option>gemma</option></select>
+  </label>
+  <textarea name="message">Dear Serena — I just walked through the fairy door and found your gallery. The moonlit sea is my favourite.
+
+Gemma says hi (she's asleep on the rug again).</textarea>
+</form>
+<div class="shots">
+  <div class="shot"><b>on a computer</b><iframe data-wide width="640" height="900" title="The letter, wide"></iframe></div>
+  <div class="shot"><b>on a phone</b><iframe data-narrow width="375" height="900" title="The letter, narrow"></iframe></div>
+</div>
+<script src="mailbox-apps-script.js"></script>
+<script>
+  (function () {
+    var form = document.querySelector("[data-form]");
+    // dates as the Apps Script writes them ("Saturday 24 October 2026 at 2:15 PM"), in St. Pete time
+    function part(d, o) {
+      o.timeZone = "America/New_York";
+      return new Intl.DateTimeFormat("en-US", o).format(d);
+    }
+    function when(d) {
+      return part(d, { weekday: "long" }) + " " + part(d, { day: "numeric" }) + " " + part(d, { month: "long" }) + " " +
+        part(d, { year: "numeric" }) + " at " + part(d, { hour: "numeric", minute: "2-digit" });
+    }
+    function draw() {
+      var now = new Date();
+      var mail = renderLetter({
+        name: form.elements.name.value || "Someone",
+        email: form.elements.email.value.trim(),
+        stamp: form.elements.stamp.value,
+        message: form.elements.message.value.replace(/^Dear Serena[,—\s-]*/i, "") || "…",
+        when: when(now),
+        day: part(now, { day: "numeric" }) + " " + part(now, { month: "short" }).toUpperCase(),
+        year: part(now, { year: "numeric" })
+      });
+      document.querySelector("[data-subject]").textContent = mail.subject;
+      document.querySelector("[data-wide]").srcdoc = mail.html;
+      document.querySelector("[data-narrow]").srcdoc = mail.html;
+    }
+    form.addEventListener("input", draw);
+    draw();
+  })();
+</script>
+</body>
+</html>

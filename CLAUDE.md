@@ -3,8 +3,8 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status:** the cottage hub, **Travels**, **the Kitchen** and **the Gallery** (Art) are built. The mailbox form is
-built but closed until its access key is pasted in. Every other section is a
+**Status:** the cottage hub, **Travels**, **the Kitchen** and **the Gallery** (Art) are built. The mailbox (a
+writing desk) is built but closed until its Apps Script is deployed. Every other section is a
 labelled "still decorating" stub.
 
 ## Decisions (settled with Rex, October 2026)
@@ -20,15 +20,16 @@ labelled "still decorating" stub.
   file.
 - **Who edits:** always Rex + Claude. Serena sends changes to Rex. There's no
   sign-in or backend, and none is planned, so don't add one.
-- **Messages:** the "Send a Letter" form (`mailbox.html`) posts to Web3Forms,
-  which emails letters to Serena only. Her address lives in Web3Forms behind
-  an access key and must never appear in this repo. **Getting the key needs a
-  Web3Forms sign-up with her email, so Serena (or Rex) does it, never Claude:**
-  web3forms.com, then "Create your form" with her address. The key arrives in
-  her inbox. To open the mailbox, paste the key into the `access_key` input in
-  `mailbox.html` (marked `MAILBOX KEY`) and set `mailbox` to `status: "open"` in
-  `sections.js`. Until then, `assets/mailbox.js` shows the form disabled with an
-  "opens soon" note. The key is public-safe by Web3Forms' own design.
+- **Messages:** the "Send a Letter" page (`mailbox.html`) posts each letter
+  to a small Google Apps Script web app (`tools/mailbox-apps-script.js`),
+  which emails it to Serena as a styled letter, the same format every time
+  (Rex asked for consistent, stylized letters; October 2026). **The address
+  letters go to lives only in the copy of the script inside Apps Script
+  (`SEND_TO`) and must never appear in this repo** (it would also carry her
+  surname). Deploying the script needs a Google sign-in, so Rex or Serena
+  does it, never Claude: see "The mailbox" below. (The first plan was
+  Web3Forms, but its free plan can't style emails; custom HTML is its paid
+  plan.)
 - **Look:** fairy forest / cottagecore, from her own notes. The sky follows the
   real sun and moon: a sunlit garden by day, fireflies and stars at night.
   **The room stays cottage.** In October 2026 Rex tried a bigger fairy-forest
@@ -129,9 +130,10 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   drawn as `.page-art`), a `.stub-note`, and the rooms nav. When building one,
   replace the `.stub-note` with real content (keep the header and the rooms
   nav), then set its `status` to `"open"` in `sections.js`.
-- `mailbox.html`: the letter form (see Messages above). Behaviour is in
+- `mailbox.html`: the letter desk (see "The mailbox" below). Behaviour is in
   `assets/mailbox.js`. It has a honeypot `botcheck` field for spam, and a
-  no-JavaScript fallback that posts normally and returns to `#sent`.
+  no-JavaScript fallback: the form posts straight to the script, which shows
+  its own little thank-you page with a link back.
 - **Every page shares one `<head>` pattern**: charset/viewport, title,
   description, `robots noindex`, `theme-color` (sky.js retints it at night),
   Open Graph + Twitter card tags pointing at `assets/og.png`, favicon +
@@ -175,7 +177,7 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - `assets/rooms.js`: the "wander to another room" nav on every section page,
   built from `sections.js` (current page marked `aria-current`; sections with
   an `href` link out in a new tab).
-- `assets/mailbox.js`: letter form behaviour.
+- `assets/mailbox.js`: the letter desk's behaviour (sending, the envelope).
 - `assets/og.png` (1200×630): the link-preview image shown when the site is
   texted or posted. `assets/apple-touch-icon.png` (180×180): the toadstool's
   face, for iPhone home screens. Both were rendered from small HTML cards with
@@ -287,6 +289,64 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
   the open postcard. Any touch of the globe or its buttons stops it.
 - **Links:** `travels.html#kyoto` opens on a place (the id from the data).
 - Caveat is loaded on this page too, for the handwritten notes.
+
+## The mailbox
+
+`mailbox.html` ("Send a Letter"): a writing desk. Not a room (no Gemma).
+
+- **The page:** the garland and the hanging sign ("write to serena / Send a
+  Letter") like the kitchen and gallery, then a wooden desk running edge to
+  edge: the letter on lined cream paper with a pink margin rule ("Dear
+  Serena," printed, then the letter, "with love," and their name in Caveat
+  handwriting, and an optional email for a reply), a sheet of four stamps to
+  pick from (tulip, toadstool, moon, Gemma), an inkwell and quill, pressed
+  flowers. Sending: the paper folds away, an envelope wearing their stamp
+  appears, wiggles and flies off, and "Your letter's on its way!" takes its
+  place, with "write another letter". If it fails, the letter stays put with
+  a friendly note. Reduced motion: it just swaps. Paper, stamps and the
+  envelope keep fixed colours (dimmed a little at night).
+- **The letter email** (`renderLetter()` in `tools/mailbox-apps-script.js`):
+  subject "💌 A letter from <name>", from "Serena's Garden". A cream letter
+  with airmail edging, a St. Pete postmark with the date, the stamp they
+  picked (as an emoji, so it shows in every email app with no pictures to
+  load), "Dear Serena,", their letter, "With love," and their name, then a
+  "write back" button (and Reply goes to them) or a note that they left no
+  address, and when it was posted. Plain-text version too. Email HTML is
+  tables and inline styles only (that's what email apps support); keep it
+  that way. `tools/letter-preview.html` shows it in a browser (from a local
+  server), using the same function.
+- **The script** checks each letter (name and letter required, lengths
+  capped, email checked, the honeypot), sends at most 12 an hour
+  (`PER_HOUR`), and answers the page in JSON. It sends with `MailApp`
+  (permission to send email only, not to read any).
+- **Setting it up** (Rex or Serena, signed in to Google; about five
+  minutes):
+  1. Go to script.google.com, signed in to the account letters should be
+     sent from, and make a New project ("Serena's mailbox").
+  2. Replace everything in `Code.gs` with the whole of
+     `tools/mailbox-apps-script.js`.
+  3. In that copy only, put the address letters go to in `SEND_TO`.
+  4. Pick `sendTestLetter` in the toolbar and press Run. Google asks for
+     permission to send email (it warns the app isn't verified, since it's
+     your own: Advanced, then Go to Serena's mailbox). A sample letter
+     arrives.
+  5. Deploy, New deployment, gear, Web app. Execute as: Me. Who has access:
+     Anyone. Deploy, and copy the Web app URL (ending in `/exec`).
+  6. Paste that URL into the form's `action` in `mailbox.html` (marked
+     `MAILBOX ADDRESS`) and set `mailbox` to `status: "open"` in
+     `sections.js`. Until then the desk shows closed with an "opens soon"
+     note and sends nothing.
+- **Whose account:** each letter is sent from the account the script runs
+  in, and a copy stays in that account's Sent mail. So for real letters it
+  should run in Serena's own account (then only she ever sees them), unless
+  she and Rex are happy for copies to sit in his. Testing in Rex's account,
+  sending to Rex, is fine.
+- **Changing the letter's look:** edit `tools/mailbox-apps-script.js`, paste
+  it into Apps Script again (keep its `SEND_TO`), then Deploy, Manage
+  deployments, edit, Version: New version. The URL stays the same.
+- **October 2026:** Rex wants letters to go to Serena's Gmail, tested first
+  with his own. Claude emailed Rex a rendered sample from his Gmail to show
+  what one looks like; the script wasn't deployed yet.
 
 ## The Gallery
 
@@ -628,7 +688,8 @@ surname).
 
 ## Open items
 
-- Serena creates the Web3Forms access key (see Messages) and sends it to Rex.
+- Deploy the mailbox's Apps Script (see "The mailbox"): test in Rex's
+  account, then set it up for real letters to Serena.
 - Serena reviews and rewrites the draft copy in `sections.js`, and names the
   toadstool.
 - Real "currently" entries. Then set `sample: false`.

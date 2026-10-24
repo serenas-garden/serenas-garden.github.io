@@ -21,80 +21,213 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&family=Caveat:wght@600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
 </head>
 <body data-section="mailbox">
-<main class="wrap">
-  <header class="page-head">
-    <a class="back" href="./">&larr; back inside</a>
-    <p class="eyebrow">serena's garden</p>
-    <h1>Send a Letter</h1>
-    <p>Write me a note. It goes straight to my inbox.</p>
-    <div class="page-art" aria-hidden="true">
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M74 22 c-3 -6 -11 -3 -8 3 l8 7 l8 -7 c3 -6 -5 -9 -8 -3z" class="f-rose"/>
-      <rect x="12" y="36" width="76" height="50" rx="4" class="ink f-paper"/>
-      <path d="M13 38 L50 66 L87 38" class="ink"/>
-      <circle cx="50" cy="64" r="8" class="ink f-berry"/>
-      <path d="M50 68 l-3.5 -3.5 a2 2 0 0 1 3.5 -2.5 a2 2 0 0 1 3.5 2.5 Z" class="f-paper"/>
-      </svg>
-    </div>
-  </header>
-
-  <div class="stub-note mailbox-closed" hidden>
-    <h2>The mailbox opens soon</h2>
-    <p>I'm still putting up my letterbox. Come back soon and write me something!</p>
+<main class="mail-room">
+  <div class="garland" aria-hidden="true">
+    <svg viewBox="0 0 1000 72" preserveAspectRatio="none"><path d="M-10 4 Q500 76 1010 4"/></svg>
+    <span class="pennant" style="left:2.40%;top:7.6px;--r:6.3deg"></span>
+    <span class="pennant pennant--gingham pn--alt" style="left:9.20%;top:16.0px;--r:5.4deg"></span>
+    <span class="pennant pennant--moss" style="left:16.00%;top:23.0px;--r:4.5deg"></span>
+    <span class="pennant pennant--gold pn--alt" style="left:22.80%;top:28.8px;--r:3.6deg"></span>
+    <span class="pennant pennant--dots" style="left:29.60%;top:33.2px;--r:2.7deg"></span>
+    <span class="pennant pn--alt" style="left:36.40%;top:36.4px;--r:1.8deg"></span>
+    <span class="pennant pennant--gingham" style="left:43.20%;top:38.4px;--r:0.9deg"></span>
+    <span class="pennant pennant--moss pn--alt" style="left:50.00%;top:39.0px;--r:0.0deg"></span>
+    <span class="pennant pennant--gold" style="left:56.80%;top:38.4px;--r:-0.9deg"></span>
+    <span class="pennant pennant--dots pn--alt" style="left:63.60%;top:36.4px;--r:-1.8deg"></span>
+    <span class="pennant" style="left:70.40%;top:33.2px;--r:-2.7deg"></span>
+    <span class="pennant pennant--gingham pn--alt" style="left:77.20%;top:28.8px;--r:-3.6deg"></span>
+    <span class="pennant pennant--moss" style="left:84.00%;top:23.0px;--r:-4.5deg"></span>
+    <span class="pennant pennant--gold pn--alt" style="left:90.80%;top:16.0px;--r:-5.4deg"></span>
+    <span class="pennant pennant--dots" style="left:97.60%;top:7.6px;--r:-6.3deg"></span>
+    <span class="bulb bulb--alt" style="left:5.80%;top:13.0px;--c:#f4b6b0;--d:2.43s"></span>
+    <span class="bulb" style="left:12.60%;top:20.6px;--c:#fff1c1;--d:2.06s"></span>
+    <span class="bulb bulb--alt" style="left:19.40%;top:27.0px;--c:var(--gold);--d:1.69s"></span>
+    <span class="bulb" style="left:26.20%;top:32.2px;--c:#f4b6b0;--d:1.32s"></span>
+    <span class="bulb bulb--alt" style="left:33.00%;top:36.0px;--c:#fff1c1;--d:0.95s"></span>
+    <span class="bulb" style="left:39.80%;top:38.6px;--c:var(--gold);--d:0.58s"></span>
+    <span class="bulb bulb--alt" style="left:46.60%;top:39.8px;--c:#f4b6b0;--d:0.21s"></span>
+    <span class="bulb" style="left:53.40%;top:39.8px;--c:#fff1c1;--d:2.64s"></span>
+    <span class="bulb bulb--alt" style="left:60.20%;top:38.6px;--c:var(--gold);--d:2.27s"></span>
+    <span class="bulb" style="left:67.00%;top:36.0px;--c:#f4b6b0;--d:1.90s"></span>
+    <span class="bulb bulb--alt" style="left:73.80%;top:32.2px;--c:#fff1c1;--d:1.53s"></span>
+    <span class="bulb" style="left:80.60%;top:27.0px;--c:var(--gold);--d:1.16s"></span>
+    <span class="bulb bulb--alt" style="left:87.40%;top:20.6px;--c:#f4b6b0;--d:0.79s"></span>
+    <span class="bulb" style="left:94.20%;top:13.0px;--c:#fff1c1;--d:0.42s"></span>
   </div>
 
-  <div class="letter">
-    <form action="https://api.web3forms.com/submit" method="POST">
-      <!-- MAILBOX KEY: paste Serena's Web3Forms access key as the value below.
-           That is the only step to open the mailbox (also set "mailbox" to
-           status: "open" in assets/sections.js). The key is safe to publish:
-           it can only deliver to her inbox, and her address never appears here. -->
-      <input type="hidden" name="access_key" value="">
-      <input type="hidden" name="subject" value="A new letter from Serena's Garden">
-      <input type="hidden" name="from_name" value="Serena's Garden">
-      <input type="hidden" name="redirect" value="https://serenas-garden.github.io/mailbox.html#sent">
-      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
-      <fieldset>
-        <legend class="visually-hidden">Your letter to Serena</legend>
-        <p class="letter__greeting" aria-hidden="true">Dear Serena,</p>
-        <label class="visually-hidden" for="letter-msg">Your letter</label>
-        <textarea id="letter-msg" name="message" required maxlength="4000" placeholder="write anything…"></textarea>
-        <div class="row">
-          <div class="field">
-            <label for="letter-from">from</label>
-            <input id="letter-from" name="name" type="text" required maxlength="80" autocomplete="name">
-          </div>
-          <div class="field">
-            <label for="letter-reply">your email, if you'd like a reply</label>
-            <input id="letter-reply" name="email" type="email" maxlength="120" autocomplete="email">
-          </div>
+  <div class="wrap">
+    <header class="room-head mail-head">
+      <a class="k-back" href="./">&larr; back inside</a>
+      <div class="sign">
+        <span class="sign__rope sign__rope--l" aria-hidden="true"></span>
+        <span class="sign__rope sign__rope--r" aria-hidden="true"></span>
+        <svg class="sign__bloom sign__bloom--l" viewBox="0 0 60 44" aria-hidden="true">
+          <ellipse cx="16" cy="26" rx="12" ry="5" transform="rotate(-30 16 26)" class="f-moss"/>
+          <ellipse cx="36" cy="30" rx="11" ry="4.5" transform="rotate(20 36 30)" class="f-moss"/>
+          <circle cx="22" cy="16" r="9" class="f-rose"/><path d="M18 16 a4 4 0 1 1 4 4" class="ink" style="stroke:var(--berry);stroke-width:1.5"/>
+          <circle cx="38" cy="20" r="6" class="f-paper"/><circle cx="38" cy="20" r="2.4" class="f-gold"/>
+          <circle cx="10" cy="34" r="4" class="f-gold"/>
+        </svg>
+        <svg class="sign__bloom sign__bloom--r" viewBox="0 0 60 44" aria-hidden="true">
+          <ellipse cx="16" cy="26" rx="12" ry="5" transform="rotate(-30 16 26)" class="f-moss"/>
+          <ellipse cx="36" cy="30" rx="11" ry="4.5" transform="rotate(20 36 30)" class="f-moss"/>
+          <circle cx="22" cy="16" r="9" class="f-rose"/><path d="M18 16 a4 4 0 1 1 4 4" class="ink" style="stroke:var(--berry);stroke-width:1.5"/>
+          <circle cx="38" cy="20" r="6" class="f-paper"/><circle cx="38" cy="20" r="2.4" class="f-gold"/>
+          <circle cx="10" cy="34" r="4" class="f-gold"/>
+        </svg>
+        <p class="sign__eyebrow">write to serena</p>
+        <h1>Send a Letter</h1>
+      </div>
+    </header>
+  </div>
+
+  <!-- The writing desk: the letter on lined paper, a sheet of stamps to pick
+       from, an inkwell and a few things lying about. A sealed letter folds
+       into an envelope and flies off. Letters go to a Google Apps Script
+       (tools/mailbox-apps-script.js), which emails them to Serena in one
+       styled letter format. Behaviour: assets/mailbox.js. -->
+  <section class="mail-desk" aria-label="Write a letter">
+    <div class="mail-desk__inner">
+      <svg class="mail-ink" viewBox="0 0 120 150" aria-hidden="true" focusable="false">
+        <ellipse cx="54" cy="144" rx="40" ry="5" class="mail-shadow"/>
+        <path d="M60 18 C78 30 96 52 104 80 L98 82 C88 56 74 38 58 24 Z" style="fill:#fbf6ea;stroke:#3d2f27;stroke-width:1.4;stroke-linejoin:round"/>
+        <path d="M62 26 L100 80 M70 32 l-4 10 M78 40 l-4 10 M86 50 l-4 9 M93 61 l-4 8" style="fill:none;stroke:#cfc3ac;stroke-width:1.2"/>
+        <path d="M56 22 L44 96" style="stroke:#3d2f27;stroke-width:2.4;stroke-linecap:round"/>
+        <path d="M26 104 C26 92 38 86 54 86 C70 86 82 92 82 104 L80 132 C80 140 70 144 54 144 C38 144 28 140 28 132 Z" style="fill:#2b3f5e;stroke:#3d2f27;stroke-width:1.6"/>
+        <rect x="38" y="80" width="32" height="10" rx="3" style="fill:#d9a441;stroke:#3d2f27;stroke-width:1.4"/>
+        <path d="M36 108 C38 98 44 96 50 96" style="fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:.3"/>
+      </svg>
+      <svg class="mail-flowers" viewBox="0 0 110 70" aria-hidden="true" focusable="false">
+        <path d="M14 58 C34 50 58 40 92 16" style="fill:none;stroke:#7aa857;stroke-width:2"/>
+        <path d="M40 46 C38 38 44 32 50 34 C48 40 46 44 40 46 Z M64 32 C64 24 70 20 76 22 C74 28 70 31 64 32 Z" style="fill:#8fb86a"/>
+        <g style="fill:#d9a6c8"><circle cx="92" cy="16" r="5"/><circle cx="86" cy="12" r="4"/><circle cx="97" cy="10" r="3.6"/></g>
+        <g style="fill:#f2c94c"><circle cx="30" cy="52" r="4"/><circle cx="26" cy="46" r="3"/></g>
+        <path d="M6 64 l40 -2 l-4 4 l4 4 l-40 -2 Z" style="fill:#e8a3a6;opacity:.9"/>
+      </svg>
+
+      <form class="mail-form" action="" method="POST" data-mailbox>
+        <!-- MAILBOX ADDRESS: when the Apps Script is deployed (CLAUDE.md, "The
+             mailbox"), paste its web app address (https://script.google.com/
+             macros/s/.../exec) into action="" above, and set "mailbox" to
+             status: "open" in assets/sections.js. Until then the form is shown
+             closed. The address is safe to publish: it can only send Serena a
+             letter. Her email address never appears in this repo. -->
+        <input type="hidden" name="via" value="form">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="mail-paper">
+          <p class="mail-closed" hidden>The mailbox opens soon! I&#x27;m still putting up my letterbox.</p>
+          <fieldset class="mail-paper__fields">
+            <legend class="visually-hidden">Your letter to Serena</legend>
+            <p class="mail-paper__dear" aria-hidden="true">Dear Serena,</p>
+            <label class="visually-hidden" for="letter-msg">Your letter</label>
+            <textarea id="letter-msg" name="message" required maxlength="4000" placeholder="write me anything&hellip;"></textarea>
+            <p class="mail-paper__love" aria-hidden="true">with love,</p>
+            <div class="mail-paper__row">
+              <div class="mail-field">
+                <label for="letter-from">your name</label>
+                <input id="letter-from" name="name" type="text" required maxlength="80" autocomplete="name">
+              </div>
+              <div class="mail-field">
+                <label for="letter-reply">your email, if you&#x27;d like a reply</label>
+                <input id="letter-reply" name="email" type="email" maxlength="120" autocomplete="email">
+              </div>
+            </div>
+          </fieldset>
         </div>
-        <button class="btn-send" type="submit">seal &amp; send</button>
-        <p class="letter__status" role="status"></p>
-      </fieldset>
-      <p class="letter__privacy">Your letter goes only to Serena. Nothing you write appears on this site.</p>
-    </form>
 
-    <div class="letter__thanks" id="sent">
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-        <path d="M70 18 c-3 -6 -11 -3 -8 3 l8 7 l8 -7 c3 -6 -5 -9 -8 -3z" class="f-rose"/>
-        <path d="M84 30 c-2 -4 -7 -2 -5 2 l5 4.5 l5 -4.5 c2 -4 -3 -6 -5 -2z" class="f-rose"/>
-        <rect x="12" y="36" width="76" height="50" rx="4" class="ink f-paper"/>
-        <path d="M13 38 L50 66 L87 38" class="ink"/>
-        <circle cx="50" cy="64" r="8" class="ink f-berry"/>
-        <path d="M50 68 l-3.5 -3.5 a2 2 0 0 1 3.5 -2.5 a2 2 0 0 1 3.5 2.5 Z" class="f-paper"/>
-      </svg>
-      <h2>Your letter's on its way</h2>
-      <p>It'll land right in my inbox. Thank you for writing!</p>
+        <fieldset class="mail-stamps">
+          <legend>pick a stamp</legend>
+          <div class="mail-stamps__sheet">
+        <label class="stamp-pick" style="--sp:#f8e1df">
+          <input type="radio" name="stamp" value="tulip" checked>
+          <span class="stamp-pick__stamp">
+          <svg class="stamp-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <path d="M24 44 V27" stroke="#5f8a48" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+            <path d="M24 38 C17 37 13 31 13 26 C19 27 23 31 24 38 Z" fill="#7aa857"/>
+            <path d="M24 35 C30 34 34 29 35 24 C29 25 25 29 24 35 Z" fill="#6f9a4c"/>
+            <path d="M15 12 C15 22 18 28 24 28 C30 28 33 22 33 12 L28.5 16.5 L24 9 L19.5 16.5 Z" fill="#e8676b" stroke="#a8463f" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M19.5 16.5 L24 22 L28.5 16.5" fill="none" stroke="#c9505a" stroke-width="1"/>
+          </svg>
+          <span class="stamp-pick__name">tulip</span>
+          </span>
+        </label>
+        <label class="stamp-pick" style="--sp:#e4ecd8">
+          <input type="radio" name="stamp" value="toadstool">
+          <span class="stamp-pick__stamp">
+          <svg class="stamp-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <path d="M19 30 C18 36 18 41 17 44 H31 C30 41 30 36 29 30 Z" fill="#fbf6ea" stroke="#3d2f27" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M8 30 C8 18 15 11 24 11 C33 11 40 18 40 30 Z" fill="#c9433b" stroke="#3d2f27" stroke-width="1.2" stroke-linejoin="round"/>
+            <g fill="#fbf6ea"><circle cx="17" cy="20" r="2.6"/><circle cx="27" cy="16.5" r="2.2"/><circle cx="33" cy="24" r="2.4"/><circle cx="22" cy="26" r="1.7"/></g>
+            <path d="M12 44 q12 -4 24 0" fill="none" stroke="#7aa857" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="stamp-pick__name">toadstool</span>
+          </span>
+        </label>
+        <label class="stamp-pick" style="--sp:#dfe6f3">
+          <input type="radio" name="stamp" value="moon">
+          <span class="stamp-pick__stamp">
+          <svg class="stamp-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <rect x="4" y="4" width="40" height="40" rx="2" fill="#2b3f5e"/>
+            <path d="M28 10 A15 15 0 1 0 38 34 A12 12 0 1 1 28 10 Z" fill="#f6dc8c" stroke="#c9a24a" stroke-width="1"/>
+            <g fill="#fff4c8"><path d="M12 13 l1 2.6 l2.6 1 l-2.6 1 l-1 2.6 l-1 -2.6 l-2.6 -1 l2.6 -1 z"/><circle cx="36" cy="14" r="1.2"/><circle cx="11" cy="35" r="1"/><circle cx="18" cy="9" r=".9"/></g>
+          </svg>
+          <span class="stamp-pick__name">moon</span>
+          </span>
+        </label>
+        <label class="stamp-pick" style="--sp:#f6e7a6">
+          <input type="radio" name="stamp" value="gemma">
+          <span class="stamp-pick__stamp">
+          <svg class="stamp-art" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <path d="M11 21 L9 6 L19 13 Z M37 21 L39 6 L29 13 Z" fill="#5b4334" stroke="#3d2f27" stroke-width="1.1" stroke-linejoin="round"/>
+            <path d="M11.5 18 L10.5 9.5 L16 13.5 Z M36.5 18 L37.5 9.5 L32 13.5 Z" fill="#e8a3a6"/>
+            <path d="M9 27 C9 16 16 11 24 11 C32 11 39 16 39 27 C39 36 33 41 24 41 C15 41 9 36 9 27 Z" fill="#fbf7f0" stroke="#3d2f27" stroke-width="1.2"/>
+            <path d="M24 11.2 C17 11.2 10 15.5 9.6 25 C10 30 13 34 18 36.5 L24 15.5 Z M24 11.2 C31 11.2 38 15.5 38.4 25 C38 30 35 34 30 36.5 L24 15.5 Z" fill="#5b4334"/>
+            <g fill="#5b9bd5"><ellipse cx="18" cy="25" rx="2.8" ry="3.1"/><ellipse cx="30" cy="25" rx="2.8" ry="3.1"/></g>
+            <g fill="#1f2a33"><ellipse cx="18" cy="25.2" rx=".9" ry="2.1"/><ellipse cx="30" cy="25.2" rx=".9" ry="2.1"/></g>
+            <path d="M22.4 30 h3.2 l-1.6 2 z" fill="#e8a3a6"/>
+            <path d="M24 32 q-1.6 1.8 -3.2 .9 M24 32 q1.6 1.8 3.2 .9" fill="none" stroke="#3d2f27" stroke-width=".8" stroke-linecap="round"/>
+          </svg>
+          <span class="stamp-pick__name">gemma</span>
+          </span>
+        </label>
+          </div>
+          <button class="mail-send" type="submit">seal &amp; send</button>
+          <p class="mail-status" role="status" aria-live="polite"></p>
+          <p class="mail-privacy">Your letter goes only to me. Nothing you write appears on this site.</p>
+        </fieldset>
+      </form>
+
+      <div class="mail-sent" id="sent" tabindex="-1" hidden>
+        <svg class="envelope" viewBox="0 0 240 160" aria-hidden="true" focusable="false">
+          <rect x="4" y="6" width="232" height="148" rx="6" class="env__back"/>
+          <path d="M6 150 L120 78 L234 150" class="env__fold"/>
+          <path d="M6 10 L120 92 L234 10" class="env__flap"/>
+          <g transform="translate(176 20) rotate(4 24 24)">
+            <rect x="-3" y="-3" width="54" height="54" rx="2" fill="#fbf8ef"/>
+            <g class="env__stamp env__stamp--tulip"><rect x="0" y="0" width="48" height="48" rx="1" fill="#f8e1df"/><path d="M24 44 V27" stroke="#5f8a48" stroke-width="2.4" stroke-linecap="round" fill="none"/><path d="M24 38 C17 37 13 31 13 26 C19 27 23 31 24 38 Z" fill="#7aa857"/><path d="M24 35 C30 34 34 29 35 24 C29 25 25 29 24 35 Z" fill="#6f9a4c"/><path d="M15 12 C15 22 18 28 24 28 C30 28 33 22 33 12 L28.5 16.5 L24 9 L19.5 16.5 Z" fill="#e8676b" stroke="#a8463f" stroke-width="1.2" stroke-linejoin="round"/><path d="M19.5 16.5 L24 22 L28.5 16.5" fill="none" stroke="#c9505a" stroke-width="1"/></g><g class="env__stamp env__stamp--toadstool"><rect x="0" y="0" width="48" height="48" rx="1" fill="#e4ecd8"/><path d="M19 30 C18 36 18 41 17 44 H31 C30 41 30 36 29 30 Z" fill="#fbf6ea" stroke="#3d2f27" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 30 C8 18 15 11 24 11 C33 11 40 18 40 30 Z" fill="#c9433b" stroke="#3d2f27" stroke-width="1.2" stroke-linejoin="round"/><g fill="#fbf6ea"><circle cx="17" cy="20" r="2.6"/><circle cx="27" cy="16.5" r="2.2"/><circle cx="33" cy="24" r="2.4"/><circle cx="22" cy="26" r="1.7"/></g><path d="M12 44 q12 -4 24 0" fill="none" stroke="#7aa857" stroke-width="2" stroke-linecap="round"/></g><g class="env__stamp env__stamp--moon"><rect x="0" y="0" width="48" height="48" rx="1" fill="#dfe6f3"/><rect x="4" y="4" width="40" height="40" rx="2" fill="#2b3f5e"/><path d="M28 10 A15 15 0 1 0 38 34 A12 12 0 1 1 28 10 Z" fill="#f6dc8c" stroke="#c9a24a" stroke-width="1"/><g fill="#fff4c8"><path d="M12 13 l1 2.6 l2.6 1 l-2.6 1 l-1 2.6 l-1 -2.6 l-2.6 -1 l2.6 -1 z"/><circle cx="36" cy="14" r="1.2"/><circle cx="11" cy="35" r="1"/><circle cx="18" cy="9" r=".9"/></g></g><g class="env__stamp env__stamp--gemma"><rect x="0" y="0" width="48" height="48" rx="1" fill="#f6e7a6"/><path d="M11 21 L9 6 L19 13 Z M37 21 L39 6 L29 13 Z" fill="#5b4334" stroke="#3d2f27" stroke-width="1.1" stroke-linejoin="round"/><path d="M11.5 18 L10.5 9.5 L16 13.5 Z M36.5 18 L37.5 9.5 L32 13.5 Z" fill="#e8a3a6"/><path d="M9 27 C9 16 16 11 24 11 C32 11 39 16 39 27 C39 36 33 41 24 41 C15 41 9 36 9 27 Z" fill="#fbf7f0" stroke="#3d2f27" stroke-width="1.2"/><path d="M24 11.2 C17 11.2 10 15.5 9.6 25 C10 30 13 34 18 36.5 L24 15.5 Z M24 11.2 C31 11.2 38 15.5 38.4 25 C38 30 35 34 30 36.5 L24 15.5 Z" fill="#5b4334"/><g fill="#5b9bd5"><ellipse cx="18" cy="25" rx="2.8" ry="3.1"/><ellipse cx="30" cy="25" rx="2.8" ry="3.1"/></g><g fill="#1f2a33"><ellipse cx="18" cy="25.2" rx=".9" ry="2.1"/><ellipse cx="30" cy="25.2" rx=".9" ry="2.1"/></g><path d="M22.4 30 h3.2 l-1.6 2 z" fill="#e8a3a6"/><path d="M24 32 q-1.6 1.8 -3.2 .9 M24 32 q1.6 1.8 3.2 .9" fill="none" stroke="#3d2f27" stroke-width=".8" stroke-linecap="round"/></g>
+            <rect x="-3" y="-3" width="54" height="54" rx="2" fill="none" stroke="#fbf8ef" stroke-width="5" stroke-dasharray="0 6" stroke-linecap="round"/>
+          </g>
+          <g transform="translate(34 24)" class="env__postmark">
+            <circle cx="22" cy="22" r="19"/><path d="M48 14 q6 -4 12 0 t12 0 M48 22 q6 -4 12 0 t12 0 M48 30 q6 -4 12 0 t12 0"/>
+          </g>
+          <circle cx="120" cy="92" r="13" class="env__seal"/>
+          <path d="M120 98 l-5.4 -5.4 a3 3 0 0 1 5.4 -3.8 a3 3 0 0 1 5.4 3.8 Z" class="env__heart"/>
+        </svg>
+        <h2>Your letter&#x27;s on its way!</h2>
+        <p>It&#x27;ll land right in my inbox. Thank you for writing to me.</p>
+        <button class="mail-again" type="button">write another letter</button>
+      </div>
+      <div class="mail-flight" aria-hidden="true"></div>
     </div>
-  </div>
 
-  <nav class="rooms" aria-label="Other rooms" data-rooms hidden></nav>
+    <nav class="rooms mail-rooms" aria-label="Other rooms" data-rooms hidden></nav>
+  </section>
 </main>
 <script src="assets/sections.js"></script>
 <script src="assets/rooms.js"></script>
