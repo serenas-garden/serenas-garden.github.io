@@ -110,13 +110,12 @@
         <path d="M6 64 l40 -2 l-4 4 l4 4 l-40 -2 Z" style="fill:#e8a3a6;opacity:.9"/>
       </svg>
 
-      <form class="mail-form" action="" method="POST" data-mailbox>
-        <!-- MAILBOX ADDRESS: when the Apps Script is deployed (CLAUDE.md, "The
-             mailbox"), paste its web app address (https://script.google.com/
-             macros/s/.../exec) into action="" above, and set "mailbox" to
-             status: "open" in assets/sections.js. Until then the form is shown
-             closed. The address is safe to publish: it can only send Serena a
-             letter. Her email address never appears in this repo. -->
+      <form class="mail-form" action="https://script.google.com/macros/s/AKfycbwASiN2uBhEygrrW2GQyrJG_zDW6qHWYQFYijzDB0vGTrsdgScpJwuV-mXDJbyUSWl4/exec" method="POST" data-mailbox>
+        <!-- MAILBOX ADDRESS: action="" above is the web app address of the
+             "Serena's mailbox" Apps Script (CLAUDE.md, "The mailbox"). It's safe
+             to publish: it can only send Serena a letter. Her email address
+             lives in the script, never in this repo. Empty it to close the
+             mailbox (the desk then shows "opens soon" and sends nothing). -->
         <input type="hidden" name="via" value="form">
         <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
@@ -199,7 +198,7 @@
           </div>
           <button class="mail-send" type="submit">seal &amp; send</button>
           <p class="mail-status" role="status" aria-live="polite"></p>
-          <p class="mail-privacy">Your letter goes only to me. Nothing you write appears on this site.</p>
+          <p class="mail-privacy">Your letter is emailed straight to me. Nothing you write appears on this site.</p>
         </fieldset>
       </form>
 

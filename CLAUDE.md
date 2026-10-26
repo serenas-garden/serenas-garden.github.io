@@ -3,8 +3,8 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status:** the cottage hub, **Travels**, **the Kitchen** and **the Gallery** (Art) are built. The mailbox (a
-writing desk) is built but closed until its Apps Script is deployed. Every other section is a
+**Status:** the cottage hub, **Travels**, **the Kitchen**, **the Gallery** (Art) and **the mailbox**
+(Send a Letter: a writing desk that emails letters to Serena) are built. Every other section is a
 labelled "still decorating" stub.
 
 ## Decisions (settled with Rex, October 2026)
@@ -26,8 +26,11 @@ labelled "still decorating" stub.
   (Rex asked for consistent, stylized letters; October 2026). **The address
   letters go to lives only in the copy of the script inside Apps Script
   (`SEND_TO`) and must never appear in this repo** (it would also carry her
-  surname). Deploying the script needs a Google sign-in, so Rex or Serena
-  does it, never Claude: see "The mailbox" below. (The first plan was
+  surname). It runs in **Rex's** Google account and sends from his Gmail
+  (Rex's call, October 2026: he didn't want to set it up himself, and he and
+  Serena are fine with letters coming from his address and copies sitting in
+  his Sent mail). Claude set it up in Rex's own signed-in Chrome; Claude
+  never signs in to anything. See "The mailbox" below. (The first plan was
   Web3Forms, but its free plan can't style emails; custom HTML is its paid
   plan.)
 - **Look:** fairy forest / cottagecore, from her own notes. The sky follows the
@@ -319,34 +322,33 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
   capped, email checked, the honeypot), sends at most 12 an hour
   (`PER_HOUR`), and answers the page in JSON. It sends with `MailApp`
   (permission to send email only, not to read any).
-- **Setting it up** (Rex or Serena, signed in to Google; about five
-  minutes):
-  1. Go to script.google.com, signed in to the account letters should be
-     sent from, and make a New project ("Serena's mailbox").
-  2. Replace everything in `Code.gs` with the whole of
-     `tools/mailbox-apps-script.js`.
-  3. In that copy only, put the address letters go to in `SEND_TO`.
-  4. Pick `sendTestLetter` in the toolbar and press Run. Google asks for
-     permission to send email (it warns the app isn't verified, since it's
-     your own: Advanced, then Go to Serena's mailbox). A sample letter
-     arrives.
-  5. Deploy, New deployment, gear, Web app. Execute as: Me. Who has access:
-     Anyone. Deploy, and copy the Web app URL (ending in `/exec`).
-  6. Paste that URL into the form's `action` in `mailbox.html` (marked
-     `MAILBOX ADDRESS`) and set `mailbox` to `status: "open"` in
-     `sections.js`. Until then the desk shows closed with an "opens soon"
-     note and sends nothing.
-- **Whose account:** each letter is sent from the account the script runs
-  in, and a copy stays in that account's Sent mail. So for real letters it
-  should run in Serena's own account (then only she ever sees them), unless
-  she and Rex are happy for copies to sit in his. Testing in Rex's account,
-  sending to Rex, is fine.
-- **Changing the letter's look:** edit `tools/mailbox-apps-script.js`, paste
-  it into Apps Script again (keep its `SEND_TO`), then Deploy, Manage
-  deployments, edit, Version: New version. The URL stays the same.
-- **October 2026:** Rex wants letters to go to Serena's Gmail, tested first
-  with his own. Claude emailed Rex a rendered sample from his Gmail to show
-  what one looks like; the script wasn't deployed yet.
+- **Where it lives:** the Apps Script project **"Serena's mailbox"** in
+  Rex's Google account (script.google.com), deployed as a web app
+  ("the garden mailbox": execute as Rex, anyone can access). Its `/exec`
+  address is the form's `action` in `mailbox.html` (marked `MAILBOX
+  ADDRESS`); it's safe to publish, since it can only send Serena a letter.
+  `SEND_TO` in that copy is Serena's address; it is never in this repo.
+  Letters come from Rex's Gmail under the name "Serena's Garden", and a
+  copy of each stays in his Sent mail, so the page says "Your letter is
+  emailed straight to me" (not "only to me"). Rex and Serena are fine with
+  that.
+- **Changing the letter's look:** edit `tools/mailbox-apps-script.js`, then
+  in the Apps Script project paste it over `Code.gs` (keeping its `SEND_TO`
+  line: never paste Serena's address back into the repo), save, and
+  Deploy, Manage deployments, the pencil, Version: New version, Deploy. The
+  `/exec` address stays the same, so the page needs no change. Pasting with
+  `pbcopy` needs `LANG=en_US.UTF-8`, or the emoji turn to mojibake.
+- **Closing it:** empty the form's `action`; the desk shows "opens soon".
+- **Setting one up from scratch** (if it ever moves accounts): new project
+  at script.google.com, paste the file, set `SEND_TO`, Run
+  `sendTestLetter` once to grant "send email as you" (Google warns the app
+  is unverified because it's your own: Advanced, then Go to), then Deploy,
+  New deployment, Web app, execute as Me, access Anyone, and put the new
+  `/exec` address in the form.
+- **History (October 2026):** Claude first emailed Rex a rendered sample.
+  Then it was deployed sending to Rex, a real letter written on the page
+  arrived in his inbox, and only then was `SEND_TO` switched to Serena's
+  address (version 2). No test letters were sent to Serena.
 
 ## The Gallery
 
@@ -688,8 +690,6 @@ surname).
 
 ## Open items
 
-- Deploy the mailbox's Apps Script (see "The mailbox"): test in Rex's
-  account, then set it up for real letters to Serena.
 - Serena reviews and rewrites the draft copy in `sections.js`, and names the
   toadstool.
 - Real "currently" entries. Then set `sample: false`.

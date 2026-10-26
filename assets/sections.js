@@ -83,6 +83,6 @@ window.SECTIONS = [
     object: "envelope",
     guide: "write me a letter! it goes straight to me",
     blurb: "Write me a note. It goes straight to my inbox.",
-    status: "soon"
+    status: "open"
   }
 ];
