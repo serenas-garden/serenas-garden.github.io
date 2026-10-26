@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=Pixelify+Sans:wght@400;500&family=Caveat:wght@600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/sky.js"></script>
+<script src="assets/wallpaper.js"></script>
 <script src="assets/weather.js"></script>
 </head>
 <body class="home">
@@ -370,10 +371,30 @@
 
   <div class="wrap">
     <header class="room-head">
+      <div class="wall-controls">
       <button class="switch" type="button" data-mode="auto" hidden>
         <span class="switch__plate" aria-hidden="true"><span class="switch__toggle"></span></span>
         <span class="switch__label">sky: real time</span>
       </button>
+
+      <!-- the wallpaper sample fan: opens the sample book; pick one and it's
+           hung strip by strip (assets/wallpaper-picker.js) -->
+      <div class="wp-picker" data-wp-picker hidden>
+        <button class="wp-fan" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="wp-book">
+          <span class="wp-fan__cards" aria-hidden="true" data-wp-fan></span>
+          <span class="wp-fan__label" data-wp-label>wallpaper</span>
+        </button>
+        <div class="wp-book" id="wp-book" role="dialog" aria-labelledby="wp-book-title" hidden>
+          <span class="wp-book__rings" aria-hidden="true"></span>
+          <p class="wp-book__eyebrow">the sample book</p>
+          <h2 class="wp-book__title" id="wp-book-title">Pick a wallpaper</h2>
+          <p class="wp-book__note">I&#x27;ll hang it in every room with this wallpaper.</p>
+          <div class="wp-book__grid" data-wp-grid></div>
+          <button class="wp-book__close" type="button" data-wp-close aria-label="Close the sample book">&times;</button>
+        </div>
+        <p class="visually-hidden" aria-live="polite" data-wp-live></p>
+      </div>
+      </div>
 
       <div class="sign">
         <span class="sign__rope sign__rope--l" aria-hidden="true"></span>
@@ -789,5 +810,6 @@
 <script src="assets/gemma-kit.js"></script>
 <script src="assets/gemma.js"></script>
 <script src="assets/gemma-outside.js"></script>
+<script src="assets/wallpaper-picker.js"></script>
 </body>
 </html>

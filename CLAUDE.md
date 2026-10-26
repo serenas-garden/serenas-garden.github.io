@@ -97,7 +97,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   It opens onto:
   a bunting-and-fairy-light **garland** (pennant/bulb positions along the sag
   are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
-  **light switch** (the sky toggle), a tear-off **wall calendar** (real date
+  **light switch** (the sky toggle) with the **wallpaper sample fan** beside
+  it (see "Wallpapers"), a tear-off **wall calendar** (real date
   and tonight's moon), the **window** with gingham curtains, ivy and a
   **flower box** (the window itself is not a link; a brass **telescope**
   standing outside in the meadow, aimed at the moon, is the Moon Paparazzi
@@ -141,7 +142,7 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   description, `robots noindex`, `theme-color` (sky.js retints it at night),
   Open Graph + Twitter card tags pointing at `assets/og.png`, favicon +
   `apple-touch-icon`, preconnect + Google Fonts `<link>`, `style.css`, then
-  `sky.js`. Copy it from an existing page when adding one.
+  `sky.js` and `wallpaper.js`. Copy it from an existing page when adding one.
 - `404.html`: uses root-absolute `/assets/...` paths on purpose (Pages serves
   it at whatever URL was missed). That's safe because the site is at the
   domain root.
@@ -181,6 +182,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   built from `sections.js` (current page marked `aria-current`; sections with
   an `href` link out in a new tab).
 - `assets/mailbox.js`: the letter desk's behaviour (sending, the envelope).
+- `assets/wallpaper.js` (every page's head) and `assets/wallpaper-picker.js`
+  (home page): the wallpapers. See "Wallpapers".
 - `assets/og.png` (1200×630): the link-preview image shown when the site is
   texted or posted. `assets/apple-touch-icon.png` (180×180): the toadstool's
   face, for iPhone home screens. Both were rendered from small HTML cards with
@@ -190,7 +193,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - `assets/favicon.svg`: toadstool.
 - `README.md`: a short public description, shown on the GitHub repo page.
 - `tools/`: Python scripts (standard library only) that generate the travels
-  map data and stamp drawings, plus the place checker. Not loaded by any page.
+  map data, stamp drawings and wallpapers, plus the place checker and the
+  art preparer; and the mailbox's Apps Script with its letter preview. Not
+  loaded by any page.
 - `CREDITS.md`: third-party material and its licence.
 - `AGENTS.md`: a short pointer to this file for other coding agents (Codex
   reads that name). Keep it a pointer; never copy these notes into it, or the
@@ -292,6 +297,52 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
   the open postcard. Any touch of the globe or its buttons stops it.
 - **Links:** `travels.html#kyoto` opens on a place (the id from the data).
 - Caveat is loaded on this page too, for the handwritten notes.
+
+## Wallpapers
+
+Rex asked (October 2026) for a way to change the wallpaper from the home
+page, spreading to every room with the same wallpaper.
+
+- **Six wallpapers**, all drawn in code (inline SVG tiles plus CSS stripes
+  or checks): **garden stripe** (the original, and the default), **wildflower**
+  (a ditsy floral: pink blossoms, forget-me-nots, daisies, buds), **woodland**
+  (toadstools, ferns, acorns, a snail, clover, on soft sage), **picnic
+  gingham** (a rose check; plum underneath at night), **wisteria** (a garden
+  trellis dripping with wisteria) and **moonlit** (gold crescent moons and
+  sparkles on pale periwinkle, deep navy at night, a nod to Moon Paparazzi).
+  Each has a day and a night look.
+- **Where they're drawn:** `tools/build_wallpapers.py` holds the drawings
+  and writes the CSS between the `wallpapers:start` / `wallpapers:end`
+  markers in style.css: for each, `[data-wp="<id>"]` sets `--wp-img` (the
+  layers, every layer at position 0 0), `--wp-ground` (the paint under it)
+  and `--wp-op` (how strongly it shows), with night values under
+  `[data-dark="true"]`. `body` and `body::before` paint from those. Edit
+  there and rerun; never edit the generated block by hand. A new wallpaper
+  needs an entry there and in `WALLPAPERS` in `assets/wallpaper.js`.
+- **Which is up:** `assets/wallpaper.js`, in every page's head right after
+  sky.js, sets `<html data-wp>` before the page is drawn, from this
+  browser's choice (localStorage `sg-wallpaper`; garden stripe by default).
+  It's remembered across visits, and other open tabs of the site follow a
+  change straight away. **The kitchen and the gallery keep their own
+  wallpapers** (their more specific rules win); every other page (the
+  cottage, Travels, the mailbox, the stubs, 404) shows the chosen one.
+- **The picker** (`assets/wallpaper-picker.js`, home page only): a fan of
+  narrow sample strips, one per wallpaper, pivoting on a brass rivet, beside
+  the light switch (the one on the walls pulled out of the fan; it spreads
+  when you point at it), labelled "wallpaper: <name>". It opens **the sample
+  book**: a ring-bound card with a pinked-edge sample of each at real size,
+  its name and a line about it, and an "on the walls" tag on the current
+  one. Esc, the ×, or a click outside closes it. Each card shows a
+  wallpaper by setting `data-wp` on itself, so the samples always match.
+- **Hanging it:** pick one and it's hung strip by strip, left to right:
+  each strip of the new paper unrolls down the wall from the ceiling,
+  behind the furniture (a layer just in front of the old wallpaper), with
+  a roll of paper travelling down its edge; each strip's pattern is offset
+  by its own left edge so they line up into one wallpaper exactly where the
+  real one goes. Then the real one is switched and the strips removed. The
+  toadstool guide narrates ("ooh, woodland! hanging it now…", "all
+  done!…"). Reduced motion: it just changes. On phones the fan sits beside
+  the switch and the book opens from the left of the header.
 
 ## The mailbox
 
@@ -623,8 +674,9 @@ is the heart of the home page, so treat her with care.
   door lantern scale their glow by it. Animate glows with `transform` only
   (the `breathe` keyframes): an opacity animation would override `--lamp` and
   light them up in daytime.
-- **Wallpaper:** soft stripes plus a sparse sprig pattern on `body::before`
-  (inline SVG data URI). It shows on every page.
+- **Wallpaper:** whichever one the visitor picked (see "Wallpapers"), on
+  `body::before`; garden stripe (soft stripes and sparse sprigs) by default.
+  The kitchen and gallery have their own.
 - **Type:** Cormorant Garamond (display), Nunito (body), Pixelify Sans (the
   guide, tags, eyebrows: the "game UI" voice). Loaded via `<link>` tags in
   each page's `<head>` (not `@import`, which would delay them). The home page
