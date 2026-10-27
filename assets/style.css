@@ -2375,7 +2375,7 @@ body[data-section="kitchen"]::before {
 }
 :root[data-dark="true"] body[data-section="kitchen"]::before { opacity: .15; }
 
-.kroom, .gal-room, .mail-room {
+.kroom, .gal-room, .mail-room, .den-room {
   position: relative;
   z-index: 1;
   display: flex;
@@ -2383,8 +2383,8 @@ body[data-section="kitchen"]::before {
   min-height: 100vh;
   overflow-x: clip;
 }
-.k-head, .gal-head { grid-template-columns: 1fr auto 1fr; padding-bottom: 6px; }
-.k-head .sign, .gal-head .sign { grid-column: 2; }
+.k-head, .gal-head, .den-head { grid-template-columns: 1fr auto 1fr; padding-bottom: 6px; }
+.k-head .sign, .gal-head .sign, .den-head .sign { grid-column: 2; }
 .k-back {
   grid-column: 1;
   grid-row: 1;
@@ -2400,7 +2400,7 @@ body[data-section="kitchen"]::before {
   box-shadow: 0 6px 12px -8px rgba(0, 0, 0, .45);
 }
 .k-back:hover { color: var(--berry); border-color: var(--berry); }
-.kroom::before, .gal-room::before, .mail-room::before { /* the room's corners fall into a little shade */
+.kroom::before, .gal-room::before, .mail-room::before, .den-room::before { /* the room's corners fall into a little shade */
   content: "";
   position: absolute;
   inset: 0;
@@ -2408,8 +2408,8 @@ body[data-section="kitchen"]::before {
   pointer-events: none;
   background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(90, 60, 25, 0) 55%, rgba(90, 60, 25, .13));
 }
-:root[data-dark="true"] .kroom::before, :root[data-dark="true"] .gal-room::before, :root[data-dark="true"] .mail-room::before { background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .35)); }
-.kroom > .wrap, .gal-room > .wrap, .mail-room > .wrap { position: relative; z-index: 2; }
+:root[data-dark="true"] .kroom::before, :root[data-dark="true"] .gal-room::before, :root[data-dark="true"] .mail-room::before, :root[data-dark="true"] .den-room::before { background: radial-gradient(ellipse 75% 70% at 50% 42%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .35)); }
+.kroom > .wrap, .gal-room > .wrap, .mail-room > .wrap, .den-room > .wrap { position: relative; z-index: 2; }
 .kitchen { position: relative; margin: 12px 0 0; }
 .k-baseboard {
   position: relative;
@@ -2937,8 +2937,8 @@ body[data-section="kitchen"]::before {
   .k-floor__rug { left: calc(50% - 60px); }
 }
 @media (max-width: 640px) {
-  .k-head.room-head, .gal-head.room-head, .mail-head.room-head { grid-template-columns: 1fr; }
-  .k-head .sign, .gal-head .sign, .mail-head .sign { grid-column: 1 / -1; grid-row: 1; }
+  .k-head.room-head, .gal-head.room-head, .mail-head.room-head, .den-head.room-head { grid-template-columns: 1fr; }
+  .k-head .sign, .gal-head .sign, .mail-head .sign, .den-head .sign { grid-column: 1 / -1; grid-row: 1; }
   .k-back { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
   .k-floor { min-height: 200px; }
   .k-floor__view { perspective: 520px; perspective-origin: 50% -200px; }
@@ -3004,7 +3004,7 @@ body[data-section="art"]::before {
 .gallery__noscript { text-align: center; color: var(--ink-soft); margin: 30px 0; }
 
 /* a little paper note under the sign: how to wake the paintings up */
-.gallery__hint {
+.gallery__hint, .den-hint {
   position: relative;
   width: max-content;
   max-width: 100%;
@@ -3018,7 +3018,7 @@ body[data-section="art"]::before {
   box-shadow: 0 5px 8px -6px rgba(0, 0, 0, .45);
   transform: rotate(-1.2deg);
 }
-.gallery__hint::before {   /* washi tape */
+.gallery__hint::before, .den-hint::before {   /* washi tape */
   content: "";
   position: absolute;
   top: -8px; left: 50%;
@@ -3028,7 +3028,7 @@ body[data-section="art"]::before {
   transform: rotate(3deg);
   clip-path: polygon(0 10%, 4% 0, 8% 12%, 12% 0, 100% 0, 96% 90%, 100% 100%, 92% 88%, 88% 100%, 0 100%, 4% 50%);
 }
-:root[data-dark="true"] .gallery__hint { filter: brightness(.85); }
+:root[data-dark="true"] .gallery__hint, :root[data-dark="true"] .den-hint { filter: brightness(.85); }
 .gallery__hint--tap { display: none; }
 @media (hover: none) {
   .gallery__hint--point { display: none; }
@@ -3378,7 +3378,7 @@ body[data-section="art"]::before {
   box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .3);
 }
 :root[data-dark="true"] .gal-dado::before { border-color: #0e130f; }
-.gal-floor {
+.gal-floor, .den-floor {
   position: relative;
   z-index: 2;
   flex: 1 0 auto;
@@ -3389,7 +3389,7 @@ body[data-section="art"]::before {
     repeating-linear-gradient(0deg, rgba(0, 0, 0, .09) 0 2px, transparent 2px 30px),
     linear-gradient(rgba(0, 0, 0, .14), transparent 40%);
 }
-.gal-floor::before {     /* the skirting board */
+.gal-floor::before, .den-floor::before {     /* the skirting board */
   content: "";
   position: absolute;
   left: 0; right: 0; bottom: 100%;
@@ -3521,6 +3521,589 @@ body[data-section="art"]::before {
   .viewer__go--next { right: 16px; }
   .viewer__caption { padding: 0 52px; }
   .viewer__note { font-size: 15px; }
+}
+
+/* ============================== the den ==============================
+   currently.html: what Serena's watching, reading and listening to, as a
+   den of the cottage. It keeps the cottage's wallpaper (whichever one is up,
+   wallpaper.js), with the garland and the hanging sign, then one long shelf
+   with an old TV, a book and a cathedral radio on it and a card hanging under
+   each (currently.js fills them in from currently-data.js). Then the "just
+   finished" notepad, and the floor: an armchair, a reading lamp, the knitting
+   and a wood stove, where Gemma sits to watch the fire. Paper, the TV's
+   picture and the radio's dial keep fixed colours (dimmed a little at night);
+   the furniture uses theme tokens. */
+
+.den-hint { z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.den-hint__date { font-size: 10.5px; color: #6c7a62; }
+.den-hint__date:empty { display: none; }
+
+.den {
+  --shelf-edge: var(--ink);
+  position: relative;
+  z-index: 2;
+  width: min(1180px, 100% - 48px);
+  margin: 26px auto 0;
+}
+:root[data-dark="true"] .den { --shelf-edge: #0e130f; }
+.den-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.spot { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.spot[hidden] { display: none; }
+.spot__things {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  height: 252px;
+}
+.den-shadow { fill: rgba(0, 0, 0, .2); }
+
+/* the shelf: one long plank, in a piece under each thing */
+.spot__shelf {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(var(--wood-lite) 0 6px, var(--wood) 6px 15px, var(--wood-dark) 15px);
+  border: 0 solid var(--shelf-edge);
+  border-block-width: 1.5px;
+  box-shadow: 0 12px 12px -10px rgba(0, 0, 0, .4);
+}
+.spot:first-child .spot__shelf { border-left-width: 1.5px; border-radius: 5px 0 0 5px; }
+.spot:last-child .spot__shelf { border-right-width: 1.5px; border-radius: 0 5px 5px 0; }
+/* brackets: one at each end of the shelf, and one under each join */
+.spot__bracket { position: absolute; top: 100%; left: 0; width: 22px; height: auto; overflow: visible; transform: translateX(-50%); }
+.spot:first-child .spot__bracket { left: 3%; transform: none; }
+.spot__bracket--r { display: none; }
+.spot:last-child .spot__bracket--r { display: block; left: auto; right: 3%; transform: scaleX(-1); }
+
+/* each card hangs from two little brass hooks under the shelf */
+.spot__hang {
+  position: relative;
+  width: min(296px, 88%);
+  padding-top: 26px;
+  transform-origin: 50% 0;
+  transform: rotate(var(--tilt, 0deg));
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, .28));
+}
+.spot--watching  .spot__hang { --tilt: -1.2deg; }
+.spot--reading   .spot__hang { --tilt: .9deg; }
+.spot--listening .spot__hang { --tilt: -.6deg; }
+.spot__hang:empty { display: none; }
+.spot__hang::before, .spot__hang::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 18%;
+  width: 8px;
+  height: 34px;
+  margin-left: -4px;
+  background:
+    radial-gradient(circle at 4px 4px, #e2bb57 0 2.4px, #8a6a2a 2.6px 3.4px, transparent 3.6px),
+    linear-gradient(90deg, transparent 3px, #a68356 3px 5px, transparent 5px) 0 7px / 8px 27px no-repeat;
+}
+.spot__hang::after { left: 82%; }
+
+/* ----- the cards ----- */
+.card { position: relative; color: var(--note-ink); text-align: left; }
+:root[data-dark="true"] .card { filter: brightness(.86); }
+.card h2 { margin: 0; }
+.card__bar { margin: 0; font: 400 11px/1 var(--pixel); letter-spacing: .08em; }
+.card__note { margin: 12px 0 0; font: 600 22px/1.05 "Caveat", var(--display); color: #3b4a8c; }
+
+/* watching: a clipping from the TV guide, torn along the bottom */
+.card--watching {
+  padding: 0 18px 26px;
+  background:
+    repeating-linear-gradient(0deg, rgba(60, 50, 30, .035) 0 1px, transparent 1px 3px),
+    #f3efe4;
+  clip-path: polygon(0 0, 100% 0, 100% 94%, 97% 97%, 93% 94.5%, 88% 98%, 83% 95%, 77% 99%, 71% 95.5%, 64% 98.5%, 58% 95%, 51% 99%, 45% 95.5%, 38% 98%, 32% 95%, 25% 99%, 19% 95.5%, 12% 98.5%, 6% 95%, 0 98%);
+}
+.card--watching .card__bar {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 -18px 14px;
+  padding: 8px 18px 7px;
+  color: #f3efe4;
+  background: #2f3a2c;
+}
+.card__tv { color: #f2c46a; }
+.card--watching .card__title { font: 700 32px/1 var(--display); letter-spacing: -.01em; }
+.card--watching .card__line { margin: 6px 0 0; font: italic 600 18px/1.2 var(--display); color: #5d6a55; }
+
+/* reading: the card from the pocket inside a library book */
+.card--reading {
+  padding: 12px 16px 16px;
+  border-radius: 3px;
+  background:
+    linear-gradient(#c4564b, #c4564b) 0 33px / 100% 1.5px no-repeat,
+    repeating-linear-gradient(transparent 0 25px, rgba(70, 110, 170, .33) 25px 26px) 0 36px / 100% calc(100% - 36px) no-repeat,
+    #f0deb2;
+}
+.card--reading .card__bar { display: flex; justify-content: space-between; margin-bottom: 15px; color: #a8463f; }
+.card__fields { margin: 0; }
+.card__field { display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 6px; }
+.card__field dt { font: 400 10.5px/26px var(--pixel); color: #8a6f45; }
+.card__field dd { margin: 0; font: 15px/26px "Courier New", ui-monospace, monospace; color: #2a2a3a; }
+.card--reading .card__title { font: 700 15px/26px "Courier New", ui-monospace, monospace; }
+.card__out { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.card__stamp {
+  display: grid;
+  justify-items: center;
+  padding: 4px 9px 3px;
+  font: 400 10px/1.3 var(--pixel);
+  text-transform: uppercase;
+  color: #6d4ea0;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  opacity: .82;
+  transform: rotate(-7deg);
+}
+.card__stamp b { font: 500 14px/1.1 var(--pixel); letter-spacing: .08em; }
+.card__who { margin-right: 8px; font: 600 30px/1 "Caveat", var(--display); color: #2c4a8f; transform: rotate(-3deg); }
+
+/* listening: a title strip, like the ones in a jukebox */
+.card--listening {
+  padding: 12px 14px 14px;
+  text-align: center;
+  background: #fbf6ea;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 4px #fbf6ea, inset 0 0 0 5.5px #c4564b;
+}
+.card--listening .card__bar { color: #a8463f; }
+.card--listening .card__title { margin-top: 8px; font: 700 34px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.card__band {
+  position: relative;
+  margin: 10px -14px 0;
+  padding: 8px 32px 7px;
+  font: 800 11.5px/1.3 var(--body);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #cf6670;
+}
+.card__band::before, .card__band::after { content: "\266A"; position: absolute; top: 50%; font-size: 16px; transform: translateY(-50%); }
+.card__band::before { left: 11px; }
+.card__band::after { right: 11px; }
+.card--listening .card__line { margin: 8px 0 0; font: italic 600 16px/1.2 var(--display); color: #5d6a55; }
+
+/* anything else she's into: a pinned note */
+.den-notes { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin: 46px 0 0; padding: 0; list-style: none; }
+.den-notes[hidden] { display: none; }
+.card--note {
+  width: min(240px, 100%);
+  padding: 24px 14px 16px;
+  text-align: center;
+  background: var(--note-sun);
+  box-shadow: 0 10px 14px -10px rgba(0, 0, 0, .55);
+  transform: rotate(-1.5deg);
+}
+.card--note:nth-child(even) { background: var(--note-sage); transform: rotate(1.2deg); }
+.card--note::before { /* push pin */
+  content: "";
+  position: absolute;
+  top: 7px; left: 50%;
+  width: 13px; height: 13px;
+  margin-left: -6.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .7) 0 2px, #a8463f 3px);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, .35);
+}
+.card--note .card__bar { color: #4f6b40; }
+.card--note .card__title { margin-top: 4px; font: 600 25px/1.05 "Caveat", var(--display); }
+.card--note .card__line { margin: 4px 0 0; font-size: 13px; color: #5d6a55; }
+
+/* ----- the TV ----- */
+.tv {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: block;
+  width: min(280px, 92%);
+  aspect-ratio: 300 / 240;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.tv:focus-visible, .book:focus-visible, .radio:focus-visible { outline: 2px dashed var(--berry); outline-offset: 6px; border-radius: 14px; }
+.tv::before {             /* the picture's glow on the wall */
+  content: "";
+  position: absolute;
+  left: -14%; right: 10%; top: 4%; bottom: -12%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(150, 190, 255, .55), rgba(150, 190, 255, 0));
+  opacity: 0;
+}
+.tv.is-on::before { opacity: calc(.2 + var(--lamp) * .8); }
+.tv__set { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tv__rod { fill: none; stroke: #9b968c; stroke-width: 2.6; stroke-linecap: round; }
+.tv__leg { fill: none; stroke: var(--wood-dark); stroke-width: 7; stroke-linecap: round; }
+.tv__bevel { fill: none; stroke: var(--wood-lite); stroke-width: 2; }
+.tv__shine { stroke: rgba(255, 255, 255, .28); stroke-width: 3; stroke-linecap: round; }
+.tv__surround { fill: #3b2e27; }
+.tv__panel { fill: var(--wood-dark); opacity: .35; }
+.tv__knob-cap { fill: var(--wood-lite); }
+.tv__knob { transform-box: fill-box; transform-origin: center; }
+.tv.is-on .tv__knob { transform: rotate(75deg); }
+.tv.is-on .tv__knob--b { transform: rotate(-40deg); }
+.tv__light { fill: #5e4236; }
+.tv.is-on .tv__light { fill: #ff7a5c; }
+.tv__grille { stroke: var(--wood-dark); stroke-width: 3.4; stroke-linecap: round; }
+.tv__plate { fill: var(--gold); }
+.tv__brand { font: 500 6.4px/1 var(--pixel); fill: #4a3520; text-anchor: middle; letter-spacing: .05em; }
+.tv__screen {
+  position: absolute;
+  left: 11.667%; top: 31.25%;
+  width: 55.333%; height: 51.667%;
+  overflow: hidden;
+  border-radius: 18% / 22%;
+  background: radial-gradient(ellipse at 50% 45%, #46524b, #1a1f1c 78%);
+  box-shadow: inset 0 0 14px rgba(0, 0, 0, .75);
+  container-type: size;
+}
+.tv__show { position: absolute; inset: 0; visibility: hidden; }
+.tv.is-on .tv__show { visibility: visible; }
+.tv__scene { position: absolute; inset: 0; display: none; width: 100%; height: 100%; }
+.tv__scene.is-showing { display: block; }
+.tv__card {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: grid;
+  justify-items: center;
+  gap: 3cqh;
+  padding: 16cqh 6cqw 9cqh;
+  text-align: center;
+  background: linear-gradient(rgba(4, 7, 13, 0), rgba(4, 7, 13, .8) 52%);
+}
+.tv__title { font: 700 9cqw/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: #f3d48c; text-shadow: 0 0 1.4cqw rgba(243, 212, 140, .6); }
+.tv.is-long .tv__title { font-size: 7cqw; }
+.tv__sub { font: 700 5.6cqw/1.1 var(--body); letter-spacing: .03em; color: #ebe5d6; }
+.tv__sub:empty { display: none; }
+.tv__glass {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(128deg, rgba(255, 255, 255, .2) 0 16%, rgba(255, 255, 255, 0) 32%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, .5));
+}
+.tv.is-on .tv__glass {
+  background:
+    repeating-linear-gradient(rgba(0, 0, 0, .16) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    linear-gradient(128deg, rgba(255, 255, 255, .12) 0 16%, rgba(255, 255, 255, 0) 32%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, .45));
+}
+
+/* ----- the book: stands on the shelf, and opens on its title page ----- */
+.spot--reading { --bw: clamp(86px, 9vw, 124px); }
+.book {
+  --cover: #2a4466;
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--bw);
+  height: calc(var(--bw) * 1.42);
+  margin-bottom: 1px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  perspective: 1200px;
+  -webkit-tap-highlight-color: transparent;
+}
+.book.is-open { transform: translateX(50%); }      /* so the open book is in the middle */
+.book::after {             /* its shadow on the shelf */
+  content: "";
+  position: absolute;
+  left: -4%; right: -12%; bottom: -5px;
+  height: 9px;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .3), rgba(0, 0, 0, 0));
+}
+.book.is-open::after { left: -104%; }
+.book__page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--bw) * .03);
+  padding: 10% 11% 22%;
+  color: #3a3226;
+  text-align: center;
+  background: linear-gradient(90deg, #ddd1b5, #f8f2e2 9%, #fbf7ec);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 1px 1px 0 #efe6d0, 2px 2px 0 #d8ccb0, 3px 3px 0 #efe6d0, 4px 4px 0 #d3c6a8, 5px 5px 0 #ece2ca, 8px 10px 12px -5px rgba(0, 0, 0, .45);
+}
+.book__orn { width: 46%; height: auto; color: #b0956a; }
+.book__ptitle { font: 700 calc(var(--bw) * .125)/1.05 var(--display); }
+.book__psub { font: italic 600 calc(var(--bw) * .092)/1.1 var(--display); }
+.book__pby { margin-top: 4%; font: 400 calc(var(--bw) * .06)/1.2 var(--pixel); letter-spacing: .04em; color: #7a6a50; }
+.book__flower { position: absolute; right: 8%; bottom: 4%; width: 24%; height: auto; transform: rotate(14deg); }
+.book__cover { position: absolute; inset: -3px -5px -4px -3px; transform-origin: 0 50%; transform-style: preserve-3d; }
+.book.is-open .book__cover { transform: rotateY(-176deg); }
+.book__front, .book__inside {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px 7px 7px 3px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.book__front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--bw) * .035);
+  padding: 13% 11% 12% 17%;
+  color: #e9cb7a;
+  text-align: center;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .38) 0 5%, rgba(255, 255, 255, .14) 6.5%, rgba(0, 0, 0, .12) 8%, rgba(0, 0, 0, 0) 10%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .04) 0 1px, rgba(255, 255, 255, 0) 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, .05) 0 1px, rgba(0, 0, 0, 0) 1px 3px),
+    var(--cover);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25), 5px 6px 10px -4px rgba(0, 0, 0, .45);
+}
+.book__front::before {     /* a gold-tooled frame */
+  content: "";
+  position: absolute;
+  inset: 7% 7% 7% 13%;
+  border: 1.5px solid rgba(233, 203, 122, .8);
+  border-radius: 2px;
+  outline: 1px solid rgba(233, 203, 122, .45);
+  outline-offset: 3px;
+  pointer-events: none;
+}
+.book__ctitle { font: 700 calc(var(--bw) * .14)/1 var(--display); text-shadow: 0 1px 0 rgba(0, 0, 0, .35); }
+.book.is-long .book__ctitle { font-size: calc(var(--bw) * .115); }
+.book__csub { font: italic 600 calc(var(--bw) * .09)/1.1 var(--display); }
+.book__cby { margin-top: 2%; font: 400 calc(var(--bw) * .056)/1.2 var(--pixel); letter-spacing: .1em; text-transform: uppercase; opacity: .9; }
+.book__csub:empty, .book__psub:empty, .book__pby:empty, .book__cby:empty { display: none; }
+.book__emblem { width: 30%; height: auto; }
+.book__inside {             /* the endpaper, with her bookplate */
+  display: grid;
+  place-items: center;
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(circle, #d9a3a9 0 1.8px, rgba(0, 0, 0, 0) 2.3px) 0 0 / 14px 14px,
+    radial-gradient(circle, #a9c49a 0 1.4px, rgba(0, 0, 0, 0) 1.9px) 7px 7px / 14px 14px,
+    #f4ead6;
+  box-shadow: inset -6px 0 8px -4px rgba(0, 0, 0, .25);
+}
+.book__plate {
+  display: grid;
+  justify-items: center;
+  width: 66%;
+  padding: 9% 6% 10%;
+  color: #3a3226;
+  text-align: center;
+  background: #fbf7ec;
+  border: 1.5px solid #b0956a;
+  outline: 1px solid #b0956a;
+  outline-offset: -5px;
+}
+.book__plate svg { width: 36%; height: auto; }
+.book__plate small { font: italic 600 calc(var(--bw) * .075)/1.2 var(--display); }
+.book__plate b { font: 600 calc(var(--bw) * .15)/1 "Caveat", var(--display); color: #2c4a8f; }
+.book__ribbon {
+  position: absolute;
+  left: 66%;
+  bottom: -16px;
+  width: 8px;
+  height: 24px;
+  background: #b8423f;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+}
+.book.is-open .book__ribbon { left: 3%; top: -4px; bottom: auto; width: 7px; height: 80%; }  /* lying in the fold */
+
+/* a candle beside it, lit at night or while the book's open; a teacup on a pile of books */
+.den-candle { position: absolute; bottom: 0; right: calc(50% + var(--bw) + 8px); width: 46px; height: auto; overflow: visible; }
+.den-candle__flame { fill: #ffc65c; opacity: var(--lamp); }
+.den-candle__glow { opacity: calc(var(--lamp) * .9); }
+.spot.is-open .den-candle__flame { opacity: 1; }
+.spot.is-open .den-candle__glow { opacity: .9; }
+.den-stack { position: absolute; bottom: 0; left: calc(50% + var(--bw) + 8px); width: 62px; height: auto; overflow: visible; }
+
+/* ----- the radio ----- */
+.radio {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: min(196px, 64%);
+  aspect-ratio: 220 / 240;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.radio::before {          /* the warm glow of its valves */
+  content: "";
+  position: absolute;
+  inset: -8% -12% 16%;
+  z-index: -1;
+  border-radius: 50% 50% 30% 30%;
+  background: radial-gradient(closest-side, rgba(255, 196, 110, .55), rgba(255, 196, 110, 0));
+  opacity: 0;
+}
+.radio.is-on::before { opacity: calc(.35 + var(--lamp) * .65); }
+.radio__set { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.radio__mould { fill: none; stroke: var(--wood-lite); stroke-width: 3; }
+.radio__cloth { fill: #dcc79c; }
+.radio.is-on .radio__cloth { fill: #f2dba4; }
+:root[data-dark="true"] .radio__cloth { fill: #8d7d5e; }
+:root[data-dark="true"] .radio.is-on .radio__cloth { fill: #e6c37e; }
+.radio__fret-ink { fill: none; stroke: var(--ink); stroke-width: 8.4; stroke-linecap: round; }
+.radio__fret-wood { fill: none; stroke: var(--wood); stroke-width: 5.6; stroke-linecap: round; }
+.radio__dial { fill: #efe2bf; }
+.radio.is-on .radio__dial { fill: #ffdc8e; }
+:root[data-dark="true"] .radio__dial { fill: #b9a77f; }
+:root[data-dark="true"] .radio.is-on .radio__dial { fill: #ffd47a; }
+.radio__tick { fill: none; stroke: #6b5330; stroke-width: 1.2; }
+.radio__num { font: 400 7px/1 var(--pixel); fill: #6b5330; text-anchor: middle; }
+.radio.is-on .radio__scale { opacity: 0; }
+.radio__needle { stroke: #c0392b; stroke-width: 2; stroke-linecap: round; }
+.radio.is-on .radio__needle { transform: translateX(64px); }
+.radio__lamp { fill: #6b5330; }
+.radio.is-on .radio__lamp { fill: #ff8a5c; }
+.radio__knob { transform-box: fill-box; transform-origin: center; }
+.radio.is-on .radio__knob { transform: rotate(120deg); }
+.radio__window {           /* the song, along the lit dial */
+  position: absolute;
+  left: 24.5%; top: 66.2%;
+  width: 51%; height: 9.4%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 5px;
+  opacity: 0;
+}
+.radio.is-on .radio__window { opacity: 1; }
+.radio__ticker { display: flex; flex: none; white-space: nowrap; font: 400 9.5px/1 var(--pixel); color: #5a2a14; }
+.radio__ticker span { padding: 0 2.4em 0 .4em; }
+.radio__note {
+  position: absolute;
+  top: 10%;
+  z-index: 2;
+  font: 800 22px/1 var(--body);
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
+.den-vase { position: absolute; bottom: 0; left: calc(50% + min(98px, 32%) + 10px); width: 44px; height: auto; overflow: visible; }
+
+/* ----- what she just finished, on a notepad ----- */
+.den-done {
+  position: relative;
+  width: min(460px, 100%);
+  margin: 60px auto 0;
+  padding: 30px 26px 22px 54px;
+  color: var(--note-ink);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 40px, rgba(217, 115, 123, .6) 40px 41.5px, rgba(0, 0, 0, 0) 41.5px),
+    repeating-linear-gradient(rgba(0, 0, 0, 0) 0 29px, rgba(90, 130, 180, .28) 29px 30px) 0 58px / 100% calc(100% - 58px) no-repeat,
+    #fdfaf0;
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 16px 20px -16px rgba(0, 0, 0, .6);
+  transform: rotate(-.8deg);
+}
+.den-done::before {        /* the pad's glued top */
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -6px;
+  height: 14px;
+  background: linear-gradient(#b65049, #93403a);
+  border-radius: 3px 3px 0 0;
+}
+:root[data-dark="true"] .den-done { filter: brightness(.86); }
+.den-done__title { margin: 0 0 6px; font: 600 30px/28px "Caveat", var(--display); color: #a8463f; }
+.den-done__list { margin: 0; padding: 0; list-style: none; }
+.den-done__list li, .den-done__empty { margin: 0; font: 600 21px/30px "Caveat", var(--display); }
+.den-done__empty { color: #5d6a55; }
+.den-done__tick { margin-right: 6px; color: #5f7d4f; }
+.den-done__kind, .den-done__line { color: #7a6a50; }
+.den-pencil { position: absolute; right: -58px; bottom: 30px; width: 120px; height: auto; transform: rotate(-58deg); }
+.den-noscript { margin: 30px 0 0; text-align: center; color: var(--ink-soft); }
+
+/* ----- the floor ----- */
+.den-floor { margin-top: 140px; }
+.den-floor__stage { position: relative; width: min(1100px, 100% - 32px); height: 150px; margin: 0 auto; --gemma-feet: 112px; }
+.den-floor__stage > svg { position: absolute; height: auto; overflow: visible; }
+.den-rug   { left: 47%; top: 32px; width: min(540px, 50%); transform: translateX(-50%); }
+.den-lamp  { left: -1%; bottom: 42px; width: 84px; }
+.den-chair { left: 6%; bottom: 40px; width: 232px; }
+.den-yarn  { left: 28.5%; bottom: 40px; width: 64px; }
+.den-stove { left: 71%; bottom: 38px; width: 130px; }
+.den-logs  { left: 84.5%; bottom: 42px; width: 72px; }
+.den-plant { right: 0; bottom: 42px; width: 76px; }
+.den-leg { fill: none; stroke: var(--wood-dark); stroke-width: 6; stroke-linecap: round; }
+.den-chair__fab { fill: var(--rose); }
+.den-chair__seat { fill: color-mix(in srgb, var(--rose) 68%, var(--paper)); }
+.den-chair__seam { fill: none; stroke: var(--berry); stroke-width: 1.6; stroke-linecap: round; opacity: .45; }
+.den-chair__tufts { fill: var(--berry); opacity: .55; }
+:root[data-dark="true"] .den-throw { filter: brightness(.7); }
+.den-lamp__pole { fill: none; stroke: var(--wood-dark); stroke-width: 5; stroke-linecap: round; }
+.den-lamp__shade { fill: #fbf1dc; }
+:root[data-dark="true"] .den-lamp__shade { fill: #ffe0a0; }
+.den-lamp__fringe { fill: none; stroke: var(--rose); stroke-width: 2.4; }
+.den-lamp__glow { opacity: calc(var(--lamp) * .9); }
+.den-needle { fill: none; stroke: var(--wood-lite); stroke-width: 3; stroke-linecap: round; }
+.den-iron { fill: #3d3a38; }
+.den-iron-lite { fill: #55504c; }
+.den-copper { fill: #c47a4b; }
+.den-copper-line { fill: none; stroke: #c47a4b; stroke-width: 2.2; stroke-linecap: round; }
+.den-hearth { fill: #a39a8c; }
+:root[data-dark="true"] .den-hearth { fill: #5c564e; }
+.den-stove__window { fill: #2a1610; }
+.den-stove__leg { fill: none; stroke: #3d3a38; stroke-width: 5; stroke-linecap: round; }
+.den-stove__warm { opacity: calc(.3 + var(--lamp) * .7); }
+.den-flame { transform-box: fill-box; transform-origin: 50% 100%; }
+
+@media (max-width: 1240px) {
+  .den-stack { width: 54px; }
+}
+@media (max-width: 960px) {
+  .den-shelf { grid-template-columns: minmax(0, 1fr); row-gap: 50px; max-width: 460px; margin: 0 auto; }
+  .den-shelf .spot .spot__shelf { border-inline-width: 1.5px; border-radius: 5px; }
+  .den-shelf .spot .spot__bracket { display: block; left: 6%; transform: none; }
+  .den-shelf .spot .spot__bracket--r { left: auto; right: 6%; transform: scaleX(-1); }
+  .spot__things { height: auto; padding-top: 18px; }
+  .spot--reading { --bw: 120px; }
+  .den-stack { width: 62px; }
+}
+@media (max-width: 640px) {
+  .den { width: calc(100% - 32px); margin-top: 22px; }
+  .spot--reading { --bw: 100px; }
+  .den-stack { width: 56px; }
+  .card--watching .card__title { font-size: 29px; }
+  .den-done { padding: 28px 18px 26px 46px; background-position: 0 0, 0 56px, 0 0; }
+  .den-done { background-image:
+    linear-gradient(90deg, rgba(0, 0, 0, 0) 34px, rgba(217, 115, 123, .6) 34px 35.5px, rgba(0, 0, 0, 0) 35.5px),
+    repeating-linear-gradient(rgba(0, 0, 0, 0) 0 29px, rgba(90, 130, 180, .28) 29px 30px); }
+  .den-pencil { right: 4px; bottom: -14px; width: 92px; transform: rotate(-5deg); }
+  .den-floor { margin-top: 110px; }
+  .den-floor__stage { width: calc(100% - 16px); height: 118px; --gemma-feet: 92px; }
+  .den-lamp, .den-yarn, .den-logs, .den-plant { display: none; }
+  .den-rug { left: 50%; top: 26px; width: 94%; }
+  .den-chair { left: 0; bottom: 34px; width: 140px; }
+  .den-stove { left: auto; right: 2%; bottom: 30px; width: 88px; }
+}
+@media (max-width: 380px) {
+  .den-stack { display: none; }
 }
 
 /* =============================== mobile =============================== */
@@ -4445,4 +5028,93 @@ body[data-section="art"]::before {
   @keyframes wp-open { from { opacity: 0; transform: rotate(-2deg) translateY(-8px) scale(.96); } }
   .wp-chip__swatch { transition: transform .25s ease, box-shadow .2s ease; }
   .wp-chip:hover .wp-chip__swatch { transform: translateY(-3px) rotate(-1deg); }
+
+  /* ----- the den ----- */
+  .spot:hover .spot__hang { animation: den-sway 1.8s ease-in-out; }
+  @keyframes den-sway {
+    0%, 100% { transform: rotate(var(--tilt)); }
+    25% { transform: rotate(calc(var(--tilt) + 2.2deg)); }
+    55% { transform: rotate(calc(var(--tilt) - 1.6deg)); }
+    80% { transform: rotate(calc(var(--tilt) + .7deg)); }
+  }
+  /* the TV: rabbit ears wobble; it switches on to a line that opens into the
+     picture, and off to a line, then a dot */
+  .tv__ears { transform-box: fill-box; transform-origin: 50% 100%; }
+  .tv:hover .tv__ears { animation: den-ears .7s ease-in-out; }
+  @keyframes den-ears { 25% { transform: rotate(-5deg); } 60% { transform: rotate(4deg); } }
+  .tv__knob, .radio__knob { transition: transform .45s cubic-bezier(.3, .7, .3, 1.3); }
+  .tv::before, .radio::before { transition: opacity .5s ease; }
+  .tv.is-on .tv__show { animation: den-tv-on .55s cubic-bezier(.2, .7, .3, 1) both; }
+  .tv.is-off .tv__show { visibility: visible; animation: den-tv-off .42s ease-in both; }
+  @keyframes den-tv-on {
+    0%   { transform: scale(.2, .008); filter: brightness(7); }
+    30%  { transform: scale(1, .008); filter: brightness(5); }
+    100% { transform: none; filter: none; }
+  }
+  @keyframes den-tv-off {
+    0%   { transform: none; filter: none; }
+    55%  { transform: scale(1, .008); filter: brightness(5); }
+    100% { transform: scale(0, .008); filter: brightness(7); }
+  }
+  .tv.is-on .tv__card { animation: den-title .8s .45s ease-out both; }
+  @keyframes den-title { from { opacity: 0; transform: translateY(8%); } }
+  .tv.is-on .tv__glass { animation: den-flicker 5s steps(1) infinite; }
+  @keyframes den-flicker { 0%, 100% { opacity: 1; } 31% { opacity: .82; } 32% { opacity: 1; } 77% { opacity: .9; } 78% { opacity: 1; } }
+  .tv-win--a { animation: den-window 3.4s ease-in-out infinite; }
+  .tv-win--b { animation: den-window 2.6s ease-in-out -1s infinite; }
+  .tv-win--c { animation: den-window 4.2s ease-in-out -2s infinite; }
+  @keyframes den-window { 0%, 100% { opacity: 1; } 40% { opacity: .5; } 55% { opacity: .9; } 70% { opacity: .4; } }
+  .tv-mist { animation: den-mist 16s ease-in-out infinite alternate; }
+  .tv-mist--b { animation-duration: 21s; animation-direction: alternate-reverse; }
+  @keyframes den-mist { from { transform: translateX(-18px); } to { transform: translateX(18px); } }
+  .tv-bird { animation: den-bird 11s linear infinite; }
+  @keyframes den-bird { from { transform: translate(-14px, 46px); } to { transform: translate(180px, 30px); } }
+  .tv-stars > * { animation: blink 3.6s ease-in-out infinite; }
+  .tv-stars > :nth-child(3n) { animation-delay: -1.2s; }
+  .tv-stars > :nth-child(3n+1) { animation-delay: -2.4s; }
+  .tv-lantern { animation: breathe 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  /* the book: peeks open when you point at it, then swings open */
+  .book { transition: transform .8s cubic-bezier(.4, .1, .2, 1); }
+  .book__cover { transition: transform .9s cubic-bezier(.45, .05, .2, 1); }
+  .book:not(.is-open):hover .book__cover { transform: rotateY(-18deg); }
+  .den-candle__flame, .den-candle__glow { transition: opacity .5s ease; }
+  .den-candle__flame { animation: den-candle 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes den-candle {
+    0%, 100% { transform: scale(1, 1) rotate(0deg); }
+    30% { transform: scale(.92, 1.08) rotate(-3deg); }
+    60% { transform: scale(1.04, .94) rotate(2deg); }
+  }
+  .den-steam { animation: den-steam 3.6s ease-in-out infinite; }
+  @keyframes den-steam {
+    0%   { opacity: 0; transform: translateY(4px); }
+    30%  { opacity: .8; }
+    100% { opacity: 0; transform: translateY(-8px); }
+  }
+  /* the radio: the needle finds the station, the speaker thrums, the song
+     scrolls along the dial, notes float out */
+  .radio:hover .radio__knob { transform: rotate(40deg); }
+  .radio.is-on:hover .radio__knob { transform: rotate(150deg); }
+  .radio__needle { transition: transform 1.1s cubic-bezier(.3, .7, .3, 1.1); }
+  .radio.is-on .radio__cloth { animation: den-thrum .46s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes den-thrum { to { transform: scale(1.014); } }
+  .radio.is-on .radio__ticker { animation: den-ticker 10s linear infinite; }
+  @keyframes den-ticker { to { transform: translateX(-50%); } }
+  .radio__note { animation: den-note 2.8s ease-out forwards; }
+  @keyframes den-note {
+    0%   { opacity: 0; transform: translate(-50%, 0) scale(.6); }
+    15%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), -110px) rotate(var(--rot)) scale(1.15); }
+  }
+  /* the stove's fire */
+  .den-flame--a { animation: den-fire 1.3s ease-in-out infinite alternate; }
+  .den-flame--b { animation: den-fire .9s ease-in-out -.4s infinite alternate; }
+  .den-flame--c { animation: den-fire 1.1s ease-in-out -.2s infinite alternate-reverse; }
+  @keyframes den-fire {
+    0%   { transform: scale(1, 1) skewX(0deg); }
+    50%  { transform: scale(.94, 1.1) skewX(-4deg); }
+    100% { transform: scale(1.04, .9) skewX(3deg); }
+  }
+  .den-embers { animation: den-embers 2s ease-in-out infinite alternate; }
+  @keyframes den-embers { to { opacity: .45; } }
+  .den-stove__warm { animation: breathe 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 }

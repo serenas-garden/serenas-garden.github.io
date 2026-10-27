@@ -3,9 +3,9 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status:** the cottage hub, **Travels**, **the Kitchen**, **the Gallery** (Art) and **the mailbox**
-(Send a Letter: a writing desk that emails letters to Serena) are built. Every other section is a
-labelled "still decorating" stub.
+**Status:** the cottage hub, **Travels**, **the Kitchen**, **the Gallery** (Art), **the den**
+(Currently) and **the mailbox** (Send a Letter: a writing desk that emails letters to Serena) are
+built. Every other section is a labelled "still decorating" stub.
 
 ## Decisions (settled with Rex, October 2026)
 
@@ -128,7 +128,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
 - `kitchen.html`: built. See **The Kitchen** below.
 - `art.html`: the gallery, with Serena's first 18 pieces. See **The
   Gallery** below.
-- `music.html`, `currently.html`, `moon.html`,
+- `currently.html`: the den. See **The den (Currently)** below.
+- `music.html`, `moon.html`,
   `zoo.html`, `picks.html`: section stubs, all from one template.
   Each has a `.page-head` (back link, title, blurb, and that section's object
   drawn as `.page-art`), a `.stub-note`, and the rooms nav. When building one,
@@ -151,8 +152,10 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   title, the guide's hover line, the blurb, `status` ("soon" / "open"), and an
   optional `href` for a section that lives elsewhere. Object tags, links and
   guide text on the hub read from it.
-- `assets/currently-data.js`: the "currently" card. `sample: true` makes it
-  label itself as a placeholder.
+- `assets/currently-data.js`: what Serena's watching, reading and
+  listening to, read by both the corkboard on the hub and the den
+  (`assets/currently.js`). Format at its top. `sample: true` makes the
+  corkboard label itself as a placeholder.
 - `assets/sky.js`: the sun/moon engine from Rex's site. **At Rex's request
   (October 2026) it follows St. Petersburg, Florida** (27.7676 N, 82.6403 W,
   America/New_York), the same as his site. That covers time of day, sun, moon
@@ -325,7 +328,8 @@ page, spreading to every room with the same wallpaper.
   It's remembered across visits, and other open tabs of the site follow a
   change straight away. **The kitchen and the gallery keep their own
   wallpapers** (their more specific rules win); every other page (the
-  cottage, Travels, the mailbox, the stubs, 404) shows the chosen one.
+  cottage, the den, Travels, the mailbox, the stubs, 404) shows the chosen
+  one.
 - **The picker** (`assets/wallpaper-picker.js`, home page only): a fan of
   narrow sample strips, one per wallpaper, pivoting on a brass rivet, beside
   the light switch (the one on the walls pulled out of the fan; it spreads
@@ -506,10 +510,59 @@ pool of warm light (`--lamp`).
   blank canvas with a pencil doodle, labelled "Empty frame · art coming
   soon", and the plaque says the frames are waiting.
 
+## The den (Currently)
+
+`currently.html`: what Serena's watching, reading and listening to, as a
+den of the cottage. Rex gave Claude creative control (October 2026) and the
+first three: *The Traitors* season 5 (*New Blood*, NBC's first all-civilian
+season), *His Excellency: George Washington* by Joseph J. Ellis, and "Lies"
+by Zach Bryan & Lana Del Rey. The same data fills the corkboard on the hub.
+
+- **The room:** the garland and the hanging sign ("what i'm into right now
+  / Currently") with a "back inside" pill, and a taped note ("switch on the
+  tv · open the book · turn on the radio", plus "updated <asOf>"). **It
+  keeps the cottage's wallpaper**, so it follows the sample fan. Then one
+  long wooden shelf on brackets (a piece under each thing, joined on
+  desktop; stacked as three shelves under 960px) with:
+  - **an old wooden TV** ("serenavision", rabbit ears): tap and it switches
+    on like an old set (a bright line opening into the picture; off is a
+    line, then a dot). The screen shows the show's scene (`scene` in the
+    data: `"castle"` is a Highland castle at night with mist, flickering
+    windows, a crow and a cloaked figure with a lantern; anything else gets
+    a starry title card) with the title over it. At night its picture
+    glows blue on the wall.
+  - **the book**, standing up, its cloth cover (`cover` colour) tooled in
+    gold with the title, a laurel and the author. Tap and the cover swings
+    open (3D) onto the title page, with Serena's "ex libris" bookplate
+    inside the cover and the ribbon in the fold; the candle beside it lights
+    (it's lit at night anyway). A teacup on a pile of books on the other
+    side.
+  - **a cathedral radio**: tap and the dial lights, the needle finds the
+    station, the song scrolls along the dial, the speaker thrums and notes
+    float out. No sound (on purpose).
+- **The cards** hang under the shelf on twine from brass hooks, each its own
+  paper: a TV-guide clipping torn along the bottom, a library card (typed
+  title and author, an "on loan" date stamp, "Serena" signed), and a jukebox
+  title strip with the artist on a band. Any other `kind` gets a pinned note
+  below. An item's optional `note` is handwritten on its card.
+- **"Just finished"**: a notepad below, listing `finished` (newest first,
+  "watched / read / listened to"). Empty, it says so.
+- **The floor**: an armchair with a granny-square throw, a fringed reading
+  lamp (lit at night), a knitting basket, a rug, a wood stove with a kettle
+  and a fire, and logs. **Gemma follows you in**: she sits by the stove and
+  watches the fire, then naps on the rug (nearer the stove after dark).
+- Paper, the TV picture and the radio dial keep fixed colours (dimmed at
+  night); the furniture uses theme tokens. Reduced motion: all three still
+  work, instantly, with no notes, and Gemma's already asleep.
+- **To update it**, edit `currently-data.js` only: change an item, move the
+  old one to the top of `finished`, set `asOf`. A new show can get its own
+  screen by adding a scene `<svg class="tv__scene" data-scene="…">` in
+  `currently.html`.
+
 ## Rooms, and Gemma following you in
 
-Some pages are designed as **rooms** of the cottage (the Kitchen and the
-Gallery so far); others are just pages (Travels). **Rex's rule (October 2026): on every page
+Some pages are designed as **rooms** of the cottage (the Kitchen, the
+Gallery and the den so far); others are just pages (Travels, the mailbox). **Rex's rule (October 2026): on every page
 designed as a room, Gemma follows you in. On pages that aren't rooms, she
 doesn't.** So every new room page needs:
 
@@ -744,7 +797,8 @@ surname).
 
 - Serena reviews and rewrites the draft copy in `sections.js`, and names the
   toadstool.
-- Real "currently" entries. Then set `sample: false`.
+- Currently: Serena's own `note` on any of the three, if she'd like one
+  (handwritten on its card), and her finished things as she goes.
 - Travels: Serena's own `note` for each place and a `favorite` for each
   country (both empty), and her rewrite of the draft blurbs.
 - Kitchen: her top drinks (the fridge) and top fruits (the fruit bowl), and

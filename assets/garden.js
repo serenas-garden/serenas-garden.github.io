@@ -167,7 +167,8 @@
       li.style.setProperty("--pin", look.pin);
       li.style.setProperty("--r", look.r);
       li.innerHTML = ICONS[item.kind] || "";
-      [["note__kind", item.kind], ["note__title", item.title], ["note__detail", item.detail]]
+      var detail = [item.by ? "by " + item.by : "", item.detail || ""].filter(Boolean).join(" · ");
+      [["note__kind", item.kind], ["note__title", item.title], ["note__detail", detail]]
         .forEach(function (pair) {
           var span = document.createElement("span");
           span.className = pair[0];

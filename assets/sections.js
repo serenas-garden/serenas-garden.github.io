@@ -42,7 +42,7 @@ window.SECTIONS = [
     object: "tv and books",
     guide: "what i'm watching, reading and listening to right now",
     blurb: "What I'm watching, reading and listening to right now, plus what I just finished.",
-    status: "soon"
+    status: "open"
   },
   {
     slug: "moon",
