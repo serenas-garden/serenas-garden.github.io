@@ -20,12 +20,14 @@
  */
 window.CURRENTLY = {
   sample: false,
-  asOf: "2026-10-26",
+  asOf: "2026-10-27",
   items: [
     { kind: "watching",  title: "The Traitors", detail: "season 5 · New Blood", scene: "castle" },
     { kind: "reading",   title: "His Excellency: George Washington", by: "Joseph J. Ellis", cover: "#2a4466" },
     { kind: "listening", title: "Lies", by: "Zach Bryan & Lana Del Rey" }
   ],
   // what she just finished, newest first (same fields as above)
-  finished: []
+  finished: [
+    { kind: "watching", title: "The Mindy Project" }
+  ]
 };
