@@ -3,9 +3,10 @@
 Personal site for Serena, built and maintained by her brother Rex with Claude.
 Her own idea board is in `IDEAS.md`. Read it first; it's the brief.
 
-**Status:** the cottage hub, **Travels**, **the Kitchen**, **the Gallery** (Art), **the den**
-(Currently) and **the mailbox** (Send a Letter: a writing desk that emails letters to Serena) are
-built. Every other section is a labelled "still decorating" stub.
+**Status:** the cottage hub, **Travels** (with its game, **Where's Serena?**), **the Kitchen**,
+**the Gallery** (Art), **the den** (Currently) and **the mailbox** (Send a Letter: a writing desk
+that emails letters to Serena) are built. Every other section is a labelled "still decorating"
+stub.
 
 ## Decisions (settled with Rex, October 2026)
 
@@ -125,6 +126,7 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   it also tips the scope up, glints the lens, and makes the moon glow. `moon.html` only redirects there, so an old `moon.html` link
   still works. A separate sunrise/sunset page could come later.
 - `travels.html`: built. See **Travels** below.
+- `travel-game.html`: **Where's Serena?**, the travels map game. See below.
 - `kitchen.html`: built. See **The Kitchen** below.
 - `art.html`: the gallery, with Serena's first 18 pieces. See **The
   Gallery** below.
@@ -185,6 +187,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   built from `sections.js` (current page marked `aria-current`; sections with
   an `href` link out in a new tab).
 - `assets/mailbox.js`: the letter desk's behaviour (sending, the envelope).
+- `assets/stamp.js`: draws a postage stamp (`stampSvg`) for the travels
+  postcards and the game.
+- `assets/travel-game.js`: the Where's Serena? game.
 - `assets/wallpaper.js` (every page's head) and `assets/wallpaper-picker.js`
   (home page): the wallpapers. See "Wallpapers".
 - `assets/og.png` (1200×630): the link-preview image shown when the site is
@@ -299,7 +304,67 @@ scroll), a postcard for each place, and a passport of country stamps. Rex asked 
 - **Tour:** "take the tour" flies through every place once, starting after
   the open postcard. Any touch of the globe or its buttons stops it.
 - **Links:** `travels.html#kyoto` opens on a place (the id from the data).
+- **The game:** a boarding-pass invitation under the globe and a button on
+  the intro postcard lead to **Where's Serena?** (below). Each place's
+  `level` (1 to 3) is for the game.
 - Caveat is loaded on this page too, for the handwritten notes.
+
+## Where's Serena? (the travels game)
+
+`travel-game.html`: Rex asked (October 2026) for a MapTap-style game using
+only the places Serena has been, reached from Travels, scored as close to
+MapTap as possible. It's a page of Travels, not a room (no Gemma), and the
+rooms nav marks Travels. Behaviour: `assets/travel-game.js`.
+
+- **Scoring is MapTap's, exactly** (from maptap.gg/faq, whose chart code
+  holds the formulas): the distance straight across the Earth (haversine,
+  6,371 km) scores `100 x e^(-3.5 x km / 16250)`, 0 from 16,250 km, rounded
+  (100 within about 22 km, 90 at 500, 81 at 1,000, 42 at 4,000). Five
+  rounds weighted x1 x1 x2 x3 x3, so a perfect game is 1,000. **The country
+  bonus**, as in MapTap's daily game only: a pin inside the right country
+  lifts the round with `max(raw, min(floor + raw/100 x (100 - floor), 80))`,
+  floor 25 for the country, 10 for the continent (it never lowers a score,
+  never lifts past 80). The intro credits MapTap with a link. If MapTap's
+  formulas change, the constants are at the top of the script.
+- **Today's trip** is the same five places for everyone on the same day,
+  by the player's own calendar like MapTap (a seeded pick from the date, so
+  no server). It's played once a day and kept in localStorage
+  (`sg-wheres-serena`) pin by pin, so a reload carries on; after that the
+  intro shows its score, and there are trips played, best and a streak.
+  Trip numbers count from 2026-10-26 (No. 1). **Random trips** are as many
+  as you like: five fresh places, distance only (MapTap's other modes have
+  no bonus either).
+- **The five places** get harder: round pools of `level` 1, 1-2, 2, 2-3, 3
+  (in `travels-data.js`: 1 a famous city, 2 known but harder, 3 a small
+  town, island or corner), never the same place twice and, while there's a
+  choice, never the same country twice.
+- **The globe** is the travels engine in its game mode (`game: true` in
+  `globe.js`): no borders (MapTap has none), no toadstools, no tints, no
+  night and no idle spin except on the intro. Drag any way to spin (on
+  phones too: `touch-action: none`), pinch or plain scroll to zoom, tap to
+  drop a gold pin, tap again to move it, then "lock it in". Keyboard:
+  arrows turn it, + and - zoom, Enter drops the pin at the crosshair in the
+  middle. The engine draws the game's pins (`mark`), the great-circle line
+  from pin to answer, growing as it's revealed (`line`), and frames them
+  (`frame`). `Globe.countryAt(geo, lon, lat)` says which country a point is
+  in (a due-north ray along its own meridian, so shapes across the 180th
+  meridian and Antarctica work); the game's own table gives each country's
+  continent (Natural Earth's grouping). Coasts are simplified, so a pin
+  right on New York or Copenhagen can be "just off the coast of" it; that
+  never changes a score (the bonus only matters past about 1,000 km).
+- **The page:** a "garden air" boarding pass names the place (round,
+  weight, and the five rounds' points on its stub; the result after each
+  round), the desk globe, and a postcard: how to play, then each round's
+  result (the score counting up, the distance in km and miles, where the
+  pin landed, the bonus, and that place's stamp and blurb with a link to it
+  on the travels map), then the trip (total, a verdict, the five rows, a
+  share button that copies an emoji line like MapTap's, or opens the share
+  sheet on phones). On phones the globe fills the width without its stand,
+  how-to and the final score come before the globe, and the score shows on
+  the pass and the toadstool's label too. Pixel-font fives look like S, so
+  round numbers are spelled out and score numbers use the body font.
+- Reduced motion: no spin, flights, line growing or count-up; the answer
+  just appears.
 
 ## Wallpapers
 
@@ -805,4 +870,5 @@ surname).
   any recipe links or notes for the cookies, all in `kitchen-data.js`.
 - Gallery: Serena titles the 18 pieces and corrects the guessed years and
   mediums (all in `art-data.js`); any notes she'd like shown full screen.
+- Where's Serena?: copy is DRAFT (the verdicts, the how-to) for Serena.
 - Pick the next section to build.

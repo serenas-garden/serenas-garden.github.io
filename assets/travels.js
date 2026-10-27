@@ -13,7 +13,6 @@
   if (!T) return;
 
   var places = T.places, countries = T.countries;
-  var STAMPS = window.TRAVEL_STAMPS || {};
   var reduceMotion = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
   var D2R = Math.PI / 180;
 
@@ -79,31 +78,7 @@
 
   /* --------------------------------- stamps --------------------------------- */
 
-  // a stamp's perforated edge: a rectangle with half-round bites all the way round
-  function perforated(w, h, r, pitch) {
-    var d = "M0 0", nx = Math.round(w / pitch), ny = Math.round(h / pitch), sx = w / nx, sy = h / ny, i;
-    for (i = 0; i < nx; i++) d += " L" + (i * sx + sx / 2 - r) + " 0 A" + r + " " + r + " 0 0 0 " + (i * sx + sx / 2 + r) + " 0";
-    d += " L" + w + " 0";
-    for (i = 0; i < ny; i++) d += " L" + w + " " + (i * sy + sy / 2 - r) + " A" + r + " " + r + " 0 0 0 " + w + " " + (i * sy + sy / 2 + r);
-    d += " L" + w + " " + h;
-    for (i = nx - 1; i >= 0; i--) d += " L" + (i * sx + sx / 2 + r) + " " + h + " A" + r + " " + r + " 0 0 0 " + (i * sx + sx / 2 - r) + " " + h;
-    d += " L0 " + h;
-    for (i = ny - 1; i >= 0; i--) d += " L0 " + (i * sy + sy / 2 + r) + " A" + r + " " + r + " 0 0 0 0 " + (i * sy + sy / 2 - r);
-    return d + " Z";
-  }
-  var EDGE = perforated(72, 86, 2.3, 7.2);
-
-  function stampSvg(key, caption, value) {
-    var art = STAMPS[key] || STAMPS.toadstool || "";
-    return '<svg class="stamp" viewBox="-2 -2 76 90" aria-hidden="true" focusable="false">' +
-      '<path class="stamp__paper" d="' + EDGE + '"/>' +
-      '<svg x="6" y="6" width="60" height="52" viewBox="0 0 60 52" class="stamp__art">' + art + "</svg>" +
-      '<rect x="6" y="6" width="60" height="52" class="pc-k stamp__frame"/>' +
-      '<text class="stamp__value" x="10" y="16">' + esc(value) + "</text>" +
-      '<text class="stamp__caption" x="36" y="71">' + esc(caption) + "</text>" +
-      '<text class="stamp__post" x="36" y="79.5">garden post</text>' +
-      "</svg>";
-  }
+  var stampSvg = window.stampSvg;          // stamp.js
 
   // a round postmark: a ring of words with the date there in the middle
   function postmark(middle) {
@@ -191,7 +166,8 @@
       " places in " + say(order.length) + " countries, across " + say(continents.length) +
       " continents. Spin the globe or unroll the map, and tap a toadstool for a postcard from each one, or take the tour.</p>" +
       live +
-      '<p class="postcard__actions"><button type="button" class="postcard__go" data-act="tour">take the tour</button></p>' +
+      '<p class="postcard__actions"><button type="button" class="postcard__go" data-act="tour">take the tour</button>' +
+      ' <a class="postcard__game" href="travel-game.html">play where\u2019s serena?</a></p>' +
       "</div>";
     pop();
   }

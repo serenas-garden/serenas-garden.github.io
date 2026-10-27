@@ -34,11 +34,21 @@
  *    motion (nor do the fly-to animations: they jump instead).
  *
  * Usage: var globe = Globe(element, { geo, places, tint, onPick, onMove,
- *                                     projection: "globe" | "flat" });
+ *                                     projection: "globe" | "flat",
+ *                                     game, onTap });
  *   places  [{ id, name, lat, lon }]
  *   tint    [{ geo: "Japan", box: [w, s, e, n] | null }]   countries to tint
  *   onPick  called with a place id when its toadstool is clicked
  *   onMove  called whenever the visitor moves the globe themselves
+ *   game    true for the Where's Serena? game (travel-game.js): a bare globe
+ *           with no borders, no night and no idle spin, where plain
+ *           scrolling zooms and double-clicks don't. It shows the game's
+ *           pins and lines (mark, line, frame in the api).
+ *   onTap   called with { lon, lat } when the globe is tapped anywhere but
+ *           a toadstool, and on Enter or Space (the middle of the view)
+ *
+ * Globe.countryAt(geo, lon, lat) says which country (its globe-geo name) a
+ * point is in, or null out at sea.
  */
 (function () {
   "use strict";
@@ -227,6 +237,13 @@
     '<path class="ink f-paper" d="M-52 -9 H52 V6 H-52 Z" style="stroke-width:1.1"/>' +
     '<text class="deco__title" x="0" y="1.6" textLength="90" lengthAdjust="spacingAndGlyphs">the world, so far</text>' };
 
+  // the game's pin: a dressmaker's pin pushed into the globe at (0, 0)
+  var GUESS_PIN =
+    '<ellipse class="gpin__shadow" cx="1.6" cy="0.5" rx="3.6" ry="1.3"/>' +
+    '<path class="gpin__needle" d="M0 0 L3.4 -12.4"/>' +
+    '<circle class="gpin__head" cx="3.9" cy="-14.4" r="4.7"/>' +
+    '<circle class="gpin__shine" cx="2.4" cy="-15.9" r="1.4"/>';
+
   var SUN_ART =
     '<path class="ink sun-mark__rays" d="M0 -11 V-8 M0 8 V11 M-11 0 H-8 M8 0 H11 M-7.8 -7.8 L-5.7 -5.7 M5.7 5.7 L7.8 7.8 M-7.8 7.8 L-5.7 5.7 M5.7 -5.7 L7.8 -7.8"/>' +
     '<circle r="5.6" class="ink f-gold"/>';
@@ -262,6 +279,7 @@
     var nightImg = null;
 
     var FLAT = opts.projection === "flat";
+    var GAME = !!opts.game;
     var maxK = FLAT ? MAX_KF : MAX_K;
     var Y_TOP = millerY(MAP_N), Y_BOT = millerY(MAP_S);
 
@@ -419,6 +437,10 @@
     skyLabel.className = "globe__label globe__label--hint";
     labels.appendChild(skyLabel);
 
+    /* the game's pins and lines: { id: mark }, { id: line } */
+    var gGame = svg("g", { "class": "globe__game" }, marks);
+    var gameMarks = {}, gameLines = {};
+
     /* size */
     var W = 0, HT = 0, R = 0, dpr = 1, PIN = 1;
     function measure() {
@@ -458,6 +480,7 @@
       col.border = v("--globe-border", "rgba(47,58,44,.35)");
       col.grid = v("--globe-grid", "rgba(47,58,44,.12)");
       col.lines = v("--globe-lines", "rgba(168,70,63,.4)");
+      col.arc = v("--globe-arc", "#a8463f");
       col.rim = v("--globe-rim", "rgba(30,40,30,.25)");
       col.shine = v("--globe-shine", "rgba(255,255,255,.28)");
       col.night = rgb("--globe-night", "22 28 58");
@@ -597,6 +620,7 @@
     /* night: the sun's altitude at every pixel, from where it's overhead now */
     var sunV = null, moonV = null, moonInfo = null, sunLL = null, moonLL = null, nightDirty = true;
     function updateSky() {
+      if (GAME) return;                            // the game's globe has no night
       var o = null;
       try { o = window.Sky && window.Sky.overhead ? window.Sky.overhead(new Date()) : null; } catch (e) {}
       if (!o) { sunV = moonV = null; return; }
@@ -710,9 +734,11 @@
       each(function () { ctx.fill(flat.land, "evenodd"); });
       ctx.fillStyle = col.visited;
       each(function () { ctx.fill(flat.tint, "evenodd"); });
-      ctx.strokeStyle = col.border;
-      ctx.lineWidth = 0.7 / sc;
-      each(function () { ctx.stroke(flat.border); });
+      if (!GAME) {
+        ctx.strokeStyle = col.border;
+        ctx.lineWidth = 0.7 / sc;
+        each(function () { ctx.stroke(flat.border); });
+      }
       ctx.strokeStyle = col.coast;
       ctx.lineWidth = clamp(0.8 + view.k * 0.03, 0.8, 1.3) / sc;
       each(function () { ctx.stroke(flat.coast); });
@@ -767,11 +793,13 @@
       ctx.fillStyle = col.visited;
       ctx.fill();
 
-      ctx.beginPath();
-      border.forEach(function (a) { if (capOn(a.cap)) traceLine(a.v); });
-      ctx.strokeStyle = col.border;
-      ctx.lineWidth = 0.7;
-      ctx.stroke();
+      if (!GAME) {                                  // like MapTap, the game's globe has no borders
+        ctx.beginPath();
+        border.forEach(function (a) { if (capOn(a.cap)) traceLine(a.v); });
+        ctx.strokeStyle = col.border;
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
 
       ctx.beginPath();
       coast.forEach(function (a) { if (capOn(a.cap)) traceLine(a.v); });
@@ -796,6 +824,7 @@
       rim.addColorStop(1, col.rim);
       ctx.fillStyle = rim;
       ctx.fillRect(0, 0, W, W);
+      drawLines();
       ctx.restore();
 
       ctx.beginPath();
@@ -805,6 +834,69 @@
       ctx.stroke();
 
       placeMarks();
+    }
+
+    /* the game's lines: the great circle from a guess to the answer, drawn as
+       far along as it has grown (t), clipped at the horizon like the coasts */
+    function drawLines() {
+      var any = false, id, l;
+      ctx.beginPath();
+      for (id in gameLines) {
+        l = gameLines[id];
+        if (l.t <= 0) continue;
+        any = true;
+        traceLine(l.t >= 1 ? l.v : partLine(l));
+      }
+      if (!any) return;
+      ctx.setLineDash([6, 5]);
+      ctx.strokeStyle = col.arc;
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    function partLine(l) {
+      var k = l.t * (l.n - 1), i0 = Math.floor(k), f = k - i0, v = l.v;
+      var out = new Float64Array((i0 + 2) * 3);
+      out.set(v.subarray(0, (i0 + 1) * 3));
+      var a = [v[3 * i0], v[3 * i0 + 1], v[3 * i0 + 2]];
+      var b = i0 + 1 < l.n ? [v[3 * i0 + 3], v[3 * i0 + 4], v[3 * i0 + 5]] : a;
+      out.set(slerp(a, b, f), (i0 + 1) * 3);
+      return out;
+    }
+    function greatCircle(a, b) {
+      var va = vec(a.lon, a.lat), vb = vec(b.lon, b.lat);
+      var n = Math.max(2, Math.ceil(between(va, vb) / (1.2 * D2R)) + 1), v = new Float64Array(n * 3);
+      for (var i = 0; i < n; i++) v.set(slerp(va, vb, i / (n - 1)), 3 * i);
+      return { v: v, n: n };
+    }
+    // grow the lines that are being drawn; true while any still is
+    function growLines(now, finished) {
+      var more = false;
+      for (var id in gameLines) {
+        var l = gameLines[id];
+        if (l.t >= 1) continue;
+        var t = clamp((now - l.t0) / l.ms, 0, 1);
+        l.t = t < 1 ? 1 - Math.pow(1 - t, 2.4) : 1;   // eases out as it arrives
+        if (l.t < 1) more = true;
+        else if (l.done) { finished.push(l.done); l.done = null; }
+      }
+      return more;
+    }
+
+    function placeGame() {
+      for (var id in gameMarks) {
+        var m = gameMarks[id], s = screenOf(m);
+        show(m, s.on);
+        if (!s.on) { if (m.label) m.label.classList.remove("is-on"); continue; }
+        setTf(m, "translate(" + s.x.toFixed(1) + " " + s.y.toFixed(1) + ") scale(" + PIN.toFixed(3) + ")");
+        if (m.label) {
+          if (!m.lw) m.lw = m.label.offsetWidth;
+          var x = s.x + 12 * PIN, y = s.y - 9 * PIN - 11;
+          if (x + m.lw > W - 4) x = s.x - 12 * PIN - m.lw;
+          m.label.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px)";
+          m.label.classList.add("is-on");
+        }
+      }
     }
 
     /* ------------------------- toadstools and labels ------------------------- */
@@ -905,6 +997,7 @@
         }
       });
 
+      placeGame();
       placeLabels();
     }
 
@@ -990,7 +1083,7 @@
     /* ----------------------------- animation ----------------------------- */
 
     var raf = 0, last = 0, lastSpinDraw = 0, fly = null, inertia = null, drag = null, pinch = null;
-    var spinOn = !REDUCED && !FLAT, onScreen = true, idleUntil = 0, wake = 0;
+    var spinOn = !REDUCED && !FLAT && !GAME, onScreen = true, idleUntil = 0, wake = 0;
 
     function invalidate() { if (!raf) raf = requestAnimationFrame(frame); }
     function spinning() {
@@ -1028,9 +1121,12 @@
         if (now - lastSpinDraw < 30) { invalidate(); return; }
         lastSpinDraw = now;
       }
+      var finished = [];
+      if (growLines(now, finished)) more = true;
       draw();
       if (more) invalidate();
       else last = 0;
+      finished.forEach(function (fn) { fn(); });
     }
 
     // the visitor moved it: stop flights, hold the spin a moment
@@ -1275,8 +1371,9 @@
       pinch = null;
       host.classList.remove("is-dragging");
       if (drag && !drag.moved && e.type === "pointerup") {
-        var q = local(e);
-        tap(hitAt(q.x, q.y, drag.touch));
+        var q = local(e), it = hitAt(q.x, q.y, drag.touch);
+        if (it) tap(it);
+        else if (opts.onTap) { var at = groundAt(q.x, q.y); if (at) opts.onTap(at); }
       } else if (drag && drag.moved && !REDUCED && e.timeStamp - drag.t < 90 &&
                  Math.abs(drag.vx) + Math.abs(drag.vy) > 0.05) {
         inertia = { vx: drag.vx, vy: drag.vy };
@@ -1288,6 +1385,22 @@
     host.addEventListener("pointercancel", release);
     host.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") setHover(null); });
 
+    // the point on the world under (x, y), or null off the edge of the globe
+    function groundAt(x, y) {
+      if (FLAT) {
+        clampFlat();
+        var my = view.y - (y - HT / 2) / sc;
+        if (my > Y_TOP || my < Y_BOT) return null;
+        return { lon: wrap(view.x + (x - W / 2) / sc), lat: millerLat(my) };
+      }
+      var u = unproject(x, y);
+      return u ? lonLat(u) : null;
+    }
+    function centre() {
+      if (FLAT) { clampFlat(); return { lon: wrap(view.x), lat: millerLat(view.y) }; }
+      return { lon: view.lon, lat: view.lat };
+    }
+
     function tap(it) {
       if (!it) return;
       if (it.type === "place") { if (opts.onPick) opts.onPick(it.p.id); }
@@ -1296,7 +1409,7 @@
     }
 
     host.addEventListener("wheel", function (e) {
-      if (!e.ctrlKey && !e.metaKey) return;     // plain scrolling still scrolls the page
+      if (!e.ctrlKey && !e.metaKey && !GAME) return;   // plain scrolling still scrolls the page
       e.preventDefault();
       touched();
       var q = local(e), dy = e.deltaY * (e.deltaMode === 1 ? 16 : 1);
@@ -1304,6 +1417,7 @@
     }, { passive: false });
 
     host.addEventListener("dblclick", function (e) {
+      if (GAME) return;                         // in the game a second tap just moves the pin
       var q = local(e);
       if (hitAt(q.x, q.y, false)) return;
       touched();
@@ -1311,6 +1425,11 @@
     });
 
     host.addEventListener("keydown", function (e) {
+      if ((e.key === "Enter" || e.key === " ") && opts.onTap) {   // a tap on the middle of the view
+        e.preventDefault();
+        opts.onTap(centre());
+        return;
+      }
       if (FLAT) {
         clampFlat();
         var gx = W * 0.15 / sc, gy = HT * 0.15 / sc;
@@ -1406,10 +1525,101 @@
         else { view.lon = wrap(lon); view.lat = clamp(lat, -80, 80); view.k = clamp(k || 1, 1, MAX_K); }
         invalidate();
       },
-      nightAt: function (id) { var p = byId[id]; return p ? p.night : false; }
+      nightAt: function (id) { var p = byId[id]; return p ? p.night : false; },
+
+      /* the game's pins and lines */
+      // put a pin ("guess") or a toadstool ("answer") at a point, with an optional label
+      mark: function (id, kind, at, label) {
+        var m = gameMarks[id];
+        if (!m) {
+          m = gameMarks[id] = { el: svg("g", { "class": "gmark gmark--" + kind }, gGame), tf: "", shown: null, label: null, lw: 0 };
+          var body = svg("g", { "class": "gmark__body" }, m.el);
+          body.innerHTML = kind === "answer" ? TOADSTOOL : GUESS_PIN;
+        }
+        m.lon = at.lon; m.lat = at.lat; m.v = vec(at.lon, at.lat);
+        if (label && !m.label) {
+          m.label = document.createElement("span");
+          m.label.className = "globe__label globe__label--game";
+          labels.appendChild(m.label);
+        }
+        if (m.label && m.label.textContent !== (label || "")) { m.label.textContent = label || ""; m.lw = 0; }
+        invalidate();
+      },
+      unmark: function (id) {
+        var m = gameMarks[id];
+        if (!m) return;
+        m.el.remove();
+        if (m.label) m.label.remove();
+        delete gameMarks[id];
+        invalidate();
+      },
+      // draw the great circle from a to b, growing over ms (at once with reduced motion)
+      line: function (id, a, b, ms, done) {
+        var gc = greatCircle(a, b);
+        var instant = REDUCED || !ms;
+        gameLines[id] = { v: gc.v, n: gc.n, t: instant ? 1 : 0, t0: performance.now(), ms: ms || 1, done: instant ? null : done };
+        invalidate();
+        if (instant && done) done();
+      },
+      clearGame: function () {
+        Object.keys(gameMarks).forEach(api.unmark);
+        gameLines = {};
+        invalidate();
+      },
+      // turn and zoom to show every point in the list
+      frame: function (list, done) {
+        var pts = list.map(function (p) { return { lon: p.lon, lat: p.lat, v: vec(p.lon, p.lat) }; });
+        if (pts.length === 1) flyTo(pts[0].lon, pts[0].lat, Math.max(view.k, 1.6), done);
+        else if (pts.length) fitPlaces(pts, false, done);
+      },
+      zoomOut: function (done) {
+        if (FLAT) flyFlat(view.x, view.y, 1, done);
+        else flyTo(view.lon, view.lat, 1, done);
+      }
     };
     return api;
   }
+
+  /* Which country a point is in: the globe-geo name, or null at sea. A ray
+     goes due north from the point along its own meridian, and each crossing
+     of a country's outline flips in and out (holes count too). Edges are
+     measured in longitude from the point's meridian, so shapes that cross
+     the 180th meridian work; an edge that jumps more than half way round is
+     crossing the far side of the world, not this ray, so it's skipped. */
+  var countryCache = null;
+  function countryShapes(geo) {
+    if (countryCache && countryCache.geo === geo) return countryCache.list;
+    var ll = geo.arcs.map(decodeLonLat), list = [];
+    geo.countries.forEach(function (c) {
+      c.p.forEach(function (poly) {
+        var rings = poly.map(function (refs) { return joinRingLL(refs, ll); });
+        var s = 90, n = -90;
+        rings[0].forEach(function (v, i) { if (i % 2) { s = Math.min(s, v); n = Math.max(n, v); } });
+        list.push({ name: c.n, s: s, n: n, rings: rings });
+      });
+    });
+    countryCache = { geo: geo, list: list };
+    return list;
+  }
+  Globe.countryAt = function (geo, lon, lat) {
+    var list = countryShapes(geo);
+    for (var k = 0; k < list.length; k++) {
+      var c = list[k];
+      if (lat < c.s || lat > c.n) continue;
+      var inside = false;
+      for (var r = 0; r < c.rings.length; r++) {
+        var ring = c.rings[r], n = ring.length / 2;
+        for (var i = 0, j = n - 1; i < n; j = i++) {
+          var x1 = short(ring[2 * j] - lon), y1 = ring[2 * j + 1];
+          var x2 = short(ring[2 * i] - lon), y2 = ring[2 * i + 1];
+          if (Math.abs(x1 - x2) > 180 || (x1 > 0) === (x2 > 0)) continue;
+          if (y1 + (0 - x1) * (y2 - y1) / (x2 - x1) > lat) inside = !inside;
+        }
+      }
+      if (inside) return c.name;
+    }
+    return null;
+  };
 
   window.Globe = Globe;
 })();
