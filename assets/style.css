@@ -883,6 +883,27 @@ h1, h2, h3 {
   color: #fff4e4;
   background: var(--berry);
 }
+button.calendar {     /* it opens tonight's sky (almanac.js) */
+  display: block;
+  padding: 0 0 8px;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.calendar:focus-visible { outline: 2px dashed var(--berry); outline-offset: 5px; }
+.calendar__month, .calendar__day, .calendar__weekday, .calendar__weather, .calendar__more { display: block; }
+.calendar__more {
+  width: max-content;
+  max-width: calc(100% - 8px);
+  margin: 8px auto 0;
+  padding: 3px 7px;
+  white-space: nowrap;
+  font: 400 10px/1.1 var(--pixel);
+  color: var(--berry);
+  border: 1px dashed currentColor;
+  border-radius: 999px;
+}
 .calendar__day { font: 600 46px/1 var(--display); margin: 6px 0 4px; }
 .calendar__weekday { font: 400 11px/1 var(--pixel); color: var(--ink-soft); }
 .calendar__moon {
@@ -4482,6 +4503,114 @@ body[data-section="art"]::before {
   .calendar { width: 88px; }
 }
 
+/* ============================ tonight's sky ============================
+   The cottage calendar opens a page of the almanac (assets/almanac.js): a
+   night-sky header with tonight's moon, then the times on paper. Night and
+   paper keep their colours, like the corkboard notes, dimmed a little at
+   night. */
+
+.almanac {
+  width: min(420px, 100% - 24px);
+  max-width: none;
+  max-height: calc(100% - 24px);
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  color: #2f3a2c;
+  background: none;
+}
+.almanac::backdrop { background: rgba(14, 20, 32, .6); }
+.almanac__page {
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  border-radius: 10px;
+  background: #fbf6ea;
+  box-shadow: 0 26px 50px -20px rgba(0, 0, 0, .7);
+}
+:root[data-dark="true"] .almanac__page { filter: brightness(.94); }
+.almanac__sky {
+  padding: 18px 22px 16px;
+  color: #f4ecd8;
+  background:
+    radial-gradient(1.2px 1.2px at 9% 20%, #fff 98%, transparent), radial-gradient(1px 1px at 22% 72%, #fff 98%, transparent),
+    radial-gradient(1.4px 1.4px at 38% 14%, #fff8dc 98%, transparent), radial-gradient(1px 1px at 56% 40%, #fff 98%, transparent),
+    radial-gradient(1.2px 1.2px at 71% 18%, #fff 98%, transparent), radial-gradient(1px 1px at 83% 66%, #fff8dc 98%, transparent),
+    radial-gradient(1.4px 1.4px at 93% 30%, #fff 98%, transparent), radial-gradient(1px 1px at 64% 86%, #fff 98%, transparent),
+    linear-gradient(#18213a, #2c3b62);
+}
+.almanac__eyebrow { margin: 0 0 12px; font: 400 11px/1 var(--pixel); letter-spacing: .08em; color: #c3cdea; }
+.almanac__tonight { display: flex; align-items: center; gap: 16px; }
+.almanac__moon { flex: none; filter: drop-shadow(0 0 14px rgba(255, 238, 190, .4)); }
+.almanac__moon-dark { fill: #37456c; }
+.almanac__moon-lit { fill: #fbf1cf; }
+.almanac__title { margin: 0; font: italic 600 31px/1 var(--display); color: #fbf1cf; text-transform: capitalize; }
+.almanac__lit { margin: 7px 0 0; font: 400 12px/1.3 var(--pixel); color: #c3cdea; }
+.almanac__paparazzi { margin: 12px 0 0; font: 600 20px/1.2 "Caveat", cursive; color: #f2c94c; }
+
+.almanac__body { padding: 12px 22px 18px; }
+.almanac__times { margin: 0; }
+.almanac__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dashed #e3dac5;
+}
+.almanac__row dt { display: flex; align-items: center; gap: 9px; font: 400 12.5px/1 var(--pixel); color: #4c5e92; }
+.almanac__row svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.almanac__row--golden dt, .almanac__row--sunset dt, .almanac__row--sunrise dt { color: #bf6a35; }
+.almanac__row dd { margin: 0; font: 700 15px/1 var(--body); color: #2f3a2c; white-space: nowrap; }
+.almanac__row.is-past { opacity: .45; }
+.almanac__note { font: 400 10.5px/1 var(--pixel); color: #8a8f7f; }
+.almanac__h { margin: 16px 0 8px; font: 400 11px/1 var(--pixel); letter-spacing: .08em; color: #7c8873; }
+.almanac__week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+.almanac__week li { display: grid; justify-items: center; gap: 4px; padding: 6px 0 5px; border-radius: 8px; }
+.almanac__week li.is-tonight { background: #efe5cc; }
+.almanac__wd { font: 400 9.5px/1 var(--pixel); color: #7c8873; }
+.almanac__pct { font: 700 10.5px/1 var(--body); color: #5d6a55; }
+.almanac__next { display: grid; gap: 10px; margin: 18px 0 0; }
+.almanac__next div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.almanac__next dt { font: 400 11.5px/1.2 var(--pixel); color: #7c8873; }
+.almanac__next dd { margin: 0; text-align: right; font: 700 14px/1.3 var(--body); }
+.almanac__name { display: block; font: 600 18px/1.1 "Caveat", cursive; color: #a8463f; }
+.almanac__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 0; }
+.almanac__foot a { font: 400 12px/1.2 var(--pixel); color: #a8463f; }
+.almanac__close {
+  margin-left: auto;
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 999px;
+  font: 400 12px/1 var(--pixel);
+  color: #fbf6ea;
+  background: #2c3b62;
+  cursor: pointer;
+}
+.almanac__close:focus-visible, .almanac__foot a:focus-visible { outline: 2px dashed #a8463f; outline-offset: 3px; }
+
+@media (max-width: 640px) {
+  .almanac__sky { padding: 16px 16px 14px; }
+  .almanac__body { padding: 10px 16px 16px; }
+  .almanac__title { font-size: 27px; }
+  .almanac__moon { width: 70px; height: 70px; }
+}
+
 /* =============================== motion ===============================
    Everything that moves lives here. Never move it outside this guard. */
 
@@ -5435,4 +5564,9 @@ body[data-section="art"]::before {
   .tg-main, .tg-alt { transition: background-color .2s ease, color .2s ease, transform .1s ease; }
   .tg-invite { transition: transform .25s cubic-bezier(.3, 1.4, .5, 1); }
   .tg-invite:hover { transform: rotate(-.2deg) translateY(-3px); }
+
+  /* ----- tonight's sky ----- */
+  .calendar { transition: transform .25s cubic-bezier(.3, 1.4, .5, 1), box-shadow .25s ease; }
+  .calendar:hover { transform: rotate(1deg) translateY(-3px); }
+  .almanac[open] .almanac__page { animation: card-in .45s cubic-bezier(.3, 1.3, .5, 1); }
 }

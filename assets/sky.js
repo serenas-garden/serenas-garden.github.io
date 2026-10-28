@@ -20,7 +20,8 @@
  *
  * Sets data-sky (phase) and data-dark on <html>, and exposes window.Sky:
  * { state: { phase, dark, sun:{alt,az}, moon:{alt,az,illum,waxing}, localTime },
- *   overhead(date): where the sun and moon are straight overhead (the globe) }.
+ *   overhead(date): where the sun and moon are straight overhead (the globe),
+ *   sunAt(date), moonAt(date): where they are in St. Pete's sky (the almanac) }.
  */
 (function () {
   "use strict";
@@ -89,19 +90,32 @@
     return h;
   }
 
-  /* Low-precision lunar position (Meeus, abridged). Good to roughly a tenth of
-     a degree, which is far better than a decorative disc needs. */
+  /* Lunar position: Meeus's series (Astronomical Algorithms, ch. 47), cut to
+     its largest terms. Good to a few hundredths of a degree, so moonrise and
+     moonset (almanac.js) come out within a minute or two of the US Naval
+     Observatory's. With only the first term, as it once was, the moon ran
+     up to two degrees off and rose ten minutes early. */
   function moonPosition(date, sun) {
     var jd = julian(date);
-    var T = (jd - 2451545) / 36525;
+    var d = jd - 2451545;
+    var T = d / 36525;
 
-    var L = norm(218.316 + 13.176396 * (jd - 2451545));   // mean longitude
-    var M = norm(134.963 + 13.064993 * (jd - 2451545));   // mean anomaly
-    var F = norm(93.272 + 13.229350 * (jd - 2451545));    // argument of latitude
+    var L = norm(218.316448 + 13.176396477 * d);   // mean longitude
+    var M = norm(134.963396 + 13.064992950 * d);   // mean anomaly
+    var F = norm(93.272095 + 13.229350244 * d);    // argument of latitude
+    var D = norm(297.850192 + 12.190749117 * d);   // mean elongation from the sun
+    var S = norm(357.529109 + 0.985600281 * d);    // the sun's mean anomaly
 
-    var lon = L + 6.289 * sin(M);
-    var lat = 5.128 * sin(F);
-    var dist = 385001 - 20905 * cos(M);
+    var lon = L + 6.288774 * sin(M) + 1.274027 * sin(2 * D - M) + 0.658314 * sin(2 * D) +
+      0.213618 * sin(2 * M) - 0.185116 * sin(S) - 0.114332 * sin(2 * F) +
+      0.058793 * sin(2 * D - 2 * M) + 0.057066 * sin(2 * D - S - M) + 0.053322 * sin(2 * D + M) +
+      0.045758 * sin(2 * D - S) - 0.040923 * sin(S - M) - 0.034720 * sin(D) -
+      0.030383 * sin(S + M) + 0.015327 * sin(2 * D - 2 * F) - 0.012528 * sin(M + 2 * F) +
+      0.010980 * sin(M - 2 * F);
+    var lat = 5.128122 * sin(F) + 0.280602 * sin(M + F) + 0.277693 * sin(M - F) +
+      0.173237 * sin(2 * D - F) + 0.055413 * sin(2 * D - M + F) + 0.046271 * sin(2 * D - M - F) +
+      0.032573 * sin(2 * D + F) + 0.017198 * sin(2 * M + F);
+    var dist = 385001 - 20905 * cos(M) - 3699 * cos(2 * D - M) - 2956 * cos(2 * D) - 570 * cos(2 * M);
 
     var obliq = 23.4397 - 0.0130042 * T;
     var ra = norm(Math.atan2(sin(lon) * cos(obliq) - Math.tan(lat * D2R) * sin(obliq),
@@ -258,6 +272,11 @@
   window.Sky = {
     compute: compute,
     overhead: overhead,
+    // the sun and the moon from St. Pete at any moment (almanac.js works out
+    // rise and set times from these): sun {alt, az}, refraction included near
+    // the horizon; moon {alt, az, illum, waxing}, from the Earth's centre
+    sunAt: function (date) { return sunPosition(date); },
+    moonAt: function (date) { return moonPosition(date, sunPosition(date)); },
     apply: apply,
     setMode: setMode,
     cycle: function () {
