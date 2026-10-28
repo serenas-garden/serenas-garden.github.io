@@ -4405,12 +4405,16 @@ body[data-section="art"]::before {
 
   .pn--alt, .bulb--alt { display: none; }
   .room-head {
-    grid-template-columns: 1fr 1fr;
+    /* each column as wide as what's in it, so the calendar keeps to its
+       corner on a narrow phone (two equal columns pushed it off the edge) */
+    grid-template-columns: auto auto;
+    justify-content: space-between;
     padding-top: 66px;
     row-gap: 26px;
   }
   .sign { grid-column: 1 / -1; grid-row: 1; }
   .wall-controls { grid-row: 2; gap: 16px; }
+  .switch__label, .wp-fan__label { white-space: normal; text-align: center; text-wrap: balance; }
   .wp-picker { position: static; }          /* the book opens from the left of the header */
   .wp-book { left: -2px; padding-left: 36px; }
   .wp-book__grid { gap: 12px 10px; }
@@ -4458,6 +4462,19 @@ body[data-section="art"]::before {
   .mail-stamps__sheet { grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .stamp-art { width: 40px; height: 40px; }
   .stamp-pick__stamp { border-width: 4px; padding: 6px 2px 4px; }
+}
+
+/* narrow phones: a little tighter, so the light switch, the fan and the
+   calendar share their row (a label wraps only if it really must), and on
+   the narrowest (320px) a smaller fan and calendar too */
+@media (max-width: 400px) {
+  .room-head { column-gap: 10px; }
+  .wall-controls { gap: 8px; }
+  .calendar { width: 92px; }
+}
+@media (max-width: 359px) {
+  .wp-fan__cards { zoom: .8; }
+  .calendar { width: 88px; }
 }
 
 /* =============================== motion ===============================
