@@ -327,6 +327,11 @@ h1, h2, h3 {
   padding: 6px 12px;
   border-radius: 999px;
 }
+.door-hint--tap { display: none; }
+@media (hover: none) {
+  .door-hint--point { display: none; }
+  .door-hint--tap { display: inline; }
+}
 
 /* ----- the weather layers: rain, lightning, fog, snow. Used in the garden
    outside and inside the cottage window; shown by data-weather. ----- */
@@ -958,6 +963,7 @@ h1, h2, h3 {
   display: block;
   text-decoration: none;
   color: inherit;
+  -webkit-tap-highlight-color: transparent;   /* a tap lifts it instead (its :hover) */
 }
 .telescope svg { display: block; width: 100%; height: auto; overflow: visible; }
 .telescope .telescope__tag {
@@ -1061,6 +1067,7 @@ h1, h2, h3 {
   padding: 0 6px;
   text-decoration: none;
   color: inherit;
+  -webkit-tap-highlight-color: transparent;   /* a tap lifts it instead (its :hover) */
 }
 .thing svg {
   grid-row: 1;
@@ -1455,7 +1462,9 @@ h1, h2, h3 {
 .page-art svg { width: 100%; height: auto; overflow: visible; display: block; }
 .back {
   display: inline-block;
-  margin-bottom: 26px;
+  justify-self: start;
+  padding: 8px 0;               /* a finger-sized target, with the text where it was */
+  margin: -8px 0 18px;
   font: 400 13px/1 var(--pixel);
   color: var(--ink-soft);
   text-decoration: none;
@@ -4438,7 +4447,7 @@ body[data-section="art"]::before {
   .gemma { --gw: 80px; }
 
   .page-head { grid-template-columns: 1fr; }
-  .page-head .back { order: -2; margin-bottom: 14px; }
+  .page-head .back { order: -2; margin-bottom: 6px; }
   .page-art { grid-column: 1; grid-row: auto; width: 96px; order: -1; }
   .mail-form { padding-left: 0; }
   .mail-ink { width: 70px; left: -6px; top: -64px; }

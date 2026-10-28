@@ -30,6 +30,8 @@
 
   var places = T.places, countries = T.countries;
   var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  // phones and tablets just pinch; a mouse wheel zooms too
+  var ZOOM = window.matchMedia && matchMedia("(hover: none)").matches ? "pinch" : "pinch or scroll";
   var byId = {};
   places.forEach(function (p) { byId[p.id] = p; });
 
@@ -271,7 +273,7 @@
     main.hidden = false;
     main.textContent = "lock it in";
     main.disabled = true;
-    help.textContent = "drag to spin · pinch or scroll to zoom · tap to drop your pin";
+    help.textContent = "drag to spin · " + ZOOM + " to zoom · tap to drop your pin";
     say("Round " + (game.i + 1) + " of 5" + (TIMES[game.i] ? ", worth " + TIMES[game.i] : "") +
         ": where is " + p.name + ", " + p.where + "? Tap the globe to drop your pin.");
   }
@@ -412,7 +414,7 @@
     main.hidden = true;
     globe.clearGame();
     globe.setSpin(true);
-    help.textContent = "drag to spin · pinch or scroll to zoom";
+    help.textContent = "drag to spin · " + ZOOM + " to zoom";
     renderPass();
     var day = store.days[TODAY];
     var dailyBtn = !day

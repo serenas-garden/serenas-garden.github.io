@@ -364,9 +364,12 @@
   var helpEl = document.querySelector("[data-help]");
   var switcher = document.querySelector(".view-switch");
   var switching = false;
+  // phones and tablets just pinch; ctrl + scroll is for a mouse
+  var ZOOM = window.matchMedia && matchMedia("(hover: none)").matches
+    ? "pinch" : "pinch or ctrl\u00a0+\u00a0scroll";
   var HELP = {
-    globe: "drag to spin \u00b7 pinch or ctrl\u00a0+\u00a0scroll to zoom \u00b7 tap a toadstool",
-    map: "drag to look around \u00b7 pinch or ctrl\u00a0+\u00a0scroll to zoom \u00b7 tap a toadstool"
+    globe: "drag to spin \u00b7 " + ZOOM + " to zoom \u00b7 tap a toadstool",
+    map: "drag to look around \u00b7 " + ZOOM + " to zoom \u00b7 tap a toadstool"
   };
   var animated = !reduceMotion && !!(document.body.animate);
   var running = [];
