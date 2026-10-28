@@ -150,6 +150,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   it at whatever URL was missed). That's safe because the site is at the
   domain root.
 - `robots.txt`: disallows everything (link-only).
+- `birthday.html`: the birthday link; it only sends you on to the cottage's
+  surprise (see "The birthday surprise").
 - `assets/sections.js`: **the single source of truth for sections**: slug,
   title, the guide's hover line, the blurb, `status` ("soon" / "open"), and an
   optional `href` for a section that lives elsewhere. Object tags, links and
@@ -631,19 +633,26 @@ by Zach Bryan & Lana Del Rey. The same data fills the corkboard on the hub.
 
 A present for Serena's birthday (Rex asked for "a cool feature" while the
 site was being finished as her gift). **It appears only for whoever opens
-the birthday link:**
+the birthday link.** The one to send is
 
-    https://serenas-garden.github.io/#happy-birthday
+    https://serenas-garden.github.io/birthday.html
 
-(`?happy-birthday` works too.) **No date is written anywhere**, so the repo
+a page that only sends you on to `./#happy-birthday` (by script, not a meta
+refresh, which link previewers can follow), so that a texted link shows its
+own preview card, `assets/og-birthday.png`: the door wrapped in its ribbon,
+balloons and confetti, and "Happy Birthday, Serena!" (rendered from an HTML
+card built on the door drawing, like og.png). `.../#happy-birthday` and
+`?happy-birthday` work too, with the everyday preview. **No date is written anywhere**, so the repo
 never says when her birthday is (rule 1): the "day" is simply the day the
 link was opened. `assets/birthday.js`, in the `<head>` of the cottage and of
 every room Gemma follows you into, sees the link, remembers the day in this
 browser (localStorage `sg-birthday`: the day, and whether the door's been
 unwrapped and the wish made), tidies the address (so a bookmark or a
 home-screen icon isn't a birthday forever) and sets `<html data-birthday>`
-until midnight. Opening the link again brings a fresh surprise (the door
-wrapped again, the candles lit); `#birthday-off` puts everything away.
+until midnight. Arriving by the link always shows the door (`Birthday.fresh`
+in `garden.js`), even though birthday.html is a page of this site. Opening
+the link again brings a fresh surprise (the door wrapped again, the candles
+lit); `#birthday-off` puts everything away.
 
 - **The door** is wrapped like a present: a rose ribbon round it, a bow, and
   a gift tag ("for Serena / love, Rex"), drawn into the door's own SVG by

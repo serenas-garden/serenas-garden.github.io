@@ -27,6 +27,7 @@
   var cottage = document.getElementById("cottage");
 
   function arrivingFromOutside() {
+    if (window.Birthday && window.Birthday.fresh) return true;     // came by the birthday link
     var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
     var type = nav ? nav.type : "navigate";
     if (type === "reload") return true;

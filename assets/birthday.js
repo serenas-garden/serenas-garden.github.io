@@ -32,8 +32,9 @@
 
   var asked = (location.hash + "&" + location.search).toLowerCase();
   var state = load();
+  var fresh = /happy-birthday/.test(asked);
 
-  if (/happy-birthday/.test(asked)) {
+  if (fresh) {
     state = { day: today(), unwrapped: false, wished: false };
     save(state);
   } else if (/birthday-off/.test(asked)) {
@@ -50,6 +51,9 @@
 
   window.Birthday = {
     on: on,
+    // just arrived by the link (birthday.html sends you on with it): the
+    // cottage shows its door even though you came from another page here
+    fresh: fresh,
     state: on ? state : {},
     // remember what's happened today (the door unwrapped, a wish made)
     note: function (k, v) {
