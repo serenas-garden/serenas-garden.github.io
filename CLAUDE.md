@@ -100,7 +100,7 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
   **light switch** (the sky toggle) with the **wallpaper sample fan** beside
   it (see "Wallpapers"), a tear-off **wall calendar** (real date
-  and tonight's moon), the **window** with gingham curtains, ivy and a
+  and tonight's moon; it opens **tonight's sky**, see below), the **window** with gingham curtains, ivy and a
   **flower box** (the window itself is not a link; a brass **telescope**
   standing outside in the meadow, aimed at the moon, is the Moon Paparazzi
   link), the **toadstool guide**, two wooden **shelves** of objects
@@ -168,7 +168,15 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   `data-dark` on `<html>`. The light switch / mushroom lamp pins the sky for
   **this visit only** (sessionStorage), so every new visit opens on the real
   sky. An older version kept the pin forever in localStorage and left
-  browsers stuck on "always day"; sky.js clears that old key.
+  browsers stuck on "always day"; sky.js clears that old key. **The moon is
+  Meeus's series (ch. 47) cut to its largest terms**: checked against the
+  US Naval Observatory for 29 days (October 2026 to September 2027),
+  moonrise and moonset come out within a minute (with only the first term,
+  as it first was, the moon was up to two degrees off and rose ten minutes
+  early). `Sky.sunAt(date)` and `Sky.moonAt(date)` give positions in St.
+  Pete's sky for the almanac.
+- `assets/almanac.js`: **tonight's sky**, the page of the almanac the cottage
+  calendar opens (see "Tonight's sky").
 - `assets/gemma-kit.js`: Gemma's drawing and petting, shared by every page
   she's on. `assets/gemma-follow.js`: her following you into rooms.
   `assets/gemma-outside.js`: her playing in the garden on the door screen.
@@ -370,6 +378,41 @@ rooms nav marks Travels. Behaviour: `assets/travel-game.js`.
   round numbers are spelled out and score numbers use the body font.
 - Reduced motion: no spin, flights, line growing or count-up; the answer
   just appears.
+
+## Tonight's sky (the calendar's almanac)
+
+Built for the Moon Paparazzi (her idea board: "Moon / sunrise / sunset
+stuff"). The cottage's wall calendar is a button with a little "tonight's
+sky" pill; it opens a `<dialog>`, a page of the almanac for St. Petersburg,
+worked out in `assets/almanac.js` from sky.js, with times in St. Pete like
+the rest of the site:
+
+- **The header** is a night sky: tonight's moon drawn at its real phase, its
+  name, how much is lit, "up now" if it is, and a line for the moon
+  paparazzi on how the night looks for moon photos ("it rises right around
+  sunset: a golden-hour moon tonight", "a late moon tonight", "no moon
+  tonight: a good night for stars", "it's up now, 94% lit, and highest at
+  3:06 am"...), from where things stand right now.
+- **Tonight's times**: golden hour, sunset, moonrise, the moon at its highest
+  (and how high), sunrise, moonset, in order; ones already past are faded.
+  "Tonight" runs noon to noon: after midnight it's still last night, and from
+  5 a.m. it's the night ahead.
+- **The week ahead**: the moon at 9 p.m. each night for seven nights.
+- **The next full and new moons**, from Meeus's phase series (ch. 49; to the
+  minute against the USNO), the full one with its old name: the month's
+  (wolf, snow, worm, pink, flower, strawberry, buck, sturgeon, corn,
+  hunter's, beaver, cold), except the **Harvest Moon** (the full moon nearest
+  the September equinox) and the **Hunter's Moon** (the one after it); a
+  second full moon in a month is also a blue moon.
+- A link to her Instagram ("my moon photos", from the moon entry in
+  `sections.js`).
+- Times are found by scanning the night every ten minutes and narrowing in
+  on each crossing: the sun's top edge at the horizon (`SUN_SET`, refraction
+  is in sky.js), the moon's (`MOON_SET`, parallax allowed for), golden hour
+  at 6 degrees. `window.Almanac` exposes the sums for checking from the
+  console.
+- Night and paper keep their colours (dimmed a little at night). Reduced
+  motion: it just opens.
 
 ## Wallpapers
 

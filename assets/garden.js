@@ -264,7 +264,8 @@
       if (weatherLine) weatherLine.textContent = w ? w.temp + "\u00b0 \u00b7 " + w.words : "";
       cal.setAttribute("aria-label", "Today is " + fmt(now, { weekday: "long", month: "long", day: "numeric" }) +
         (phase ? ". Tonight's moon: " + phase + "." : "") +
-        (w ? " It's " + w.temp + " degrees and " + w.words + "." : ""));
+        (w ? " It's " + w.temp + " degrees and " + w.words + "." : "") +
+        (cal.tagName === "BUTTON" ? " Open tonight's sky." : ""));
     }
 
     if (toggle && window.Sky) {

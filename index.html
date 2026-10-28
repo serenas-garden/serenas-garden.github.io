@@ -418,19 +418,22 @@
         <h1>Serena's Garden</h1>
       </div>
 
-      <div class="calendar" role="img" aria-label="Today's date and moon">
-        <div class="calendar__month">&nbsp;</div>
-        <div class="calendar__day">&nbsp;</div>
-        <div class="calendar__weekday">&nbsp;</div>
-        <div class="calendar__moon">
+      <!-- the wall calendar: today, tonight's moon and the weather; it opens
+           tonight's sky, a page of the almanac (almanac.js) -->
+      <button class="calendar" type="button" aria-haspopup="dialog" aria-label="Today's date and moon. Open tonight's sky.">
+        <span class="calendar__month">&nbsp;</span>
+        <span class="calendar__day">&nbsp;</span>
+        <span class="calendar__weekday">&nbsp;</span>
+        <span class="calendar__moon">
           <svg viewBox="0 0 40 40" aria-hidden="true">
             <circle class="moon-dark" cx="20" cy="20" r="15"/>
             <path id="cal-moon" class="moon-disc" d=""/>
           </svg>
           <span class="calendar__phase">tonight's moon</span>
-        </div>
-        <div class="calendar__weather"></div>
-      </div>
+        </span>
+        <span class="calendar__weather"></span>
+        <span class="calendar__more" aria-hidden="true">tonight&#x27;s sky</span>
+      </button>
     </header>
 
     <div class="room">
@@ -814,5 +817,6 @@
 <script src="assets/wallpaper-picker.js"></script>
 <script src="assets/birthday-data.js"></script>
 <script src="assets/birthday-party.js"></script>
+<script src="assets/almanac.js"></script>
 </body>
 </html>
