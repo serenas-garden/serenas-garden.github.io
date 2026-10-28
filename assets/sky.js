@@ -18,8 +18,10 @@
  *   above +6, low     morning / afternoon
  *   above +6, high    midday
  *
- * Sets data-sky (phase) and data-dark on <html>, and exposes window.Sky:
+ * Sets data-sky (phase), data-dark and data-season on <html>, and exposes
+ * window.Sky:
  * { state: { phase, dark, sun:{alt,az}, moon:{alt,az,illum,waxing}, localTime },
+ *   season: "spring" | "summer" | "autumn" | "winter" (the garden's),
  *   overhead(date): where the sun and moon are straight overhead (the globe),
  *   sunAt(date), moonAt(date): where they are in St. Pete's sky (the almanac) }.
  */
@@ -222,6 +224,42 @@
     }
   }
 
+  /* ------------------------------ the season ------------------------------- */
+  /* The garden follows the seasons by the month in St. Pete: spring is March
+     to May, summer June to August, autumn September to November, winter
+     December to February. ?season=winter (or spring, summer, autumn) shows
+     another season for the rest of the visit, to have a look; ?season=auto
+     hands it back to the calendar. */
+
+  var SEASONS = ["winter", "winter", "spring", "spring", "spring", "summer",
+                 "summer", "summer", "autumn", "autumn", "autumn", "winter"];
+  var SEASON_KEY = "sg-season";
+
+  function seasonFor(date) {
+    var m;
+    try {
+      m = +new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "numeric" }).format(date);
+    } catch (e) {
+      m = date.getMonth() + 1;
+    }
+    return SEASONS[m - 1];
+  }
+
+  (function () {
+    var asked = /[?&#]season=([a-z]+)/i.exec(location.search + location.hash);
+    if (!asked) return;
+    try {
+      if (SEASONS.indexOf(asked[1].toLowerCase()) > -1) sessionStorage.setItem(SEASON_KEY, asked[1].toLowerCase());
+      else sessionStorage.removeItem(SEASON_KEY);
+    } catch (e) {}
+  })();
+
+  function season() {
+    var pinned;
+    try { pinned = sessionStorage.getItem(SEASON_KEY); } catch (e) {}
+    return SEASONS.indexOf(pinned) > -1 ? pinned : seasonFor(new Date());
+  }
+
   /* ------------------------------- applying -------------------------------- */
   /* A visitor can pin a fixed sky with the light switch; "auto" hands it back
      to the clock. The pin lasts for this visit only (sessionStorage): every
@@ -250,6 +288,7 @@
 
     root.setAttribute("data-sky", state.phase);
     root.setAttribute("data-dark", state.dark ? "true" : "false");
+    root.setAttribute("data-season", season());
 
     // phones tint their address bar to match
     var tint = document.querySelector('meta[name="theme-color"]');
@@ -258,6 +297,7 @@
     window.Sky = window.Sky || {};
     window.Sky.state = state;
     window.Sky.mode = mode;
+    window.Sky.season = root.getAttribute("data-season");
 
     if (typeof window.Sky.onchange === "function") window.Sky.onchange(state, mode);
     return state;

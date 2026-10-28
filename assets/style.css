@@ -443,6 +443,100 @@ h1, h2, h3 {
 :root[data-dark="true"] .ds-reflect { opacity: .5; }
 :root[data-dark="true"] .ds-stone ellipse { fill: #4e4b46; }
 
+/* ----- the garden through the year -----
+   sky.js sets data-season from the month in St. Pete (?season=winter etc.
+   to look at another). Summer is the garden as drawn; the other three change
+   its colours and bring out their own pieces: blossom on the trees and
+   petals on the breeze in spring; turned leaves, fallen leaves, pumpkins and
+   monarchs in autumn; bare trees, holly, snowdrops, a cardinal and a wreath
+   on the door and lights strung through the fairy tree in winter. The
+   cottage and kitchen windows follow the meadow and treeline colours (and
+   the kitchen's far-off fairy tree, its canopy). */
+.ds-canopy { fill: var(--canopy, var(--moss-deep)); }
+.ds-canopy-hi { fill: var(--canopy-hi, var(--moss)); opacity: var(--canopy-hi-op, .35); }
+.door-canopy { fill: var(--door-canopy, var(--moss-deep)); }
+.door-canopy-hi { fill: var(--door-canopy-hi, var(--moss)); opacity: var(--door-canopy-hi-op, .32); }
+.ds-bushes .bush { fill: var(--bush, var(--hill-mid)); }
+.ds-bushes .bloom { fill: var(--bloom, var(--c)); }
+.ds-bare-ink, .ds-bare-wood { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ds-bare-ink { stroke: var(--ink); }
+.ds-bare-wood { stroke: var(--bark); }
+.ds-bare, .ds-autumn, .door-blooms, .door-pumpkins, .door-wreath, .door-winter-lights, .ds-drift { display: none; }
+
+/* spring: fresh green, cherry blossom, the fairy tree in flower */
+:root[data-season="spring"] {
+  --meadow: #7da062; --meadow-deep: #5b8148;
+  --grass-mid: #6c9a4e; --grass-tip: #a9d27a;
+  --hill-far: #b3cfa8; --hill-mid: #92b583;
+  --canopy: #e7a7b8; --canopy-hi: #fbe1e8; --canopy-hi-op: .75;
+  --door-canopy: #4b7542;
+  --fl-poppy: #e7849a;
+}
+:root[data-season="spring"] .door-blooms { display: inline; --b1: #f4bfcc; --b2: #f9d9e1; --b3: #fff3f5; --b4: #eaa2b6; --b5: #f6c9d4; }
+
+/* autumn: gold grass, turned trees, leaves on the ground, pumpkins, monarchs */
+:root[data-season="autumn"] {
+  --meadow: #8c9a55; --meadow-deep: #6b7d42;
+  --grass-base: #4f5f2e; --grass-mid: #7d8a3e; --grass-tip: #c8b85e;
+  --hill-far: #c4c09a; --hill-mid: #a7a46e;
+  --treeline: #556b3e;
+  --door-canopy: #b4612d; --door-canopy-hi: #e6a33e; --door-canopy-hi-op: .45;
+  --bush: #b98244;
+  --fl-daisy: #eaaa2f; --fl-daisy-eye: #5a3a1e;      /* black-eyed susans */
+  --fl-poppy: #e0702c;                                /* marigolds */
+  --fl-bluebell: #9b7fc8;                             /* asters */
+}
+:root[data-season="autumn"] .ds-tree-l { --canopy: #c9672f; --canopy-hi: #eba43f; --canopy-hi-op: .6; }
+:root[data-season="autumn"] .ds-tree-r { --canopy: #d4a032; --canopy-hi: #f0cf6a; --canopy-hi-op: .6; }
+:root[data-season="autumn"] .ds-bushes .bloom:nth-of-type(3n)   { --bloom: #c4532d; }
+:root[data-season="autumn"] .ds-bushes .bloom:nth-of-type(3n+1) { --bloom: #e3a63a; }
+:root[data-season="autumn"] .ds-bushes .bloom:nth-of-type(3n+2) { --bloom: #d9772e; }
+:root[data-season="autumn"] .bfly--1, :root[data-season="autumn"] .bfly--3 { --bf: #e8862e; }
+:root[data-season="autumn"] .bfly--2 { --bf: #e3a63a; }
+:root[data-season="autumn"] .bfly--4 { --bf: #d9662a; }
+:root[data-season="autumn"] .ds-autumn,
+:root[data-season="autumn"] .door-pumpkins { display: inline; }
+:root[data-season="autumn"] .door-blooms { display: inline; --b1: #e3a03a; --b2: #c4502b; --b3: #f0c45a; --b4: #b8452e; --b5: #d97b30; }
+
+/* winter: bare trees, holly, snowdrops and hellebores, a cardinal, a wreath */
+:root[data-season="winter"] {
+  --meadow: #8a9a78; --meadow-deep: #6c7d5e;
+  --grass-base: #4a5a40; --grass-mid: #7a8a62; --grass-tip: #b9bd94;
+  --hill-far: #b4c3c0; --hill-mid: #94a69a;
+  --treeline: #3f5a48;
+  --door-canopy: #3c5c49; --door-canopy-hi: #dfeae6; --door-canopy-hi-op: .14;
+  --bush: #3f6040; --bloom: #c0392b;                  /* holly */
+  --fl-daisy: #f7f1ec; --fl-daisy-eye: #c3cf7a;      /* hellebores */
+  --fl-bluebell: #fbfbf6;                             /* snowdrops */
+  --fl-lavender: #a99cc0;
+  --bird: #c8372d; --bird-wing: #9e2a22;              /* a cardinal */
+}
+:root[data-season="winter"] .ds-bare,
+:root[data-season="winter"] .door-wreath,
+:root[data-season="winter"] .door-winter-lights { display: inline; }
+:root[data-season="winter"] .ds-canopy,
+:root[data-season="winter"] .ds-canopy-hi,
+:root[data-season="winter"] .ds-bflies { display: none; }
+:root[data-birthday] .door-wreath { display: none; }   /* the ribbon's there */
+
+/* flowers that are resting this season */
+:root[data-season="autumn"] .door-scene use[href="#fl-tulip"],
+:root[data-season="winter"] .door-scene use[href="#fl-tulip"],
+:root[data-season="winter"] .door-scene use[href="#fl-poppy"],
+:root[data-season="winter"] .door-scene use[href="#fl-foxglove"],
+:root[data-season="winter"] .door-scene use[href="#fl-clover"] { display: none; }
+
+/* the seasons after dark */
+:root[data-dark="true"][data-season="spring"] { --canopy: #5a3b48; --canopy-hi: #7a5262; --canopy-hi-op: .5; }
+:root[data-dark="true"][data-season] .door-blooms { opacity: .35; }
+:root[data-dark="true"][data-season="autumn"] { --door-canopy: #3d2a1a; --door-canopy-hi: #6b4628; --door-canopy-hi-op: .4; --bush: #3a2c1c; }
+:root[data-dark="true"][data-season="autumn"] .ds-tree-l { --canopy: #4a2c1a; --canopy-hi: #6b4325; --canopy-hi-op: .45; }
+:root[data-dark="true"][data-season="autumn"] .ds-tree-r { --canopy: #4a3a1a; --canopy-hi: #6b5525; --canopy-hi-op: .45; }
+:root[data-dark="true"][data-season="autumn"] .ds-autumn,
+:root[data-dark="true"] .door-pumpkins,
+:root[data-dark="true"] .door-wreath { opacity: .7; }
+:root[data-dark="true"][data-season="winter"] { --door-canopy: #1f3328; --door-canopy-hi: #9fb3ac; --door-canopy-hi-op: .08; --bush: #1d2e20; --bloom: #7e2a22; }
+
 /* ----- weather in the garden and the window ----- */
 .ds-deck { display: none; }
 .ds-deck ellipse { fill: #c4cad0; opacity: .92; }
@@ -5299,6 +5393,49 @@ body[data-section="art"]::before {
   }
   :root[data-dark="true"] .petal { display: none; }
   :root[data-dark="true"] .mote { display: block; }
+  /* the seasons in the cottage air: blossom in spring, leaves in autumn,
+     nothing in winter (summer is the rose and gold petals above) */
+  :root[data-season="spring"] .petal { background: #f4bfcc; }
+  :root[data-season="spring"] .petal:nth-child(3n) { background: #fff3f5; }
+  :root[data-season="autumn"] .petal { width: 13px; height: 9px; border-radius: 0 85% 0 85%; background: #d9772e; }
+  :root[data-season="autumn"] .petal:nth-child(3n) { background: #e3a63a; }
+  :root[data-season="autumn"] .petal:nth-child(3n+1) { background: #c4532d; }
+  :root[data-season="winter"] .petal { display: none; }
+
+  /* and across the garden, in front of the door tree */
+  :root[data-season="spring"]:not([data-dark="true"]) .ds-drift,
+  :root[data-season="autumn"]:not([data-dark="true"]) .ds-drift {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ds-drift span {
+    position: absolute;
+    top: -30px;
+    left: var(--x);
+    width: calc(11px * var(--sz));
+    height: calc(8px * var(--sz));
+    border-radius: 80% 0 80% 0;
+    background: #f4bfcc;
+    opacity: .85;
+    animation: fall var(--t, 16s) linear infinite;
+    animation-delay: var(--d, 0s);
+  }
+  .ds-drift span:nth-child(3n) { background: #fff3f5; }
+  .ds-drift span:nth-child(4n) { background: #eaa2b6; }
+  :root[data-season="autumn"] .ds-drift span {
+    width: calc(15px * var(--sz));
+    height: calc(10px * var(--sz));
+    border-radius: 0 85% 0 85%;
+    background: #d9772e;
+  }
+  :root[data-season="autumn"] .ds-drift span:nth-child(3n) { background: #e3a63a; }
+  :root[data-season="autumn"] .ds-drift span:nth-child(4n) { background: #c4532d; }
+  :root[data-weather="rain"][data-season] .ds-drift,
+  :root[data-weather="storm"][data-season] .ds-drift { display: none; }
 
   /* fairies fly in front of the room (they never block clicks). Each is a
      long, wandering flight (.fairy) carrying a bobbing body with two

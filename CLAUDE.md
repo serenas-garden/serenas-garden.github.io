@@ -94,7 +94,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   Flowers are reusable `<g id="fl-…">` shapes placed with `<use>`.
   Keep them as groups, not `<symbol>`s with a viewBox: a `<use>` without a
   size stretches a symbol to fill the whole scene. Rex asked for this garden
-  to be full and lively; keep it that way.
+  to be full and lively; keep it that way. **It changes with the seasons**
+  (see "The seasons").
   It opens onto:
   a bunting-and-fairy-light **garland** (pennant/bulb positions along the sag
   are precomputed inline styles), a hanging wooden **sign** (the `<h1>`), a
@@ -168,7 +169,8 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   `data-dark` on `<html>`. The light switch / mushroom lamp pins the sky for
   **this visit only** (sessionStorage), so every new visit opens on the real
   sky. An older version kept the pin forever in localStorage and left
-  browsers stuck on "always day"; sky.js clears that old key. **The moon is
+  browsers stuck on "always day"; sky.js clears that old key. It also sets
+  **`data-season`** from the month in St. Pete (see "The seasons"). **The moon is
   Meeus's series (ch. 47) cut to its largest terms**: checked against the
   US Naval Observatory for 29 days (October 2026 to September 2027),
   moonrise and moonset come out within a minute (with only the first term,
@@ -413,6 +415,48 @@ the rest of the site:
   console.
 - Night and paper keep their colours (dimmed a little at night). Reduced
   motion: it just opens.
+
+## The seasons
+
+Rex asked (October 2026) for the garden to change with the seasons. sky.js
+sets `<html data-season>` from the month in St. Pete: spring March to May,
+summer June to August, autumn September to November, winter December to
+February. `?season=winter` (spring, summer, autumn) on any page shows another
+season for the rest of the visit (sessionStorage `sg-season`), for a look;
+`?season=auto` hands it back to the calendar. It's all CSS, in "the garden
+through the year" in style.css, plus a few pieces in the garden's SVGs that
+only their season shows:
+
+- **Summer** is the garden as drawn.
+- **Spring:** fresher greens, the two framing trees in pink cherry blossom,
+  clusters of blossom over the fairy tree's crown (`.door-blooms`), pink
+  poppies, and blossom petals drifting across the garden (`.ds-drift`) and
+  the cottage.
+- **Autumn:** golden grass and hills, the fairy tree turned orange with gold
+  and red dapples (the same `.door-blooms`, recoloured), the framing trees
+  orange and gold, rust bushes, fallen leaves over the meadow and the path
+  (`.ds-autumn`, one `#lf` leaf shape), pumpkins by the fence and at the
+  foot of the tree (`.door-pumpkins`), monarch-orange butterflies, black-eyed
+  susans, marigolds and asters, tulips resting, and leaves drifting down
+  outside and in the cottage.
+- **Winter:** muted sage meadow, blue-grey hills, the framing trees bare
+  (`.ds-bare` branches), holly bushes with red berries, hellebores and
+  snowdrops (most other flowers resting), a cardinal on the birdhouse, the
+  fairy tree evergreen with strings of coloured lights in its crown
+  (`.door-winter-lights`, glowing at night like the arch lights), a wreath on
+  the door (inside `.door-panel`, so it swings open with it; hidden on a
+  birthday visit, when the ribbon's there), no butterflies, nothing
+  drifting. No snow and no frost: St. Pete doesn't get them (real snow would
+  still come from weather.js).
+- Seasonal colours come from tokens: the garden's (`--meadow`, `--grass-*`,
+  `--hill-*`, `--treeline`), the framing trees' `--canopy`/`--canopy-hi`,
+  the fairy tree's `--door-canopy`/`--door-canopy-hi` (the kitchen window's
+  far-off fairy tree uses it too), `--bush`/`--bloom` for the bushes,
+  `--fl-daisy`, `--fl-poppy`, `--fl-tulip`, `--fl-lavender`, `--fl-bluebell`
+  for the flower shapes, `--bf` for butterfly wings, `--bird`/`--bird-wing`.
+  Each has a night version where it needs one. The cottage window and the
+  kitchen window follow the meadow and treeline.
+- Reduced motion: no drifting petals or leaves; everything else still shows.
 
 ## Wallpapers
 
