@@ -187,6 +187,9 @@ same as Rex's site (local path in `CLAUDE.local.md`). Every page links one share
   built from `sections.js` (current page marked `aria-current`; sections with
   an `href` link out in a new tab).
 - `assets/mailbox.js`: the letter desk's behaviour (sending, the envelope).
+- `assets/birthday.js` (head of the cottage and the rooms Gemma visits),
+  `assets/birthday-data.js` and `assets/birthday-party.js` (the cottage):
+  the birthday surprise. See "The birthday surprise".
 - `assets/stamp.js`: draws a postage stamp (`stampSvg`) for the travels
   postcards and the game.
 - `assets/travel-game.js`: the Where's Serena? game.
@@ -624,6 +627,52 @@ by Zach Bryan & Lana Del Rey. The same data fills the corkboard on the hub.
   screen by adding a scene `<svg class="tv__scene" data-scene="…">` in
   `currently.html`.
 
+## The birthday surprise
+
+A present for Serena's birthday (Rex asked for "a cool feature" while the
+site was being finished as her gift). **It appears only for whoever opens
+the birthday link:**
+
+    https://serenas-garden.github.io/#happy-birthday
+
+(`?happy-birthday` works too.) **No date is written anywhere**, so the repo
+never says when her birthday is (rule 1): the "day" is simply the day the
+link was opened. `assets/birthday.js`, in the `<head>` of the cottage and of
+every room Gemma follows you into, sees the link, remembers the day in this
+browser (localStorage `sg-birthday`: the day, and whether the door's been
+unwrapped and the wish made), tidies the address (so a bookmark or a
+home-screen icon isn't a birthday forever) and sets `<html data-birthday>`
+until midnight. Opening the link again brings a fresh surprise (the door
+wrapped again, the candles lit); `#birthday-off` puts everything away.
+
+- **The door** is wrapped like a present: a rose ribbon round it, a bow, and
+  a gift tag ("for Serena / love, Rex"), drawn into the door's own SVG by
+  `assets/birthday-party.js`. The hint says "a present for you! tap to
+  unwrap it". The first tap unties it (the bow springs loose, the ribbon
+  slides off, a burst of fairy confetti), then the door opens as usual and
+  Gemma dashes in.
+- **Inside the cottage:** a "happy birthday, Serena!" ribbon banner hung
+  under the sign (on phones the header leaves room for it above the
+  calendar), balloons drifting up the wall behind the furniture (a fixed
+  layer behind the cottage, like the hanging wallpaper), the date circled
+  on the calendar (pure CSS), and **Gemma in a party hat** in every pose
+  and every room (`.g-hat` in `gemma-kit.js`, shown under
+  `[data-birthday]`). The toadstool's everyday line becomes "happy
+  birthday, serena!! there's a cake on the floor for you" (`Guide.hello`
+  in `garden.js`).
+- **The cake**, on a stand in the middle of the rug: two tiers, pink
+  frosting, strawberries, five lit candles (no number, on purpose). Tap it:
+  "make a wish…" pops up over it, the candles go out one by one with a curl
+  of smoke, more confetti, and **the card** opens: a `<dialog>`, its pink
+  cover swinging open on Rex's message, handwritten in Caveat. Tapping the
+  cake again opens the card again.
+- **The words** are all in `assets/birthday-data.js`: the tag, the card's
+  cover, and the message (Claude's DRAFT, for Rex to rewrite in his own
+  words; one paragraph per line, the first is the card's heading).
+- Ribbon, cake, card and confetti keep fixed colours, dimmed a little at
+  night. Reduced motion: no confetti, balloons stay put, the door unwraps
+  and the candles go out instantly, the card opens without its cover.
+
 ## Rooms, and Gemma following you in
 
 Some pages are designed as **rooms** of the cottage (the Kitchen, the
@@ -761,7 +810,9 @@ is the heart of the home page, so treat her with care.
   z's). `data-pose` picks which is shown. Classes add moods: `is-yawning`,
   `is-curious` (nose up, or a head tilt sitting), `is-grooming` (a paw raised
   to her chin; `.g-sit-head`, `.g-paw` and `.g-lick` in the art),
-  `is-wiggling` (crouched, about to pounce) and `is-running`.
+  `is-wiggling` (crouched, about to pounce) and `is-running`. On a
+  birthday visit she wears a party hat (`.g-hat`; see "The birthday
+  surprise").
 - **Her day** (`assets/gemma.js`): nap → wake, sit, yawn → hop out → stroll to
   the tree (sometimes stopping halfway to look around) → jump condo → shelf →
   top perch → sit there → down via the condo → walk home → step into bed →
@@ -871,4 +922,6 @@ surname).
 - Gallery: Serena titles the 18 pieces and corrects the guessed years and
   mediums (all in `art-data.js`); any notes she'd like shown full screen.
 - Where's Serena?: copy is DRAFT (the verdicts, the how-to) for Serena.
+- Birthday surprise: Rex rewrites the card's message (`birthday-data.js`,
+  Claude's draft) before sending the link.
 - Pick the next section to build.

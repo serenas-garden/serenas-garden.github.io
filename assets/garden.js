@@ -114,7 +114,9 @@
   // gemma.js borrows the guide to introduce her
   window.Guide = {
     say: function (text) { clearTimeout(resetTimer); say(text); },
-    rest: function () { resetTimer = setTimeout(function () { say(hello); }, 1800); }
+    rest: function () { resetTimer = setTimeout(function () { say(hello); }, 1800); },
+    // a new everyday line, to come back to (birthday-party.js)
+    hello: function (text) { hello = text; clearTimeout(resetTimer); say(text); }
   };
 
   if (bubble) {

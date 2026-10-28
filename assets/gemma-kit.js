@@ -12,10 +12,23 @@
  * with a yawn) and sleep (curled up, with drifting z's). Classes add the
  * rest: is-yawning, is-curious (head tilted, or nose up in side view),
  * is-grooming (sitting, washing a paw), is-wiggling (crouched, about to
- * pounce) and is-running.
+ * pounce) and is-running. On a birthday visit she wears a party hat
+ * (.g-hat, shown by style.css under <html data-birthday>).
  */
 (function () {
   "use strict";
+
+  // her party hat, for a birthday visit (birthday.js puts data-birthday on
+  // <html>; style.css shows it then): a striped cone with a pom-pom, drawn
+  // for each pose so it sits on her head whatever she's doing
+  function hat(cone, stripes, pom) {
+    return "<g class=\"g-hat\">" +
+      "<path d=\"" + cone + "\" fill=\"#f2a7b8\"/>" +
+      "<path d=\"" + stripes + "\" fill=\"#f6d27a\"/>" +
+      "<path d=\"" + cone + "\" fill=\"none\" stroke=\"#3d2f27\" stroke-width=\"1.1\" stroke-linejoin=\"round\"/>" +
+      "<circle cx=\"" + pom[0] + "\" cy=\"" + pom[1] + "\" r=\"" + pom[2] + "\" fill=\"#fbf5e6\" stroke=\"#3d2f27\" stroke-width=\"1\"/>" +
+      "</g>";
+  }
 
   var ART = [
     "<!-- walking and jumping: side view, facing right -->",
@@ -44,6 +57,8 @@
     "<path d=\"M111.6 30.4 l2.6 -.4 l-.9 2.4 z\" fill=\"#e8a3a6\"/>",
     "<path d=\"M112.8 33 q-2 2 -4.2 1\" fill=\"none\" stroke=\"#3d2f27\" stroke-width=\".9\" stroke-linecap=\"round\"/>",
     "<path d=\"M107 32 l13 -3 M107 33.6 l13 1.2\" stroke=\"#c9c1b6\" stroke-width=\".7\"/>",
+    hat("M94 18.6 Q100.5 21.5 107 17.4 L103.6 -.5 Z",
+        "M96.9 12.9 L106 12 L105.6 9.9 L98 10.6 Z M100 6.8 L104.9 6.3 L104.6 4.5 L100.9 4.9 Z", [103.6, -.5, 2.6]),
     "</g>",
     "<path d=\"M87 39.5 q7 5.5 14 2\" fill=\"none\" stroke=\"#d99a9e\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>",
     "<circle cx=\"94.5\" cy=\"44.6\" r=\"2.3\" fill=\"#d9a441\" stroke=\"#9c7124\" stroke-width=\".6\"/>",
@@ -86,6 +101,8 @@
     "<path d=\"M60 32.6 q-1.8 2 -3.6 1 M60 32.6 q1.8 2 3.6 1\" fill=\"none\" stroke=\"#3d2f27\" stroke-width=\".9\" stroke-linecap=\"round\"/>",
     "<ellipse class=\"g-yawn\" cx=\"60\" cy=\"34.6\" rx=\"2.5\" ry=\"2.4\" fill=\"#e8a3a6\" stroke=\"#3d2f27\" stroke-width=\".8\"/>",
     "<path d=\"M54 32 L40 29.5 M54 33.6 L40 34.2 M66 32 L80 29.5 M66 33.6 L80 34.2\" stroke=\"#c9c1b6\" stroke-width=\".7\"/>",
+    hat("M53 12.8 Q60 15.6 67 12.8 L61 -7.5 Z",
+        "M55.4 6.7 L65.2 6.7 L64.5 4.3 L56.4 4.3 Z M58 .2 L63.3 .2 L62.7 -1.8 L58.8 -1.8 Z", [61, -7.5, 3]),
     "</g>",
     "<path d=\"M50 40.6 Q60 45.6 70 40.6\" fill=\"none\" stroke=\"#d99a9e\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>",
     "<circle cx=\"60\" cy=\"44.8\" r=\"2.3\" fill=\"#d9a441\" stroke=\"#9c7124\" stroke-width=\".6\"/>",
@@ -111,6 +128,8 @@
     "<path d=\"M88 49.6 C95 49.6 100.3 54 100.5 61 C100 65 97.5 68 94 70 L88 53 Z\" fill=\"#5b4334\"/>",
     "<path d=\"M79.6 61 q2.6 2.2 5.2 0 M91.2 61 q2.6 2.2 5.2 0\" fill=\"none\" stroke=\"#efe3d3\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>",
     "<path d=\"M86.6 65.2 h2.8 l-1.4 1.8 z\" fill=\"#e8a3a6\"/>",
+    hat("M82 51.6 Q88 54.2 94.2 50.2 L96.5 33.5 Z",
+        "M86.4 46.2 L94.9 45.2 L95.2 43.2 L88.1 44 Z M91 40.4 L95.6 39.9 L95.9 38.2 L92.4 38.6 Z", [96.5, 33.5, 2.6]),
     "</g>",
     "<text class=\"g-z\" x=\"100\" y=\"44\">z</text>",
     "<text class=\"g-z g-z2\" x=\"106\" y=\"36\">z</text>",
