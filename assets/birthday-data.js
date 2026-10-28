@@ -9,8 +9,8 @@
  *   to, from   the names on the gift tag and the card
  *   tag        the gift tag tied to the door's bow (two short lines)
  *   cover      the front of the card
- *   message    the inside of the card, one paragraph per line. DRAFT:
- *              Rex, this is yours to rewrite in your own words.
+ *   message    the inside of the card, one paragraph per line (the first
+ *              is its heading). Claude's draft, as Rex edited it.
  *   signoff    the last line before the name
  */
 window.BIRTHDAY = {
@@ -21,7 +21,7 @@ window.BIRTHDAY = {
   message: [
     "Happy birthday, Serena!",
     "I built you a little cottage at the edge of the forest: your travels on a globe, your paintings on the walls, your cookies in the oven, the real moon in the window, and Gemma, keeping an eye on all of it.",
-    "It's yours to fill up. I hope it feels like you."
+    "It's yours to fill up."
   ],
-  signoff: "love,"
+  signoff: "from,"
 };

@@ -719,8 +719,8 @@ lit); `#birthday-off` puts everything away.
   cover swinging open on Rex's message, handwritten in Caveat. Tapping the
   cake again opens the card again.
 - **The words** are all in `assets/birthday-data.js`: the tag, the card's
-  cover, and the message (Claude's DRAFT, for Rex to rewrite in his own
-  words; one paragraph per line, the first is the card's heading).
+  cover, and the message (Claude's draft as Rex edited it, signed "from,
+  Rex"; one paragraph per line, the first is the card's heading).
 - Ribbon, cake, card and confetti keep fixed colours, dimmed a little at
   night. Reduced motion: no confetti, balloons stay put, the door unwraps
   and the candles go out instantly, the card opens without its cover.
@@ -974,6 +974,4 @@ surname).
 - Gallery: Serena titles the 18 pieces and corrects the guessed years and
   mediums (all in `art-data.js`); any notes she'd like shown full screen.
 - Where's Serena?: copy is DRAFT (the verdicts, the how-to) for Serena.
-- Birthday surprise: Rex rewrites the card's message (`birthday-data.js`,
-  Claude's draft) before sending the link.
 - Pick the next section to build.
