@@ -4394,6 +4394,19 @@ body[data-section="art"]::before {
 /* =============================== mobile =============================== */
 
 @media (max-width: 860px) {
+  /* the sign gets the top row to itself, and the light switch, the fan and
+     the calendar share the one below, each column as wide as what's in it
+     (all in one row they don't fit under about 830px: the calendar was
+     pushed off the edge, as it was on narrow phones with two equal columns) */
+  .room-head {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    row-gap: 26px;
+  }
+  .sign { grid-column: 1 / -1; grid-row: 1; }
+  .wall-controls { grid-row: 2; }
+  .calendar { grid-row: 2; justify-self: end; }
+
   .room { grid-template-columns: 1fr; gap: 40px; }
   .window-frame { max-width: 560px; margin-inline: auto; }
   .flowerbox { max-width: 584px; margin-inline: auto; }
@@ -4404,23 +4417,15 @@ body[data-section="art"]::before {
   body { font-size: 16px; }
 
   .pn--alt, .bulb--alt { display: none; }
-  .room-head {
-    /* each column as wide as what's in it, so the calendar keeps to its
-       corner on a narrow phone (two equal columns pushed it off the edge) */
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-    padding-top: 66px;
-    row-gap: 26px;
-  }
-  .sign { grid-column: 1 / -1; grid-row: 1; }
-  .wall-controls { grid-row: 2; gap: 16px; }
+  .room-head { padding-top: 66px; }
+  .wall-controls { gap: 16px; }
   .switch__label, .wp-fan__label { white-space: normal; text-align: center; text-wrap: balance; }
   .wp-picker { position: static; }          /* the book opens from the left of the header */
   .wp-book { left: -2px; padding-left: 36px; }
   .wp-book__grid { gap: 12px 10px; }
   .wp-chip__swatch { height: 76px; }
   .wp-chip__note { display: none; }
-  .calendar { grid-row: 2; justify-self: end; width: 96px; }
+  .calendar { width: 96px; }
   .calendar__day { font-size: 40px; }
 
   .window-frame { margin: 22px 16px 0; }
