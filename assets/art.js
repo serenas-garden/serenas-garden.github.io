@@ -366,7 +366,16 @@
 
   layout();
   if (window.ResizeObserver) {
-    new ResizeObserver(function () { if (hang.clientWidth !== lastW) layout(); }).observe(hang);
+    // re-hung on the next frame: hanging changes the wall's height, and doing
+    // it inside the observer's own callback makes browsers warn about a loop
+    var queued = 0;
+    new ResizeObserver(function () {
+      if (queued || hang.clientWidth === lastW) return;
+      queued = requestAnimationFrame(function () {
+        queued = 0;
+        if (hang.clientWidth !== lastW) layout();
+      });
+    }).observe(hang);
   } else {
     window.addEventListener("resize", layout);
   }
