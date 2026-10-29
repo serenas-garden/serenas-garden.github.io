@@ -266,6 +266,7 @@
     dialog.innerHTML =
       '<div class="almanac__page">' +
         '<header class="almanac__sky">' +
+          '<button type="button" class="almanac__x" data-close-almanac aria-label="close tonight’s sky"><span aria-hidden="true">×</span></button>' +
           '<p class="almanac__eyebrow">tonight’s sky over st. pete</p>' +
           '<div class="almanac__tonight">' +
             moonSvg(84, n.illum, n.waxing, "almanac__moon") +
@@ -296,7 +297,7 @@
   function open() {
     render();
     if (dialog.showModal) dialog.showModal(); else dialog.setAttribute("open", "");
-    var close = dialog.querySelector("[data-close-almanac]");
+    var close = dialog.querySelector(".almanac__close");
     if (close) close.focus({ preventScroll: true });
   }
   function close() { if (dialog.close) dialog.close(); else dialog.removeAttribute("open"); }

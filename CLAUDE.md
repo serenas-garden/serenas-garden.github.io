@@ -413,6 +413,11 @@ the rest of the site:
   is in sky.js), the moon's (`MOON_SET`, parallax allowed for), golden hour
   at 6 degrees. `window.Almanac` exposes the sums for checking from the
   console.
+- **Closing:** the × in the night sky's corner, "close" at the foot, Esc,
+  or a tap outside. On a short screen it scrolls inside itself (capped at
+  `100dvh`: on iPhones `100vh` counts the space under Safari's toolbars, so
+  the bottom was cut off and swipes went to the page). While any pop-up is
+  open the page behind stays still (`html:has(dialog[open])` in style.css).
 - Night and paper keep their colours (dimmed a little at night). Reduced
   motion: it just opens.
 

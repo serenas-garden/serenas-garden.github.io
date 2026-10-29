@@ -4735,7 +4735,9 @@ body[data-section="art"]::before {
 .bday-card__inside {
   position: relative;
   max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
   overflow: auto;
+  overscroll-behavior: contain;
   padding: 34px 30px 26px;
   text-align: center;
   border-radius: 6px;
@@ -4809,13 +4811,16 @@ body[data-section="art"]::before {
 .almanac::backdrop { background: rgba(14, 20, 32, .6); }
 .almanac__page {
   max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
   overflow: auto;
+  overscroll-behavior: contain;
   border-radius: 10px;
   background: #fbf6ea;
   box-shadow: 0 26px 50px -20px rgba(0, 0, 0, .7);
 }
 :root[data-dark="true"] .almanac__page { filter: brightness(.94); }
 .almanac__sky {
+  position: relative;
   padding: 18px 22px 16px;
   color: #f4ecd8;
   background:
@@ -4890,6 +4895,29 @@ body[data-section="art"]::before {
   cursor: pointer;
 }
 .almanac__close:focus-visible, .almanac__foot a:focus-visible { outline: 2px dashed #a8463f; outline-offset: 3px; }
+/* the × in the night sky, so a phone needn't scroll down to close it */
+.almanac__x {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  font: 400 22px/1 var(--body);
+  color: #c3cdea;
+  background: rgba(255, 255, 255, .08);
+  cursor: pointer;
+}
+.almanac__x:hover { color: #fbf1cf; background: rgba(255, 255, 255, .16); }
+.almanac__x:focus-visible { outline: 2px dashed #f2c94c; outline-offset: 2px; }
+
+/* while a pop-up is open the page behind it stays still: on a phone, a swipe
+   the pop-up doesn't need would otherwise scroll the cottage behind it */
+html:has(dialog[open]) { overflow: hidden; }
 
 @media (max-width: 640px) {
   .almanac__sky { padding: 16px 16px 14px; }
